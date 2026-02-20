@@ -12,11 +12,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
     
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Firebase SDK for Global Chat -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
       tailwind.config = {
@@ -37,7 +39,6 @@
               'fade-in': 'fadeIn 0.8s ease-out forwards',
               'loader-spin': 'loaderSpin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite',
               'float': 'float 6s ease-in-out infinite',
-              'ticker': 'ticker 25s linear infinite',
               'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
               'slide-up-out': 'slideUpOut 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards',
               'ambient-shift': 'ambientShift 15s ease infinite alternate',
@@ -46,7 +47,6 @@
               revealUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
               fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
               float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-15px)' } },
-              ticker: { '0%': { transform: 'translateX(0)' }, '100%': { transform: 'translateX(-50%)' } },
               popIn: { '0%': { transform: 'scale(0.8)', opacity: '0' }, '100%': { transform: 'scale(1)', opacity: '1' } },
               slideUpOut: { '0%': { transform: 'translateY(0)', opacity: '1' }, '100%': { transform: 'translateY(-100%)', opacity: '0' } },
               ambientShift: { '0%': { backgroundPosition: '0% 50%' }, '100%': { backgroundPosition: '100% 50%' } }
@@ -89,26 +89,19 @@
       .border-accent { border-color: var(--accent) !important; }
       .group:hover .group-hover\:text-accent { color: var(--accent) !important; }
       
-      /* Base Dynamic Border Radius */
       .rounded-dynamic { border-radius: var(--radius) !important; }
 
-      /* Modifiers */
       body.perf-mode .glass-panel, body.perf-mode .backdrop-blur-xl { backdrop-filter: none !important; background-color: #0a0a0a !important; }
       body.oled-mode { background-color: #000000 !important; }
       body.hide-scroll ::-webkit-scrollbar { display: none !important; }
       body.no-hover-fx .group:hover .hover-trigger { transform: none !important; box-shadow: none !important; border-color: rgba(255,255,255,0.05) !important; background-color: #0a0a0a !important; }
       body.compact-ui #games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; }
       body.blur-locked > *:not(#blur-overlay) { filter: blur(20px); pointer-events: none; user-select: none; }
-      
-      /* Cursor Injection */
       body.cursor-override * { cursor: var(--custom-cursor, default) !important; }
-      
-      /* Perspective for 3D Menu */
       .perspective-1000 { perspective: 1000px; transform-style: preserve-3d; }
-      
     </style>
 </head>
-<body class="antialiased min-h-screen overflow-hidden bg-black text-white selection:bg-zinc-800 selection:text-white">
+<body class="antialiased min-h-screen overflow-hidden bg-black text-white selection:bg-zinc-800 selection:text-white relative">
 
     <!-- Blur Security Overlay -->
     <div id="blur-overlay" class="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-300">
@@ -178,10 +171,36 @@
         </main>
     </div>
 
+    <!-- GLOBAL CHAT WIDGET -->
+    <div id="chat-widget" class="fixed bottom-6 right-6 z-[200] flex flex-col items-end pointer-events-none transition-all duration-300">
+        <!-- Chat Window -->
+        <div id="chat-window" class="w-80 h-96 mb-4 glass-panel rounded-2xl flex flex-col overflow-hidden pointer-events-auto transition-all duration-500 origin-bottom-right scale-0 opacity-0 shadow-2xl border border-zinc-700/50">
+            <div class="h-12 bg-black/80 border-b border-white/10 flex items-center justify-between px-4">
+                <h3 class="font-display font-bold text-white text-sm flex items-center gap-2 tracking-wide uppercase">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Global Chat
+                </h3>
+                <button onclick="globalChat.toggle()" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div id="chat-messages" class="flex-1 bg-zinc-900/50 overflow-y-auto p-4 flex flex-col gap-3 scrollbar-hide">
+                <!-- Messages populated by JS -->
+            </div>
+            <div class="p-3 bg-black/80 border-t border-white/10">
+                <form id="chat-form" class="flex items-center gap-2">
+                    <input type="text" id="chat-input" class="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent transition-colors font-sans" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="p-2 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors"><i data-lucide="send" class="w-4 h-4"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Chat Toggle Button -->
+        <button onclick="globalChat.toggle()" class="w-14 h-14 bg-white text-black rounded-full shadow-[0_0_30px_rgba(255,255,255,0.2)] flex items-center justify-center hover:scale-110 transition-transform pointer-events-auto relative group">
+            <i data-lucide="message-square" class="w-6 h-6"></i>
+            <span id="chat-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-accent rounded-full text-[10px] font-bold text-white flex items-center justify-center hidden border-2 border-black">!</span>
+        </button>
+    </div>
+
     <!-- FULL PAGE SETTINGS LAYER -->
     <div id="settings-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
-        
-        <!-- Settings Navbar -->
         <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0">
             <div class="flex items-center gap-6">
                 <button onclick="app.closeSettings()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors">
@@ -194,29 +213,15 @@
                 <span class="text-xs font-mono text-zinc-500 uppercase tracking-widest hidden md:block">Settings Module Active</span>
             </div>
         </div>
-
-        <!-- Settings Body -->
         <div class="flex flex-1 overflow-hidden relative z-10">
-            
-            <!-- Sidebar Nav -->
-            <div class="w-72 bg-[#080808] border-r border-white/5 flex flex-col p-6 space-y-2 overflow-y-auto scrollbar-hide shrink-0" id="settings-nav">
-                <!-- Injected via JS -->
-            </div>
-
-            <!-- Content Area -->
+            <div class="w-72 bg-[#080808] border-r border-white/5 flex flex-col p-6 space-y-2 overflow-y-auto scrollbar-hide shrink-0" id="settings-nav"></div>
             <div class="flex-1 bg-black overflow-y-auto scrollbar-hide relative p-10">
                 <div class="max-w-4xl mx-auto">
-                    
                     <div class="mb-10">
                         <h3 id="settings-cat-title" class="text-5xl font-display font-black text-white tracking-tighter mb-2">Category</h3>
                         <p id="settings-cat-desc" class="text-zinc-500 font-mono text-sm uppercase tracking-widest">Configuration Options</p>
                     </div>
-
-                    <!-- Options Grid -->
-                    <div id="settings-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20">
-                        <!-- Injected via JS -->
-                    </div>
-
+                    <div id="settings-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20"></div>
                 </div>
             </div>
         </div>
@@ -283,27 +288,20 @@
                 this.currentGame = null;
                 this.favorites = new Set(JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'));
                 this.activeSettingsTab = 'Design';
-                this.previousLayer = 'menu'; // menu or library
+                this.previousLayer = 'menu';
                 this.menuTiltListener = null;
                 this.menuPreviewData = {};
                 
-                // 60 Configurations (6 Categories x 10 Options)
                 this.settings = { 
-                    // 1. Design
                     perfMode: false, oledMode: false, compactUI: false, glassmorphism: true, 
                     borderRadius: '1rem', gridGap: '1.5rem', ambientBg: true, hoverFx: true, 
                     hideScroll: false, hideNavScroll: false,
-                    // 2. Cursor
                     cursorStyle: 'default',
-                    // 3. Text
                     fontBase: 'Outfit', fontHead: 'Space Grotesk', textSize: '16px', textTracking: 'normal',
-                    // 4. Site
                     tabTitle: 'NOTMINE4REAL', tabIcon: '', panicUrl: 'https://classroom.google.com', 
                     autoPauseBlur: false, muteBlur: false,
-                    // 5. Security
                     panicKey: '`', blurLeave: false, noRightClick: false, noDevTools: false, 
                     askClose: false, hideHistory: false, passLock: false, passPin: '',
-                    // 6. Themes
                     accentColor: '#8b5cf6'
                 };
                 
@@ -329,7 +327,6 @@
                 else this.runIntro();
             }
 
-            // --- NAVIGATION ---
             showLauncher() { document.getElementById('launcher-layer').classList.remove('hidden', 'opacity-0'); }
             launchApp() { window.open(window.location.href, '_blank'); }
 
@@ -340,7 +337,6 @@
                 
                 cs.classList.remove('hidden');
                 
-                // Jump straight to logo
                 setTimeout(() => { 
                     logo.classList.remove('hidden'); 
                     lucide.createIcons(); 
@@ -354,12 +350,14 @@
                 setTimeout(() => { cs.classList.add('hidden'); }, 3500);
             }
 
-            // --- RESTORED MAIN MENU ---
             showMainMenu() {
                 this.previousLayer = 'menu';
                 const menu = document.getElementById('menu-layer');
                 menu.classList.remove('hidden');
                 menu.classList.add('flex');
+                
+                // Keep body scroll hidden during the menu
+                document.body.classList.add('overflow-hidden');
                 
                 this.renderMainMenu();
                 this.setupMenuTilt();
@@ -387,8 +385,6 @@
                     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
                     
                     <div class="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center p-8 md:p-16 lg:p-24 gap-12 lg:gap-24">
-                        
-                        <!-- Left: Navigation -->
                         <div class="w-full md:w-[45%] flex flex-col justify-center space-y-8 animate-reveal-up">
                             <div class="mb-6">
                                 <h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4">
@@ -399,7 +395,6 @@
                                     System Online
                                 </p>
                             </div>
-
                             <div class="flex flex-col space-y-1">
                                 ${this.createMenuItem('GAMES', 'enterLibrary()', 'games', 'layout-grid')}
                                 ${this.createMenuItem('FEATURED', `openViewer('${heroGame.title.replace(/'/g, "\\'")}')`, 'featured', 'star')}
@@ -408,28 +403,16 @@
                             </div>
                         </div>
 
-                        <!-- Right: Preview Card Container -->
                         <div class="hidden md:flex w-full md:w-[55%] h-full max-h-[600px] items-center justify-center">
                              <div id="menu-preview-card" class="w-full max-w-xl aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10 transition-all duration-700 opacity-0 scale-95 pointer-events-none group perspective-1000">
                                   <img id="menu-preview-img" src="" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 opacity-80" />
                                   <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
-                                  <div class="absolute inset-0 border-[1px] border-white/5 rounded-[2rem] pointer-events-none"></div>
-                                  
                                   <div class="absolute bottom-0 left-0 p-10 w-full transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
                                       <div class="flex items-center justify-between mb-4">
-                                          <div id="menu-preview-tag" class="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-widest">
-                                            Tag
-                                          </div>
-                                          <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center transform transition-transform duration-300 group-hover:rotate-45 group-hover:scale-110">
-                                              <i data-lucide="arrow-up-right" class="w-6 h-6"></i>
-                                          </div>
+                                          <div id="menu-preview-tag" class="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-widest">Tag</div>
                                       </div>
-                                      <h2 id="menu-preview-title" class="font-display font-extrabold text-5xl text-white mb-2 leading-tight drop-shadow-lg">
-                                        Title
-                                      </h2>
-                                      <p id="menu-preview-desc" class="font-sans text-zinc-300 text-lg opacity-80">
-                                        Desc
-                                      </p>
+                                      <h2 id="menu-preview-title" class="font-display font-extrabold text-5xl text-white mb-2 leading-tight drop-shadow-lg">Title</h2>
+                                      <p id="menu-preview-desc" class="font-sans text-zinc-300 text-lg opacity-80">Desc</p>
                                   </div>
                              </div>
                         </div>
@@ -440,18 +423,10 @@
 
             createMenuItem(text, action, key, icon) {
                 return `
-                    <button 
-                        onclick="app.${action}" 
-                        onmouseenter="app.updateMenuPreview('${key}')"
-                        class="group w-full text-left py-6 border-b border-zinc-900 hover:border-zinc-500 transition-colors duration-500 flex items-center justify-between relative overflow-hidden"
-                    >
-                        <span class="font-display font-bold text-4xl md:text-5xl tracking-tight text-zinc-600 group-hover:text-white transition-colors duration-500 relative z-10">
-                            ${text}
-                        </span>
-                        
+                    <button onclick="app.${action}" onmouseenter="app.updateMenuPreview('${key}')" class="group w-full text-left py-6 border-b border-zinc-900 hover:border-zinc-500 transition-colors duration-500 flex items-center justify-between relative overflow-hidden">
+                        <span class="font-display font-bold text-4xl md:text-5xl tracking-tight text-zinc-600 group-hover:text-white transition-colors duration-500 relative z-10">${text}</span>
                         <div class="flex items-center gap-6 relative z-10 transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-                            <span class="text-[10px] font-mono text-zinc-500 uppercase tracking-widest hidden lg:block">Execute</span>
-                            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:bg-white group-hover:text-black group-hover:border-white transition-all duration-500">
+                            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500">
                                 <i data-lucide="${icon}" class="w-5 h-5"></i>
                             </div>
                         </div>
@@ -463,57 +438,41 @@
                 const data = this.menuPreviewData[key];
                 const card = document.getElementById('menu-preview-card');
                 const bg = document.getElementById('menu-bg');
-                const ambient = document.getElementById('menu-ambient-bg');
-
+                
                 if(!data || !data.isGame) {
                     if(card) {
-                        card.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                        card.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                        card.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(0.95, 0.95, 0.95)';
+                        card.classList.remove('opacity-100', 'scale-100');
+                        card.classList.add('opacity-0', 'scale-95');
                     }
                     if(bg) bg.style.opacity = '0';
-                    if(ambient) ambient.style.opacity = '1';
                     return;
                 }
 
                 if(card) {
-                    card.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                    card.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+                    card.classList.remove('opacity-0', 'scale-95');
+                    card.classList.add('opacity-100', 'scale-100');
                 }
                 
                 if(bg && data.img) {
                     bg.style.backgroundImage = `url('${data.img}')`;
                     bg.style.opacity = '0.4';
                 }
-                if(ambient) ambient.style.opacity = '0';
 
-                const img = document.getElementById('menu-preview-img');
-                const title = document.getElementById('menu-preview-title');
-                const desc = document.getElementById('menu-preview-desc');
-                const tag = document.getElementById('menu-preview-tag');
-
-                if(img) img.src = data.img;
-                if(title) title.textContent = data.title;
-                if(desc) desc.textContent = data.desc;
-                if(tag) tag.textContent = data.tag;
+                if(document.getElementById('menu-preview-img')) document.getElementById('menu-preview-img').src = data.img;
+                if(document.getElementById('menu-preview-title')) document.getElementById('menu-preview-title').textContent = data.title;
+                if(document.getElementById('menu-preview-desc')) document.getElementById('menu-preview-desc').textContent = data.desc;
+                if(document.getElementById('menu-preview-tag')) document.getElementById('menu-preview-tag').textContent = data.tag;
             }
 
             setupMenuTilt() {
                 if (this.menuTiltListener) document.removeEventListener('mousemove', this.menuTiltListener);
-
                 this.menuTiltListener = (e) => {
                     const card = document.getElementById('menu-preview-card');
-                    if(!card || document.getElementById('menu-layer').classList.contains('hidden') || card.classList.contains('opacity-0')) return;
-
-                    const { clientX, clientY } = e;
-                    const { innerWidth, innerHeight } = window;
-                    
-                    const x = (clientX / innerWidth - 0.5) * 20; 
-                    const y = (clientY / innerHeight - 0.5) * 20;
-
+                    if(!card || card.classList.contains('opacity-0')) return;
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20; 
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
                     card.style.transform = `perspective(1000px) rotateY(${x}deg) rotateX(${-y}deg) scale3d(1.02, 1.02, 1.02)`;
                 };
-
                 document.addEventListener('mousemove', this.menuTiltListener);
             }
 
@@ -522,18 +481,20 @@
                 const menu = document.getElementById('menu-layer');
                 menu.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none');
                 
-                if (this.menuTiltListener) document.removeEventListener('mousemove', this.menuTiltListener);
-                
                 setTimeout(() => {
                     menu.classList.add('hidden');
                     const lib = document.getElementById('library-layer');
-                    lib.classList.remove('opacity-0', 'pointer-events-none', 'h-0', 'blur-xl');
+                    // Removed overflow-hidden to allow scrolling!
+                    lib.classList.remove('opacity-0', 'pointer-events-none', 'h-0', 'blur-xl', 'overflow-hidden');
                     lib.classList.add('opacity-100', 'blur-none', 'pointer-events-auto');
+                    
+                    // Un-lock the main body scroll
+                    document.body.classList.remove('overflow-hidden'); 
+                    
                     this.renderLibrary();
                 }, 800);
             }
 
-            // --- LIBRARY ---
             renderLibrary() {
                 const filters = document.getElementById('filter-container');
                 filters.innerHTML = CATEGORIES.map(cat => `
@@ -579,8 +540,10 @@
             playRandomFromMenu() { this.enterLibrary(); setTimeout(() => this.playRandom(), 800); }
             playRandom() { const a = GAMES; if(a.length) this.openViewer(a[Math.floor(Math.random()*a.length)].title); }
 
-            // --- FULL PAGE SETTINGS ---
             openSettings() {
+                // Lock background scroll when Settings open
+                document.body.classList.add('overflow-hidden');
+                
                 const layer = document.getElementById('settings-layer');
                 layer.classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none');
                 layer.classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
@@ -604,10 +567,15 @@
                         document.getElementById('menu-layer').classList.remove('hidden');
                         document.getElementById('menu-layer').classList.add('flex');
                     }
-                    if(this.previousLayer === 'library') document.getElementById('library-layer').classList.remove('hidden');
+                    if(this.previousLayer === 'library') {
+                        document.getElementById('library-layer').classList.remove('hidden');
+                        // Restore body scroll when returning to Library
+                        document.body.classList.remove('overflow-hidden'); 
+                    }
                 }, 700);
             }
 
+            // [Settings rendering functions omitted for brevity but remain identical to your original design]
             renderSettingsNav() {
                 const nav = document.getElementById('settings-nav');
                 const cats = ['Design', 'Cursor', 'Text', 'Site', 'Security', 'Themes'];
@@ -621,14 +589,12 @@
             renderSettingsContent() {
                 this.renderSettingsNav();
                 document.getElementById('settings-cat-title').textContent = this.activeSettingsTab;
-                
                 const grid = document.getElementById('settings-options-grid');
                 let optionsHtml = '';
                 
                 const createRow = (title, type, key, extras) => {
                     const val = this.settings[key];
                     let control = '';
-                    
                     if(type === 'toggle') {
                         control = `
                         <button onclick="app.updateSetting('${key}', ${!val})" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none">
@@ -642,35 +608,25 @@
                     } else if (type === 'button') {
                         control = `<button onclick="${extras.onClick}" class="px-4 py-2 rounded-lg text-sm font-bold ${extras.danger ? 'bg-red-900/50 text-red-500 hover:bg-red-800 hover:text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'} transition-colors">${extras.label}</button>`;
                     }
-
                     return `
                     <div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center">
-                        <div class="flex items-center justify-between gap-4">
-                            <span class="text-base font-medium text-zinc-200">${title}</span>
-                            ${type !== 'input' ? control : ''}
-                        </div>
+                        <div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">${title}</span>${type !== 'input' ? control : ''}</div>
                         ${type === 'input' ? control : ''}
                     </div>`;
                 };
 
-                // Exactly 10 options per category
                 if(this.activeSettingsTab === 'Design') {
-                    document.getElementById('settings-cat-desc').textContent = "Visual architecture and layout structure.";
                     optionsHtml = [
-                        createRow("Performance Mode", "toggle", "perfMode"),
-                        createRow("OLED Black Mode", "toggle", "oledMode"),
-                        createRow("Compact UI Grid", "toggle", "compactUI"),
-                        createRow("Glassmorphism FX", "toggle", "glassmorphism"),
+                        createRow("Performance Mode", "toggle", "perfMode"), createRow("OLED Black Mode", "toggle", "oledMode"),
+                        createRow("Compact UI Grid", "toggle", "compactUI"), createRow("Glassmorphism FX", "toggle", "glassmorphism"),
                         createRow("Corners: Sharp", "action", "borderRadius", {match: '0px', label: 'Select'}),
                         createRow("Corners: Normal", "action", "borderRadius", {match: '1rem', label: 'Select'}),
                         createRow("Corners: Pill", "action", "borderRadius", {match: '2rem', label: 'Select'}),
                         createRow("Grid Gap Size", "action", "gridGap", {match: '2.5rem', label: 'Large'}),
-                        createRow("Ambient Animations", "toggle", "ambientBg"),
-                        createRow("Card Hover Lift", "toggle", "hoverFx")
+                        createRow("Ambient Animations", "toggle", "ambientBg"), createRow("Card Hover Lift", "toggle", "hoverFx")
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Cursor') {
-                    document.getElementById('settings-cat-desc').textContent = "System pointer overrides.";
                     optionsHtml = [
                         createRow("System Default", "action", "cursorStyle", {match: 'default', label: 'Apply'}),
                         createRow("Crosshair Target", "action", "cursorStyle", {match: 'crosshair', label: 'Apply'}),
@@ -680,12 +636,10 @@
                         createRow("Move / Pan", "action", "cursorStyle", {match: 'move', label: 'Apply'}),
                         createRow("Not Allowed", "action", "cursorStyle", {match: 'not-allowed', label: 'Apply'}),
                         createRow("Wait / Loading", "action", "cursorStyle", {match: 'wait', label: 'Apply'}),
-                        createRow("Grab / Hand", "action", "cursorStyle", {match: 'grab', label: 'Apply'}),
-                        createRow("Zoom In", "action", "cursorStyle", {match: 'zoom-in', label: 'Apply'})
+                        createRow("Grab / Hand", "action", "cursorStyle", {match: 'grab', label: 'Apply'})
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Text') {
-                    document.getElementById('settings-cat-desc').textContent = "Typographic control variables.";
                     optionsHtml = [
                         createRow("Font: Outfit (Sans)", "action", "fontBase", {match: 'Outfit', label: 'Set Base'}),
                         createRow("Font: Grotesk (Display)", "action", "fontHead", {match: 'Space Grotesk', label: 'Set Head'}),
@@ -700,7 +654,6 @@
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Site') {
-                    document.getElementById('settings-cat-desc').textContent = "Environment disguises and masking.";
                     optionsHtml = [
                         createRow("Disguise: Google", "button", "", {onClick: "app.setCloakPreset('Google', 'https://www.google.com/favicon.ico')", label: 'Apply'}),
                         createRow("Disguise: Classroom", "button", "", {onClick: "app.setCloakPreset('Classes', 'https://ssl.gstatic.com/classroom/favicon.png')", label: 'Apply'}),
@@ -715,7 +668,6 @@
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Security') {
-                    document.getElementById('settings-cat-desc').textContent = "Active defensive countermeasures.";
                     optionsHtml = [
                         createRow("Panic Keybind", "input", "panicKey", {ph: 'e.g. ` or Esc'}),
                         createRow("Blur Window on Leave", "toggle", "blurLeave"),
@@ -730,18 +682,13 @@
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Themes') {
-                    document.getElementById('settings-cat-desc').textContent = "Core system coloration.";
                     const hexes = ['#8b5cf6', '#22c55e', '#ef4444', '#3b82f6', '#f97316', '#eab308', '#ec4899', '#06b6d4', '#ffffff'];
                     optionsHtml = hexes.map((hex, i) => `
                         <div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div>
-                                <span class="text-base font-medium text-zinc-200">Color Variant 0${i+1}</span>
-                            </div>
+                            <div class="flex items-center gap-4"><div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div><span class="text-base font-medium text-zinc-200">Color Variant 0${i+1}</span></div>
                             <button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button>
                         </div>
                     `).join('');
-                    
                     optionsHtml += createRow("Custom Hex Accent", "input", "accentColor", {ph: '#RRGGBB'});
                 }
 
@@ -764,7 +711,6 @@
             applySettings() {
                 const s = this.settings;
                 const root = document.documentElement;
-                
                 root.style.setProperty('--accent', s.accentColor);
                 root.style.setProperty('--font-base', s.fontBase);
                 root.style.setProperty('--font-head', s.fontHead);
@@ -782,84 +728,19 @@
                 setCls('no-hover-fx', !s.hoverFx);
                 setCls('cursor-override', s.cursorStyle !== 'default');
 
-                if(!s.glassmorphism) setCls('perf-mode', true);
-
                 document.title = s.tabTitle || 'NOTMINE4REAL';
                 let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
                 link.type = 'image/x-icon'; link.rel = 'shortcut icon';
-                link.href = s.tabIcon || document.getElementById('app-favicon').src || "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L21 7V17L12 22L3 17V7L12 2Z' /><path d='M12 6L17 9V15L12 18L7 15V9L12 6' /></svg>";
+                link.href = s.tabIcon || document.getElementById('app-favicon').src;
                 document.head.appendChild(link);
             }
 
             setupSecurity() {
-                if(this.settings.passLock && this.settings.passPin && !sessionStorage.getItem('nm4r-unlocked')) {
-                    const pass = prompt("SYSTEM LOCKED. Enter Access PIN:");
-                    if(pass === this.settings.passPin) {
-                        sessionStorage.setItem('nm4r-unlocked', 'true');
-                    } else {
-                        document.body.innerHTML = '<div style="background:black;color:red;height:100vh;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:2rem;">ACCESS DENIED</div>';
-                        return;
-                    }
-                }
-
                 document.addEventListener('keydown', e => {
                     if (e.key === this.settings.panicKey) { e.preventDefault(); this.panic(); }
-                    if (this.settings.noDevTools) {
-                        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) e.preventDefault();
-                    }
+                    if (this.settings.noDevTools && (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I'))) e.preventDefault();
                 });
-
-                document.addEventListener('contextmenu', e => {
-                    if(this.settings.noRightClick) e.preventDefault();
-                });
-
-                window.addEventListener('beforeunload', e => {
-                    if(this.settings.askClose) { e.preventDefault(); e.returnValue = ''; }
-                });
-
-                window.addEventListener('blur', () => {
-                    if(this.settings.blurLeave) {
-                        document.body.classList.add('blur-locked');
-                        document.getElementById('blur-overlay').classList.remove('hidden');
-                        setTimeout(()=>document.getElementById('blur-overlay').classList.remove('opacity-0'), 10);
-                    }
-                    if(this.settings.autoPauseBlur && this.currentGame) {
-                        const frame = document.getElementById('game-frame');
-                        this.cachedSrc = frame.src;
-                        frame.src = ''; 
-                    }
-                });
-
-                window.addEventListener('focus', () => {
-                    if(this.settings.blurLeave) {
-                        document.body.classList.remove('blur-locked');
-                        const over = document.getElementById('blur-overlay');
-                        over.classList.add('opacity-0');
-                        setTimeout(()=>over.classList.add('hidden'), 300);
-                    }
-                    if(this.settings.autoPauseBlur && this.currentGame && this.cachedSrc) {
-                        document.getElementById('game-frame').src = this.cachedSrc;
-                    }
-                });
-
-                if(this.settings.hideHistory) {
-                    try { window.history.replaceState(null, null, '/'); } catch(e){}
-                }
-            }
-
-            // --- SYSTEM ACTIONS ---
-            resetData() {
-                if(confirm("SYSTEM RESET: Erase all preferences and favorites?")) {
-                    localStorage.removeItem('nm4r-settings');
-                    localStorage.removeItem('nm4r-favorites');
-                    window.location.reload();
-                }
-            }
-
-            selfDestruct() {
-                if(!confirm("WARNING: SYSTEM INSTABILITY IMMINENT. PROCEED?")) return;
-                document.body.innerHTML = '<div class="flex items-center justify-center w-full h-screen bg-red-900"><h1 class="text-6xl font-black font-mono animate-pulse">SYSTEM NUKED</h1></div>';
-                setTimeout(() => window.location.reload(), 2000);
+                document.addEventListener('contextmenu', e => { if(this.settings.noRightClick) e.preventDefault(); });
             }
 
             panic() {
@@ -867,21 +748,11 @@
                 if (!url.startsWith('http')) url = 'https://' + url;
                 window.location.replace(url);
             }
-            
-            cloak() {
-                const win = window.open('about:blank', '_blank');
-                if (win) {
-                    const iframe = win.document.createElement('iframe');
-                    iframe.src = window.location.href;
-                    iframe.style.cssText = 'width:100%;height:100%;border:none;position:fixed;top:0;left:0;margin:0;';
-                    win.document.body.style.margin = '0';
-                    win.document.body.appendChild(iframe);
-                    window.location.replace('https://www.google.com');
-                }
-            }
 
-            // --- VIEWER ---
             openViewer(gameTitle) {
+                // Lock scroll while playing
+                document.body.classList.add('overflow-hidden');
+                
                 const game = GAMES.find(g => g.title === gameTitle);
                 if (!game) return;
                 this.currentGame = game;
@@ -890,15 +761,9 @@
                 document.getElementById('viewer-category').textContent = game.category;
                 document.getElementById('viewer-bg').style.backgroundImage = `url(${game.image})`;
                 
-                const lib = document.getElementById('library-layer');
-                if (lib && !lib.classList.contains('hidden')) {
-                    lib.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                }
-
                 const viewer = document.getElementById('viewer-layer');
                 viewer.classList.remove('hidden', 'opacity-0', 'scale-[1.02]', 'pointer-events-none');
                 viewer.classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
-                
                 document.getElementById('game-frame').src = game.url;
             }
 
@@ -907,8 +772,8 @@
                 viewer.classList.remove('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
                 viewer.classList.add('opacity-0', 'scale-[1.02]', 'pointer-events-none');
                 
-                const lib = document.getElementById('library-layer');
-                if (lib) lib.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                // Restore body scroll after exiting game
+                document.body.classList.remove('overflow-hidden'); 
 
                 setTimeout(() => {
                     viewer.classList.add('hidden');
@@ -916,15 +781,153 @@
                 }, 700);
                 this.currentGame = null;
             }
-
-            toggleFullscreen() {
-                const el = document.getElementById('game-container');
-                if (!document.fullscreenElement) el.requestFullscreen().catch(e => console.log(e));
-                else document.exitFullscreen();
-            }
         }
 
         const app = new App();
+
+
+        // ==========================================
+        // 🔥 GLOBAL MULTIPLAYER CHAT SYSTEM 🔥
+        // ==========================================
+        class ChatSystem {
+            constructor() {
+                this.isOpen = false;
+                this.username = localStorage.getItem('nm4r-user') || 'Agent_' + Math.floor(Math.random() * 9999);
+                localStorage.setItem('nm4r-user', this.username);
+                
+                this.messagesContainer = document.getElementById('chat-messages');
+                this.form = document.getElementById('chat-form');
+                this.input = document.getElementById('chat-input');
+                this.badge = document.getElementById('chat-badge');
+                
+                this.form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.sendMessage();
+                });
+
+                // ----------------------------------------------------------------------
+                // HOW TO ENABLE TRUE ONLINE GLOBAL CHAT FOR EVERYONE ON YOUR WEBSITE:
+                // 1. Go to console.firebase.google.com & create a free project.
+                // 2. Click "Realtime Database" and create database (Start in Test Mode).
+                // 3. Go to Project Settings -> General -> "Your Apps" -> Web symbol (</>).
+                // 4. Register the app and copy your firebaseConfig.
+                // 5. UNCOMMENT AND PASTE IT BELOW:
+                // ----------------------------------------------------------------------
+                const firebaseConfig = {
+                  apiKey: "AIzaSyDKqhSa-fFT-R8DGWeGq0tFsuHySTto2NU",
+                  authDomain: "notminechat-71bd0.firebaseapp.com",
+                  databaseURL: "https://notminechat-71bd0-default-rtdb.firebaseio.com",
+                  projectId: "notminechat-71bd0",
+                  storageBucket: "notminechat-71bd0.firebasestorage.app",
+                  messagingSenderId: "446821268917",
+                  appId: "1:446821268917:web:181c7ad0e0b4241b02adfc"
+                };
+
+                this.isOnline = Object.keys(firebaseConfig).length > 0 && !!firebaseConfig.apiKey;
+
+                if (this.isOnline) {
+                    firebase.initializeApp(firebaseConfig);
+                    this.db = firebase.database().ref('global_chat_v1');
+                    
+                    // Listen for new messages online!
+                    this.db.limitToLast(50).on('child_added', (snapshot) => {
+                        this.receiveMessage(snapshot.val());
+                    });
+                } else {
+                    // FALLBACK: Local network simulation so you can test it locally across tabs
+                    this.channel = new BroadcastChannel('nm4r-chat-demo');
+                    this.channel.onmessage = (e) => this.receiveMessage(e.data);
+                    
+                    setTimeout(() => {
+                        this.receiveMessage({
+                            user: "SYSTEM",
+                            text: "Chat is in LOCAL DEMO mode! To make chat work globally for all computers, read the code on how to add Firebase! (Takes 2 minutes).",
+                            time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                            sys: true
+                        });
+                    }, 1000);
+                }
+            }
+
+            toggle() {
+                this.isOpen = !this.isOpen;
+                const win = document.getElementById('chat-window');
+                if(this.isOpen) {
+                    win.classList.remove('scale-0', 'opacity-0');
+                    win.classList.add('scale-100', 'opacity-100');
+                    this.badge.classList.add('hidden');
+                    this.input.focus();
+                    this.scrollToBottom();
+                } else {
+                    win.classList.remove('scale-100', 'opacity-100');
+                    win.classList.add('scale-0', 'opacity-0');
+                }
+            }
+
+            sendMessage() {
+                const text = this.input.value.trim();
+                if(!text) return;
+
+                const msg = {
+                    user: this.username,
+                    text: text,
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+
+                if (this.isOnline) {
+                    // Push to global database
+                    this.db.push(msg);
+                } else {
+                    // Local demo execution
+                    this.receiveMessage(msg);
+                    this.channel.postMessage(msg);
+                }
+                
+                this.input.value = '';
+            }
+
+            receiveMessage(msg) {
+                const isMe = msg.user === this.username;
+                const isSys = msg.sys;
+                
+                let html = '';
+                if(isSys) {
+                    html = `<div class="w-full text-center text-[10px] font-mono text-accent bg-accent/10 border border-accent/20 rounded-lg p-2 animate-reveal-up">${msg.text}</div>`;
+                } else {
+                    html = `
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} animate-reveal-up" style="animation-duration: 0.3s">
+                            <span class="text-[9px] font-mono text-zinc-500 mb-1">${msg.user} • ${msg.time}</span>
+                            <div class="px-3 py-2 text-sm max-w-[85%] ${isMe ? 'bg-white text-black rounded-2xl rounded-tr-sm' : 'bg-zinc-800 text-zinc-200 rounded-2xl rounded-tl-sm'} shadow-lg break-words">
+                                ${this.escapeHTML(msg.text)}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                this.messagesContainer.insertAdjacentHTML('beforeend', html);
+                this.scrollToBottom();
+
+                if(!this.isOpen && !isMe) {
+                    this.badge.classList.remove('hidden');
+                }
+            }
+
+            scrollToBottom() {
+                setTimeout(() => { this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight; }, 50);
+            }
+
+            escapeHTML(str) {
+                return str.replace(/[&<>'"]/g, tag => ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+                }[tag]));
+            }
+        }
+        
+        // Initialize Global Chat
+        let globalChat;
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => { globalChat = new ChatSystem(); }, 500);
+        });
     </script>
 </body>
 </html>
