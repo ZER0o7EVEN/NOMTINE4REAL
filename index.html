@@ -42,6 +42,7 @@
               'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
               'slide-up-out': 'slideUpOut 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards',
               'ambient-shift': 'ambientShift 15s ease infinite alternate',
+              'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
             },
             keyframes: {
               revealUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
@@ -56,41 +57,20 @@
       }
     </script>
     <style>
-      :root {
-          --accent: #8b5cf6;
-          --font-base: 'Outfit';
-          --font-head: 'Space Grotesk';
-          --text-size: 16px;
-          --tracking: normal;
-          --radius: 1rem;
-          --grid-gap: 1.5rem;
-      }
-      
-      body { 
-          background-color: #000000; 
-          color: #f4f4f5; 
-          overflow-x: hidden; 
-          transition: background-color 0.5s ease; 
-          font-size: var(--text-size);
-          letter-spacing: var(--tracking);
-      }
-      
+      :root { --accent: #8b5cf6; --font-base: 'Outfit'; --font-head: 'Space Grotesk'; --text-size: 16px; --tracking: normal; --radius: 1rem; --grid-gap: 1.5rem; }
+      body { background-color: #000000; color: #f4f4f5; overflow-x: hidden; transition: background-color 0.5s ease; font-size: var(--text-size); letter-spacing: var(--tracking); }
       ::-webkit-scrollbar { width: 6px; height: 6px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
       ::-webkit-scrollbar-thumb:hover { background: #52525b; }
-      
       .glass-panel { background: rgba(5, 5, 5, 0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); }
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-
       .text-accent { color: var(--accent) !important; }
       .bg-accent { background-color: var(--accent) !important; }
       .border-accent { border-color: var(--accent) !important; }
       .group:hover .group-hover\:text-accent { color: var(--accent) !important; }
-      
       .rounded-dynamic { border-radius: var(--radius) !important; }
-
       body.perf-mode .glass-panel, body.perf-mode .backdrop-blur-xl { backdrop-filter: none !important; background-color: #0a0a0a !important; }
       body.oled-mode { background-color: #000000 !important; }
       body.hide-scroll ::-webkit-scrollbar { display: none !important; }
@@ -107,7 +87,7 @@
     <div id="blur-overlay" class="fixed inset-0 z-[9999] bg-black/80 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-300">
         <i data-lucide="lock" class="w-16 h-16 text-zinc-500 mb-6"></i>
         <h1 class="text-4xl font-display font-bold tracking-widest text-white mb-2">LOCKED</h1>
-        <p class="font-mono text-zinc-500 text-sm">Click anywhere or focus window to unlock.</p>
+        <p class="font-mono text-zinc-500 text-sm">Click anywhere to unlock.</p>
     </div>
 
     <!-- Intro Launcher -->
@@ -119,8 +99,7 @@
                     <i data-lucide="power" class="w-6 h-6"></i><span>INITIALIZE</span>
                 </button>
              </div>
-             <p class="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-6 font-semibold">Secure Environment Required</p>
-             <button onclick="app.runIntro()" class="text-zinc-600 hover:text-white text-[10px] uppercase tracking-wider underline decoration-zinc-800 transition-all duration-300">Run in current window (Debug)</button>
+             <button onclick="app.runIntro()" class="text-zinc-600 hover:text-white text-[10px] uppercase tracking-wider underline decoration-zinc-800 transition-all duration-300">Run in current window</button>
         </div>
     </div>
 
@@ -131,7 +110,6 @@
                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-12 h-12 text-white"><path d="M12 2L21 7V17L12 22L3 17V7L12 2Z" /><path d="M12 6L17 9V15L12 18L7 15V9L12 6" /></svg>
             </div>
             <h1 class="font-display text-5xl md:text-8xl font-black tracking-tighter text-white animate-reveal-up leading-none">NOTMINE<span class="text-zinc-600">4REAL</span></h1>
-            <p class="font-mono text-zinc-500 text-xs md:text-sm font-bold tracking-[0.4em] mt-8 uppercase animate-reveal-up opacity-0" style="animation-delay: 0.3s">Dark. Stealth. Unblocked.</p>
         </div>
     </div>
 
@@ -154,12 +132,11 @@
                 <div class="flex-1 max-w-3xl relative group mx-auto w-full">
                     <div class="relative flex items-center w-full bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 rounded-full shadow-2xl transition-all duration-300 group-focus-within:bg-[#0a0a0a] group-focus-within:border-zinc-700">
                         <div class="pl-6 pointer-events-none"><i data-lucide="search" class="w-5 h-5 text-zinc-500"></i></div>
-                        <input type="text" id="search-input" placeholder="Search database..." class="w-full bg-transparent border-none py-4 px-4 text-white placeholder-zinc-600 focus:outline-none" autocomplete="off">
+                        <input type="text" id="search-input" placeholder="Search for a game..." class="w-full bg-transparent border-none py-4 px-4 text-white placeholder-zinc-600 focus:outline-none" autocomplete="off">
                     </div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0 bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 p-1.5 rounded-full shadow-xl">
                     <button onclick="app.playRandom()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all"><i data-lucide="shuffle" class="w-5 h-5"></i></button>
-                    <!-- Global Chat Button in Nav -->
                     <button onclick="app.openChat()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all relative group">
                         <i data-lucide="message-square" class="w-5 h-5"></i>
                         <span id="nav-chat-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-accent rounded-full hidden border border-[#0a0a0a]"></span>
@@ -176,63 +153,139 @@
         </main>
     </div>
 
-    <!-- FULL PAGE GLOBAL CHAT LAYER -->
+    <!-- FULL PAGE CHAT LAYER -->
     <div id="chat-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
         
-        <!-- Chat Header -->
-        <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0">
-            <div class="flex items-center gap-6">
-                <button onclick="app.closeChat()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors">
-                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Return
-                </button>
-                <div class="h-8 w-[1px] bg-zinc-800"></div>
-                <h2 class="font-display font-black text-3xl tracking-tight text-white flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span> Chat Room
-                </h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="text-xs font-mono text-zinc-500 uppercase tracking-widest hidden md:block" id="current-username-display">Not Logged In</span>
+        <!-- Header -->
+        <div class="relative z-20 flex items-center justify-between px-6 h-16 glass-panel border-b border-white/5 shrink-0">
+            <button onclick="app.closeChat()" class="flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-white hover:text-black text-zinc-300 rounded-full font-bold transition-colors">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
+            </button>
+            <h2 class="font-display font-black text-xl text-white tracking-wide">Chat Room</h2>
+            <div class="w-20"></div> <!-- Spacer for center alignment -->
+        </div>
+
+        <!-- Username Setup Modal -->
+        <div id="chat-setup-modal" class="absolute inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center transition-opacity duration-500">
+            <div class="bg-zinc-900 border border-zinc-700 p-8 rounded-3xl shadow-2xl max-w-sm w-full text-center">
+                <h3 class="font-display text-3xl font-black text-white mb-2">Welcome</h3>
+                <p class="text-zinc-400 font-sans text-sm mb-6">Choose a username to enter the chat.</p>
+                <form onsubmit="globalChat.saveUsername(event)" class="flex flex-col gap-4">
+                    <input type="text" id="username-setup-input" required maxlength="20" placeholder="Your Username" autocomplete="off" class="w-full bg-black border border-zinc-700 rounded-xl px-4 py-3 text-white text-center focus:outline-none focus:border-accent transition-colors">
+                    <button type="submit" class="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors">Join Chat</button>
+                </form>
             </div>
         </div>
 
-        <!-- Chat Content Area -->
-        <div class="flex-1 relative flex items-center justify-center p-4 md:p-10 overflow-hidden bg-black">
-            
-            <!-- Ambient Chat Background -->
-            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-800 via-black to-black"></div>
+        <!-- Add Friend/Group Modal -->
+        <div id="add-modal" class="absolute inset-0 z-[60] bg-black/80 backdrop-blur-sm hidden items-center justify-center opacity-0 transition-opacity duration-300">
+            <div class="bg-zinc-900 border border-zinc-700 p-6 rounded-2xl w-full max-w-md shadow-2xl relative">
+                <button onclick="globalChat.closeAddModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <h3 id="add-modal-title" class="text-xl font-bold text-white mb-4">Add Friend</h3>
+                <input type="text" id="add-modal-input" placeholder="Enter Username..." class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white mb-4 focus:outline-none focus:border-accent">
+                <p id="add-modal-error" class="text-red-500 text-sm hidden mb-4"></p>
+                <button onclick="globalChat.confirmAdd()" class="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-accent/80 transition-colors">Confirm</button>
+            </div>
+        </div>
 
-            <!-- 1. USERNAME SETUP MODAL (Only shows if no username) -->
-            <div id="chat-setup-modal" class="absolute inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center transition-opacity duration-500">
-                <div class="bg-zinc-900 border border-zinc-700 p-10 rounded-3xl shadow-[0_0_60px_rgba(0,0,0,0.8)] max-w-lg w-full text-center transform transition-transform scale-100">
-                    <div class="mx-auto w-16 h-16 bg-white rounded-full flex items-center justify-center mb-6">
-                        <i data-lucide="user" class="w-8 h-8 text-black"></i>
+        <!-- Incoming Call Overlay -->
+        <div id="incoming-call-modal" class="absolute inset-0 z-[70] bg-black/90 backdrop-blur-md hidden items-center justify-center opacity-0 transition-opacity duration-300">
+            <div class="text-center">
+                <div class="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-fast border-4 border-accent">
+                    <i data-lucide="phone" class="w-10 h-10 text-white animate-bounce"></i>
+                </div>
+                <h3 class="text-3xl font-display font-black text-white mb-2">Incoming Call</h3>
+                <p id="incoming-caller-name" class="text-zinc-400 text-lg mb-8">User is calling you...</p>
+                <div class="flex items-center justify-center gap-6">
+                    <button onclick="globalChat.declineCall()" class="w-16 h-16 bg-red-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_20px_rgba(239,68,68,0.5)]"><i data-lucide="phone-off" class="w-6 h-6"></i></button>
+                    <button onclick="globalChat.acceptCall()" class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_20px_rgba(34,197,94,0.5)]"><i data-lucide="phone" class="w-6 h-6"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Call Bar -->
+        <div id="active-call-bar" class="absolute top-16 left-0 right-0 z-30 bg-green-600/90 backdrop-blur-sm hidden items-center justify-between px-6 py-2 border-b border-green-500 shadow-lg">
+            <div class="flex items-center gap-3">
+                <i data-lucide="phone-call" class="w-5 h-5 text-white animate-pulse"></i>
+                <span class="text-white font-bold text-sm">Call Active <span id="active-call-name" class="opacity-80 ml-1"></span></span>
+            </div>
+            <button onclick="globalChat.endCall()" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full transition-colors">Hang Up</button>
+        </div>
+
+        <audio id="remote-audio" autoplay hidden></audio>
+
+        <!-- Main Discord-like UI Layout -->
+        <div class="flex-1 flex overflow-hidden relative z-10 bg-black">
+            
+            <!-- Sidebar -->
+            <div class="w-64 border-r border-white/5 bg-[#080808] flex flex-col shrink-0">
+                <div class="p-4 border-b border-white/5">
+                    <div class="flex items-center gap-3 bg-zinc-900 px-3 py-2 rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold text-sm" id="sidebar-user-initial">?</div>
+                        <span class="font-bold text-white text-sm truncate" id="sidebar-username">Not Logged In</span>
                     </div>
-                    <h3 class="font-display text-4xl font-black text-white mb-2 tracking-tight">Welcome</h3>
-                    <p class="text-zinc-400 font-sans text-lg mb-8">Pick a username to join the chat.</p>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-3 space-y-6 scrollbar-hide">
                     
-                    <form onsubmit="globalChat.saveUsername(event)" class="flex flex-col gap-4 relative">
-                        <input type="text" id="username-setup-input" required maxlength="20" placeholder="Enter Username..." autocomplete="off" class="w-full bg-black border border-zinc-700 rounded-xl px-6 py-4 text-white text-center focus:outline-none focus:border-accent font-display text-xl tracking-wider transition-colors shadow-inner">
-                        <button type="submit" class="w-full py-4 bg-white text-black font-extrabold tracking-widest uppercase rounded-xl hover:bg-zinc-200 hover:scale-[1.02] transition-all duration-300">
-                            JOIN CHAT
+                    <!-- Global Room -->
+                    <div>
+                        <button onclick="globalChat.switchChannel('global', 'Global Chat')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn active-channel" data-id="global">
+                            <i data-lucide="globe" class="w-5 h-5 text-zinc-400 group-hover:text-white"></i>
+                            <span class="font-bold text-zinc-300 group-hover:text-white">Global Room</span>
                         </button>
-                    </form>
+                    </div>
+
+                    <!-- Friends / DMs -->
+                    <div>
+                        <div class="flex items-center justify-between px-2 mb-2">
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Direct Messages</span>
+                            <button onclick="globalChat.openAddModal('friend')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                        </div>
+                        <div id="friends-list" class="space-y-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Groups -->
+                    <div>
+                        <div class="flex items-center justify-between px-2 mb-2">
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Groups</span>
+                            <button onclick="globalChat.openAddModal('group')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                        </div>
+                        <div id="groups-list" class="space-y-1">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <!-- 2. MAIN CHAT INTERFACE -->
-            <div class="w-full h-full max-w-6xl flex flex-col bg-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl relative z-10">
-                
-                <!-- Messages List -->
-                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col gap-6 scrollbar-hide">
+            <!-- Chat Area -->
+            <div class="flex-1 flex flex-col bg-[#0a0a0a] relative">
+                <!-- Chat Area Header -->
+                <div class="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#080808]">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="hash" class="w-4 h-4 text-zinc-500"></i>
+                        <span class="font-bold text-white" id="current-room-name">Global Chat</span>
+                    </div>
+                    <!-- Call Button (Only visible in DMs) -->
+                    <button id="start-call-btn" onclick="globalChat.initiateCall()" class="hidden px-3 py-1.5 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
+                        <i data-lucide="phone" class="w-4 h-4"></i> Call
+                    </button>
+                </div>
+
+                <!-- Messages -->
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide">
                     <!-- Messages will be injected here -->
                 </div>
 
-                <!-- Input Area -->
-                <div class="p-5 bg-zinc-950/80 border-t border-white/5 backdrop-blur-md">
+                <!-- Input -->
+                <div class="p-4 bg-[#080808] border-t border-white/5">
                     <form id="chat-form" class="flex items-center gap-3">
-                        <input type="text" id="chat-input" class="flex-1 bg-black border border-zinc-800 rounded-2xl px-6 py-4 text-lg text-white focus:outline-none focus:border-zinc-500 transition-colors font-sans disabled:opacity-50" placeholder="Type a message..." autocomplete="off" disabled>
-                        <button type="submit" id="chat-submit-btn" class="p-4 bg-white text-black rounded-2xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed group" disabled>
-                            <i data-lucide="send" class="w-7 h-7 transform group-hover:translate-x-1 transition-transform"></i>
+                        <input type="text" id="chat-input" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 transition-colors disabled:opacity-50" placeholder="Type a message..." autocomplete="off" disabled>
+                        <button type="submit" id="chat-submit-btn" class="p-3 bg-white text-black rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            <i data-lucide="send" class="w-5 h-5"></i>
                         </button>
                     </form>
                 </div>
@@ -246,13 +299,10 @@
         <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0">
             <div class="flex items-center gap-6">
                 <button onclick="app.closeSettings()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors">
-                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Back to Hub
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Back
                 </button>
                 <div class="h-8 w-[1px] bg-zinc-800"></div>
-                <h2 class="font-display font-black text-3xl tracking-tight text-white">System Control</h2>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="text-xs font-mono text-zinc-500 uppercase tracking-widest hidden md:block">Settings Module Active</span>
+                <h2 class="font-display font-black text-3xl tracking-tight text-white">Settings</h2>
             </div>
         </div>
         <div class="flex flex-1 overflow-hidden relative z-10">
@@ -261,7 +311,6 @@
                 <div class="max-w-4xl mx-auto">
                     <div class="mb-10">
                         <h3 id="settings-cat-title" class="text-5xl font-display font-black text-white tracking-tighter mb-2">Category</h3>
-                        <p id="settings-cat-desc" class="text-zinc-500 font-mono text-sm uppercase tracking-widest">Configuration Options</p>
                     </div>
                     <div id="settings-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20"></div>
                 </div>
@@ -287,7 +336,6 @@
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="app.panic()" class="flex items-center gap-2 px-4 py-1.5 bg-zinc-900 hover:bg-white hover:text-black text-zinc-400 text-xs font-bold tracking-widest uppercase rounded-lg transition-colors border border-zinc-800"><i data-lucide="alert-triangle" class="w-3 h-3"></i> PANIC</button>
-                <div class="h-6 w-[1px] bg-zinc-800 mx-2 hidden md:block"></div>
                 <button onclick="app.toggleFullscreen()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-lg transition-all"><i data-lucide="maximize" class="w-5 h-5"></i></button>
             </div>
         </div>
@@ -302,174 +350,23 @@
     <script>
         // --- DATA ---
         var _GAMES = [
-    ["Five nights at Epstein's", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d7b5efdff8c12e973faa40020d911b3e.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/710.png", "Horror"],
-    ["Midnight shift", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f7629dd04a219c53bdf6d0f2421fcfd7.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/658.png", "Horror"],
-    ["Iron Lung", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_e09fd370d40766ca1ffcc5bdb591d229.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/705.png", "Horror"],
-    ["School boy runaway", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_32c0c8b002c4cb975a08f1c4e11993e2.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/605.png", "Action"],
-    ["Five Nights at Freddy's: Pizza Simulator", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_8fd1120b36baff86409a8a249b866bfa.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/191.png", "Horror"],
-    ["Five Nights at Freddy's: Sister Location", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_26177655aa637622cc3a3ec16f51fcc9.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/185.png", "Horror"],
-    ["Kindergarten 1", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ef521b915ffa7ef66db86684a0954a82.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/445.png", "Simulation"],
-    ["Kindergarten 2", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b93d3da6d567f909db1b2fbaf9505b76.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/446.png", "Simulation"],
-    ["A Bite At Freddys", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_25f8965e3ec75d1611476c2e6da16894.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/258.png", "Horror"],
-    ["Bust A Loop", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_483b7fa2dec065e53a3eda72e726f0da.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/521.png", "Action"],
-    ["That's not my neighbor","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0c81042a959729a95e7b7cdd63cf02d7.html","https://th.bing.com/th/id/OIP.jOp-nxrRJWRMuBW4kRT7fAHaEq?w=265&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Fears to fathom","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_572aa2e68dc88d7bf012e5521b5f5970.html","https://th.bing.com/th/id/OIP.pZgZfCleZe6OEQmMKUwwrAHaEK?w=300&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Slender man","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4fbdf675c831f01618fc1a1f06c170a1.html","https://tse3.mm.bing.net/th/id/OIP.9fzFna581lwkQp6blp2WdQHaEK?cb=ucfimg2&ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3","Horror"],
-    ["The man from the window","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_081f9eeba29467a9d0aa637fd45896f1.html","https://th.bing.com/th/id/OIP.jckpYALg87HRSm_QrMh2GAHaEj?w=278&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["FNAF 1","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_88f80b2f48655ffe2d93c945dd97c8dc.html","https://th.bing.com/th/id/OIP.tzsQpIaytSceo6d7z-pNBAHaEK?w=326&h=183&c=7&r=0&o=5&pid=1.7","Horror"],
-    ["FNAF 2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_1c2a06ce7c3dd0d7571a7c8cdf2159bd.html","https://th.bing.com/th/id/OIP.lLRwPUQifXTTaAywBgNtUQHaEK?w=333&h=187&c=7&r=0&o=5&pid=1.7","Horror"],
-    ["R.E.P.O","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_3a7f6ee497a541f01b89e7d2ce341a7e.html","https://th.bing.com/th/id/OIP.ugZPQ-DkSgUQI5kViqcd5wHaD4?w=339&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Blood Money","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_23f23eb9e52bf1ceb07c788ac6c9e743.html","https://th.bing.com/th/id/OIP.rIex615SPcYgq4Z9BsCoLQHaEI?w=309&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Burger and frights","https://sgs-game-cdn.pages.dev/Projects/Burger%20&%20Frights/main","https://th.bing.com/th/id/OIP.nBGqj9oDhIuU6Ep-yx-mygHaEK?w=330&h=186&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Dead seat","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_e7c6eaa67db7e4fa7ab917de201bfcb6.html","https://th.bing.com/th/id/OIP.rViMeGlE1Z3PVscpk1nqXQHaEK?w=328&h=184&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Baldi's Basics","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b49415c7838d5272bed3689dc5bf5f3a.html","https://th.bing.com/th/id/OIP.v_jCMioFl5pXyG7IwRLZ9gHaEK?w=308&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Andy’s apple farm","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_55cf857ecf0f24c03931818ca5d2c64f.html","https://th.bing.com/th/id/OIP.ZufwLkcuYkIFhIi5w5TvIgHaEK?w=329&h=185&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Backrooms","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b0fb0d44b318cce53bb222223053649f.html","https://th.bing.com/th/id/OIP.W2BS8zgixNkZP2D0NaJ_dgHaEK?w=270&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Granny","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_dbdbefeff7b047946f8f53bd2fbe3eb9.html","https://th.bing.com/th/id/OIP.oAFZRgN_U5XtohDKMatA8gHaEK?w=314&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Granny 2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c3f8a587f8831eefa2cca620e772a2e0.html","https://th.bing.com/th/id/OIP.ytNGKBEfwERxJGQrKjaAlgHaDn?w=350&h=170&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Granny 3","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_416af790ca7dea29c087069dcaa5bc7f.html","https://th.bing.com/th/id/OIP.rK4-OAg2PJa8AGm0JyGasgHaEP?w=309&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Drift hunters","https://sgs-game-cdn.pages.dev/Projects/Drift%20Hunters/main","https://th.bing.com/th/id/OIP.R5-k2knM3MzQGSbXhLbLKAHaEJ?w=304&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Crazy Cars","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_50dc552a289d3aa0e4273604c7c1ddd9.html","https://th.bing.com/th/id/OIP.dHeZ_7-NxHgpBEnSMXYXmQHaDn?w=290&h=170&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Bergen Truck","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ce3a36b65478665b459587784cd150e6.html","https://th.bing.com/th/id/OIP.iscqdkwq2sDPYA_WAPtZ3QAAAA?w=183&h=142&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Poly Track","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c60e40b61e7b68d01e3d0ab6e925de8b.html","https://th.bing.com/th/id/OIP.fsNUkXF_VFj7ff3ycpuEFAHaD0?w=318&h=179&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Escape Road","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_09a778fbb9300fcac375c605e1a95c41.html","https://th.bing.com/th/id/OIP.RxsM_DHsCi81kZ2-iiKULgHaEo?w=240&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Highway Racer","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c48f27399cfdf99416982c7763cdb81d.html","https://th.bing.com/th/id/OIP.66gDdLHcbTNZuOXruSm9JgHaD4?w=302&h=180&c=7&r=0&o=5&pid=1.7","Racing"],
-    ["Blade Ball","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_bbde690928dfba35150bd1a7cf17c993.html","https://th.bing.com/th/id/OIP.w9Bq0azXbFtMkqLSje-z5QAAAA?w=234&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["Minecraft 1.12","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_2dd5de6cb688fee72be5cbab95e095a0.html","https://th.bing.com/th/id/OIP.YfwEzGWk99WxLiQZXMTw1AHaEK?w=321&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sandbox"],
-    ["Kirby 64","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_7baa9a02278914f648130cfbbf738e04.html","https://th.bing.com/th/id/OIP.3s6roTvNcUOFYVizk6gX9wHaDt?w=308&h=175&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Retro"],
-    ["Super Mario 64","https://sgs-game-cdn.pages.dev/Projects/Super%20Mario%2064/main","https://th.bing.com/th/id/OIP.NJpccXzTJ0OHPflJYWgYJAHaEK?w=274&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Retro"],
-    ["Lego Batman","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_1e99189d031d39e45df4ada28cf4ca6d.html","https://th.bing.com/th/id/OIP.Jgg-BZ0tNzUNSTviEJDOXwHaEK?w=312&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Solar Smash","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_a34d7d9529cdd13d72af213c4c67ca48.html","https://th.bing.com/th/id/OIP.2zlAYqtF8G_pV_HJBeDgRwHaDn?w=330&h=170&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Sandbox city","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_55aed20d83be262f0dec95a1c62c63cb.html","https://th.bing.com/th/id/OIP.sqkGZg2xxXsY_3NgmDILNwHaFj?w=239&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sandbox"],
-    ["Super hot line miami","https://cookjessie383-wixsite-com.filesusr.com/html/308cff752c7227c6c8a92467696b38fd64c779.html","https://th.bing.com/th/id/OIP.hbgiYzWlAN-CCadAWj98zwHaFk?w=205&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Build now!","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_6b503f34c6f64a45a6fe9937d15f4fc0.html","https://th.bing.com/th/id/OIP.8VTjo7Z6rKoYtoH4Xzt39AHaHa?w=175&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Super hot","https://sgs-game-cdn.pages.dev/Projects/SuperHot/main","https://th.bing.com/th/id/OIP.5V1RdBCu6Mh0q9a1M_sfKAHaEK?w=321&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Karlson milk man","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_aec4e8345cfb319cf7874a359465987b.html","https://th.bing.com/th/id/OIP.Bks4wxZcflpWtgjr5lLeqAAAAA?w=227&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Ultra kill","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_919f5c53443b660a80d7c9d667fd1255.html","https://th.bing.com/th/id/OIP.F4tDtFN5oUnAhhGA1qlhFwHaEK?w=280&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Knights Arena","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_6bfbd4a603b41e65bf40dc506359f672.html","https://th.bing.com/th/id/OIP.3t5DISFg0gnT39Q16z-jUQHaEH?w=268&h=180&c=7&r=0&o=5&pid=1.7","Action"],
-    ["HalfLife","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_7fbcdf98e9bfce2bbdd9fc4800787797.html","https://th.bing.com/th/id/OIP.MzJhdFRr_r03qLJCj-f7hwHaFj?w=228&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["People playground","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_663dc2aec59746cedf7fdf39a8c7510d.html","https://th.bing.com/th/id/OIP.JOSKBAXMNzPVA7RCegNHKAAAAA?w=323&h=152&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Deltarune","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d3d08fe859c5e016e4a2710b5e930a07.html","https://th.bing.com/th/id/OIP.zDnsBsG5_S87y5RQNLhSawHaEK?w=323&h=181&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","RPG"],
-    ["Squid Playground","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_1833ff0bb4ad28de308adb9e019568d3.html","https://th.bing.com/th/id/OIP.yw76oowFztk6sdIFhvEnlwAAAA?w=198&h=145&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Hollow knight","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_baadd1fca64488e9676b1cb222b162fc.html","https://th.bing.com/th/id/OIP.3uDiFHs1ltniHHMWxZRFngHaDt?w=317&h=174&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Raft","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d324c3d9aa09a662a30049a32f97a833.html","https://th.bing.com/th/id/OIP.YxWHQqIOCMMbGVB0hRDAwgHaEK?w=314&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Survival"],
-    ["Only up","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4fa7e24a1a30d8d8390701c57ece7d60.html","https://th.bing.com/th/id/OIP.fZ1gZeFVMMWhSBosF5ezxAHaF0?w=239&h=187&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["Gravity","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_719dccae1d8a4b0aac36d315a166124b.html","","Arcade"],
-    ["Chrome dino","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_908edc67fbe3f9f03b98e4ec322cbfa1.html","https://th.bing.com/th/id/OIP.AXkOaVfMJMHuPZ0kut5tPQHaEO?w=267&h=180&c=7&r=0&o=5&pid=1.7","Arcade"],
-    ["Getting over it","https://69150697-b785-4bcb-9ae1-0524e0fabe96.filesusr.com/html/308cff_c955f8860628e460512c60e251f69a9f.html","https://th.bing.com/th/id/OIP.4RyWPxhm1sRijTVqN0JPEwHaEK?w=304&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["Friday night Funkin","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_dbd408f94b143f8373ebe76127d6a845.html","https://th.bing.com/th/id/OIP.H9roSlTGlAr5PknXZCsiPgHaEK?w=288&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Rhythm"],
-    ["Friday night funkin VS Shaggy","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_aa9ea8410b0a4b3b4c7c11b44501d375.html","https://th.bing.com/th/id/OIP.c300rEGyaIobRsVVw4tsegHaEK?w=303&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Rhythm"],
-    ["A dance of fire and ice","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0ab3ba6a32e352ad2d4bb87cde54141f.html","https://th.bing.com/th/id/OIP.ttcG_a5H7zU6TygOHA8mVwAAAA?w=194&h=181&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Rhythm"],
-    ["A small world cup","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f3940e0d70b5293bdbdaffd107ec6fde.html","https://th.bing.com/th/id/OIP.DxU6WnzvdlB2u7cJPCvOawHaDn?w=309&h=170&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["Angry birds","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_55dc779bc57b33541bed4205fbfd4f72.html","https://th.bing.com/th/id/OIP.CjCGq44xAwCK1gn77tk3DgHaEo?w=281&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["Bad parenting","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0ed710982a10cd56b474252d5017db7f.html","https://th.bing.com/th/id/OIP.h9HV3cwTCjoUDLUFfauyrQHaEP?w=327&h=187&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Baseball bros","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c4981e24b86c333d69732a8cabaa0458.html","https://th.bing.com/th/id/OIP.sLodm1JS1xq6AfQsb_VBnQHaHa?w=173&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["basket battle","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_7767f2c4954d55b5f267f73d2664d082.html","https://th.bing.com/th/id/OIP.Wt6l_swlb7wV-BkfLjiKaAHaHa?w=168&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["basket random","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_6e5bbfc9e5e861f5bf8fabc8e4714c99.html","https://th.bing.com/th/id/OIP.iF9-8aXNta97pHY7jLfTSwHaEo?w=248&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["basket ball stars","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5a0afb889ab52bc8762338ea8f77ba89.html","https://th.bing.com/th/id/OIP.e_VMFpEVoRmL58JC9jD3-AHaE0?w=248&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["Bitlife","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_fdd3accf5996a8beb9d8b9f2164c708b.html","https://th.bing.com/th/id/OIP.ed0vN6LGwQFtk6xmDmVoHwHaEK?w=321&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Blaze drifters","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_32c7643cdf334f895f1938ca4bd7491e.html","","Racing"],
-    ["Block blast","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0c12aead615e2d2a38a55fc977400a03.html","https://th.bing.com/th/id/OIP.0eJl8ObTdD7YO6c71EbA0AHaES?w=280&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Puzzle"],
-    ["Blocky Demolition Derby","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_33282609c09e64f1724e430bf498fec5.html","https://th.bing.com/th/id/OIP.dLZ9TVyaoqEQVHxCYs2p2wHaD4?w=324&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Blocky Snakes","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4306b08f07af81e007a7077601535229.html","https://th.bing.com/th/id/OIP.Qa3kOMxgKP1xrRY9foEE6gHaHa?w=162&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["Blood tournament","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_cc7742378ad220d5391cde3831b761fa.html","https://th.bing.com/th/id/OIP.22rvrcKCAE0LcjBtAkH9QgHaFl?w=218&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Bounce masters","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_9699bb65c1a49b773d5dfed3fbf4e3d6.html","https://th.bing.com/th/id/OIP.34Bm5hs6xltXgQPtd86iyQHaDk?w=312&h=168&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["boxing random","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d6841a70a29c0330d95bbf5327bf9109.html","https://th.bing.com/th/id/OIP.GNwWCfdw4IcSwckXpY_LvQHaEK?w=266&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["choppy orc","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_8013c5601d2cc272c73df25da1cfc366.html","https://th.bing.com/th/id/OIP.T4UvcdA-eUXN_4WgC9VOKgHaDt?w=288&h=175&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["cluster truck","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5ba3cc4a3754b6501c3008fccc0daf22.html","https://th.bing.com/th/id/OIP.PlGx972nW0YgPaR-MShe2AHaDd?w=350&h=163&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["crazy mototrcycle","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_2332d8760ae403bed4904bc512e48864.html","https://th.bing.com/th/id/OIP.sVOku8N2vgaYoLUraZHVxQHaEK?w=312&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["crazy chicken 3d","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_9bad45c3b00e9ebf5fd27777c7871a92.html","https://th.bing.com/th/id/OIP.kR6doKnU-RN8y79Wtg0X2wHaHa?w=183&h=183&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["cookie clicker","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_6191eb8aa21aac260a6391f342a9de56.html","https://th.bing.com/th/id/OIP.-uAVudpSoNrI7XtaXYG80QHaEb?w=297&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Clicker"],
-    ["Crossy Road","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_094855848ee2a5b8aae9f3ed9fa2dd4a.html","https://th.bing.com/th/id/OIP.sRjDECblzJaAuPhGi_JvPQHaEK?w=285&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["deepest sword","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f096c1116d1c8003e5e3e176bd75df45.html","https://th.bing.com/th/id/OIP.GpTUcRRCJBWQiuvVxoHhYQAAAA?w=226&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["dodge miner","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_746d66beb4e418ff01d10724f3988560.html","https://th.bing.com/th/id/OIP.XVsF69jpOcKYRPNBWLC-9AHaEM?w=287&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["dodge miner 2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_a7b6d94fdd1ef26b09a78491241f7e45.html","https://th.bing.com/th/id/OIP.JIWJNSvihSdSM-dvPVxPdwHaD3?w=276&h=180&c=7&r=0&o=5&pid=1.7","Arcade"],
-    ["drive mad","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_3db30de8a12682cd714f5f25ebc86990.html","https://th.bing.com/th/id/OIP.A59clITX9HQPunpR3Rj9uAHaD4?w=343&h=180&c=7&r=0&o=5&pid=1.7","Racing"],
-    ["duck life space","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c39e72ad05032b2bd9bbb445569fd72a.html","https://th.bing.com/th/id/OIP.qgeXlcsgdz4GPBf2EsjkzQHaEK?w=326&h=183&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["eggy car","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_46b198270f823eb5d711532ce549edd0.html","https://th.bing.com/th/id/OIP.psbedeTnZFEIutksdNLS4gHaFj?w=228&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["fnaf 3","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b63025a4ec74885360a880f17f7a12f7.html","https://th.bing.com/th/id/OIP._CWgr-vY9AA8jLa7jCUgUgHaEK?w=265&h=180&c=7&r=0&o=5&pid=1.7","Horror"],
-    ["fnaf 4","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_773f8fee0a014579017ec6bb39a5297a.html","https://th.bing.com/th/id/OIP.lVEA62d_STze123TEWP4YgHaEK?w=314&h=180&c=7&r=0&o=5&pid=1.7","Horror"],
-    ["fnaf world","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_773f8fee0a014579017ec6bb39a5297a.html","https://th.bing.com/th/id/OIP.VKGjQER57vTXmA4NGPQNzQHaFj?w=169&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","RPG"],
-    ["football bros","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_fe1a67ba6321b7b837d48f367c596aec.html","https://th.bing.com/th/id/OIP.cjdJbzyHy6zRK46FhSZ3ogHaEi?w=273&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["funny shooter 2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ff36e20ff38d36e1b5e385547fefdaad.html","https://th.bing.com/th/id/OIP.abhtDf1vguVat2kxR46nrgHaEH?w=331&h=184&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["fruit ninja","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_823efca9c84f72061575a264c1f0e781.html","https://th.bing.com/th/id/OIP.vP6cJBF-zePfZzsp0fa0SwHaD4?w=324&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["geometry dash lite","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_9b5b85b6e8d4f34bfae93201b7bcb01b.html","https://th.bing.com/th/id/OIP.xzcGSyqVpOziy5nkJWadSwHaEK?w=270&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["getaway shooter","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0ff83caf3863d71b2b8fa735c45bc393.html","https://th.bing.com/th/id/OIP.PPom7Z99XBMeyX9oBa_LRQHaHa?w=176&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["gladi hoppers","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0ef6095ecd7eedb7d3e5db42c71689bc.html","https://th.bing.com/th/id/OIP.ZeajBlEibFZIQdzU-6AJ3wHaF4?w=218&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["gunspin","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b7b5981347397428a09798e9fa691438.html","https://th.bing.com/th/id/OIP.TIT_yoZ55-78She7ptPxLwHaFj?w=226&h=180&c=7&r=0&o=5&pid=1.7","Action"],
-    ["gym stack","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_795292ec79b1082da7676e647047d306.html","https://th.bing.com/th/id/OIP.yD77yafAtNCgUsGWG17XrwHaEK?w=274&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["house of hazards","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_e56284247a100fe1d9f50219e9a9d9c7.html","https://th.bing.com/th/id/OIP.VlPiG2-IR0R3XEPO388fmgHaD4?w=329&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["human expenditure program","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c469d77b38e41e440fc597bdf74dd27a.html","https://th.bing.com/th/id/OIP.1RsStdB7PvTj_kV4uA5AxQHaEK?w=311&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["hover racer drive","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_2b9e49be5764e23c768fcb218f2a944c.html","https://th.bing.com/th/id/OIP.0OPzixROwQfSV8LRQkGN5QHaEW?w=293&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["Ink game","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_325e848a4f104118997dfd7fbe018213.html","https://th.bing.com/th/id/OIP.vRHKJ5heDlfNCoeNcf8feAHaDc?w=345&h=162&c=7&r=0&o=5&pid=1.7","Puzzle"],
-    ["infinite craft","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_cba2574ec494b666376991e5cabad7f5.html","https://th.bing.com/th/id/OIP.d3o7D0eqPNyXQP3QoNvMuwHaEK?w=278&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Puzzle"],
-    ["kour.io","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0a15d30ec87206c4f68aae82410af213.html","https://th.bing.com/th/id/OIP._LGdgsV6AZNrQoAMou__CAAAAA?w=225&h=141&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Nazi zombies","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ed3b5224294996674e47f2275cf58544.html","https://th.bing.com/th/id/OIP.QLQIwvCpWU-mbAwbi6--mQHaEK?w=255&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["One night as Freddy's","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5963d8ea32096a62cd5b2d980d2d0682.html","https://th.bing.com/th/id/OIP.Lao9kYlLk2jvlv2Te0Mn5wHaEK?w=282&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Osu","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c1dd9f4bf1b1df89844415fc91b36eb8.html","https://th.bing.com/th/id/OIP.uS09Dhkx88SDSFfwpaSyPgHaEK?w=224&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Rhythm"],
-    ["parking fury","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_464a0aa713c55cdce05a5927633d666b.html","https://th.bing.com/th/id/OIP.p4cAUggGx7EQ43qrrfXfsgHaEK?w=208&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Puzzle"],
-    ["Portal 2d","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d5ab1ac2fd31a9a274811c3fcfd2b35f.html","https://th.bing.com/th/id/OIP.dhGUTpJdxLxztT4Ofjp6hQHaFk?w=225&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Puzzle"],
-    ["ragdoll archers","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5988d2ef4447d0c02ed69d69bd4fef43.html","https://th.bing.com/th/id/OIP.enBZ7FzvUIcqaLO0pQhgqAHaE8?w=171&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["retro bowl","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_28d5a02fc7a1dc5ec931e6d586ddeca4.html","https://th.bing.com/th/id/OIP.73dFbFUHUVU9rpmvuoW9LAHaEK?w=297&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["retro bowl college","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_42cc059357e2050df7a6175ebb999505.html","https://th.bing.com/th/id/OIP.2n2m0uGJmCgcfSoTHzYsBAHaEK?w=316&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["rooftop snipers","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_72756475c31f965d6437a27c6bd33440.html","https://th.bing.com/th/id/OIP.jZ7SwB1Z4yY8Habr_PhtvwHaEj?w=255&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["rooftop snipers 2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4468b2bc67ac38451402c0aa33bc6ea0.html","https://th.bing.com/th/id/OIP.cHmK8BvVnnTlCzEtMGnGgAAAAA?w=158&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["slither.io","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4606a41d970c4bbd3fedacb4af7955bd.html","https://th.bing.com/th/id/OIP.NE0F32ZefdDZP1YCNYaKAAHaHa?w=179&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["slow roads","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_7ff9e5092f4da4b22d39083740e50606.html","https://th.bing.com/th/id/OIP.UHnpDdEBcJpC3HGXIoPBqwHaEK?w=280&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["snowball.io","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d38daba27415d322f88a12beae1ef159.html","https://th.bing.com/th/id/OIP.AFgFna9ltq1gKrxk2DKaHQHaD4?w=333&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["soccer bros","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_740b83abb2cd2ef4ac85793780809423.html","https://th.bing.com/th/id/OIP.N-nPdCz6pnIn9HrM4MRSWQHaD4?w=326&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["soccer random","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_7c8ad00de8600a016d2768897f21b3dd.html","https://th.bing.com/th/id/OIP.ganHlo9M4-s8vws5c-DpQQHaDn?w=337&h=170&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["Subway surfers","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_2f468b2d851e314d09dcd63a635fb832.html","https://th.bing.com/th/id/OIP.h-kgCIZHfbEcXyvc1ksbWwHaEK?w=208&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["temple run 2d","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_76a5f1e84e97831ffd8e47b9f7c5c6c7.html","https://th.bing.com/th/id/OIP.h-kgCIZHfbEcXyvc1ksbWwHaEK?w=208&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["tomb of mask","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f25e3738351adcfec44123857e8e1049.html","https://th.bing.com/th/id/OIP.6CJLfL9KUhnPAx2DvJg4pwHaEK?w=287&h=183&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["Ultimate car driving simulator","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_230b92c217825bf22807e5bae90215fd.html","https://th.bing.com/th/id/OIP.o5fH-Wsy34ntxwdlv8dAFwHaHa?w=184&h=184&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["slope plus","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d10282c55ba16374431f3ae11885f772.html","https://th.bing.com/th/id/OIP.QdGX2PGxPzeZDTxizb5DOwHaDl?w=346&h=180&c=7&r=0&o=5&pid=1.7","Arcade"],
-    ["snow rider 3d","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b60f94ad0f84315fb5e8927dff258b68.html","https://th.bing.com/th/id/OIP.yFL6kbPM_ufuAMt8faoq1AHaHa?w=147&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
-    ["sonic.exe","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_05c99092e1d9bc44a6ea93b516371b06.html","https://th.bing.com/th/id/OIP.y9mFUZ2coKXNbE_PZRwPrwHaDt?w=348&h=174&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["space bar clicker","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_023860389f27171745d022803c4c8a6e.html","https://th.bing.com/th/id/OIP.F6JOlukyM5WuXIJkGpC51QHaHa?w=172&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Clicker"],
-    ["space waves","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5735650bd72214bf962da9b734073e73.html","https://th.bing.com/th/id/OIP.s2KHRTuSWAhN0c6rmqHVKQHaEH?w=320&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["survival race v2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5f5ea2c62ccfacbad02ffdbc03e0a3b8.html","https://th.bing.com/th/id/OIP.JDmxVxyMXr3QrrDp2F623gHaHa?w=163&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["survival race v1","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_1255378d4a6c1f98af13d6307dee47bc.html","https://th.bing.com/th/id/OIP.9Av81D5iX7t1kN9WmKNmdgHaDY?w=304&h=159&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["1","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_eaebd4fc27b5ee9f52b729339fd67b52.html","","Arcade"],
-    ["10 minutes till dawn","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_a2dd5803a99016a757ce40a00102dffd.html","https://th.bing.com/th/id/OIP.Kq4jLVkO82hDFcBOl0tJuAHaD4?w=273&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["1v1.lol","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_86ec7f8b730df71e730127f41f76e9dd.html","https://th.bing.com/th/id/OIP.ASM6tUWCDbxvnZvSQT1GWgHaD4?w=309&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["99 nights in the forest","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_1c8651b0d1dafe927c3868200b711565.html","https://th.bing.com/th/id/OIP.jjmTx0KBOyhrqfPDBvLILAHaEK?w=314&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["a dark room","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ae7c59d700af7f1431f071de41e19951.html","https://th.bing.com/th/id/OIP.pSHqnP9xeswVBEIqpm6u1wHaEK?w=323&h=181&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","RPG"],
-    ["a day in the office","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_37a700eda28c55912ed10eb5db0c72b4.html","https://th.bing.com/th/id/OIP.H5W3cb2nEZkBEGSwJ_8iawHaEK?w=314&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["ahoy survival","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_81beb819db847ed44d6ae9fa160d893d.html","https://th.bing.com/th/id/OIP.5_1HOzLcLpS8pmetpDMfqgHaEK?w=302&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Survival"],
-    ["ages of conflict","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_453dbec432b54f2bb0bf0b10407f9df2.html","https://th.bing.com/th/id/OIP.clY-8CVvNttJxe6G1LlGDAHaEK?w=296&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Strategy"],
-    ["amazing strange rope police","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_6a9c4f4cd238256c4888de3c7322c032.html","https://th.bing.com/th/id/OIP.d8pMHUvp5YsSBj7-CQZwTwHaEK?w=297&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["among us fan version","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_345405298de73cebfc138adc3737fd2d.html","https://th.bing.com/th/id/OIP.ZoxKA2oHG8C8vxDoKbmF8wHaEK?w=328&h=184&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["babel tower","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_18397f960d16bf07776777fa0de4d06d.html","https://th.bing.com/th/id/OIP.BVRI7bbi2iXE7Jn84Rhc0AHaEL?w=294&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Clicker"],
-    ["baby Chicco adventures","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_3548274d8ea29cc51e6f27c250a8ee5f.html","https://th.bing.com/th/id/OIP.gxAJDJsbW8zgoPIsdkWT8AHaEK?w=289&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["baby sniper in Vietnam","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_e189e72667ac6e5f629a5162c34eef3d.html","https://th.bing.com/th/id/OIP.-Sc1_E2ZHBYygja9iJGYYQHaD4?w=331&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["bacon may die","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0404564ccb48dc84c3ca133152b99b0b.html","https://th.bing.com/th/id/OIP.0ns6_qfk6f6ldN0BM8FE6wHaDt?w=303&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["bad bodyguards","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_7cca25aad01ab4c5a0d2996a1749d4cd.html","https://th.bing.com/th/id/OIP.i_3opbZG85YsESoV4moKDQHaEK?w=290&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["bad Monday simulator","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_c6cbff115af23730347234b000bf10e6.html","https://th.bing.com/th/id/OIP.68dgXpRaFzAllIfXiJKBmgHaEK?w=333&h=187&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["bad time simulator","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_3e722c43f5df45f40886bcf783d04a6b.html","https://th.bing.com/th/id/OIP.fpELPk3wD4XlB8zm7I8PzgHaFj?w=240&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","RPG"],
-    ["bank robber 2","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_8d0f426860166d8831b517c22fdfaea7.html","https://th.bing.com/th/id/OIP.YtL7L9jrs48QJp-z3nu7sAHaEK?w=296&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["capy barra clicker","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_cd411c683061919e4b717cfd02874cad.html","https://th.bing.com/th/id/OIP.tLeoYIhQefs4r_7voRI_1QHaHa?w=175&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Clicker"],
-    ["car drawing","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5d2333369501409d61572514e3dca7a6.html","https://th.bing.com/th/id/OIP.JHPLvUUUNZ1SIv9vxLa21wHaEK?w=304&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Puzzle"],
-    ["cheese chompers 3D","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_89a5f64f44970d6b23c6c327bb5e588b.html","https://th.bing.com/th/id/OIP.zK9b7a0vFQF3CpdFE5EiMAHaHa?w=180&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["clash of Vikings","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_bce33fe3e3a92651bd435c3a2b537b3d.html","https://th.bing.com/th/id/OIP.MTWgnyvooKdVgK9iw8-tIwHaD4?w=324&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Strategy"],
-    ["Doodle Jump","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_26bc14dfcc278ba889af4aef205c9b59.html","https://th.bing.com/th/id/OIP.8a8AQMUmEQaIrn8N2KcZPQHaD4?w=324&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
-    ["half life doom","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0203bb115f63a5538bcf409d7e32f02e.html","https://th.bing.com/th/id/OIP.iFauKnPtf2-ExY8_Orow9QHaEK?w=268&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
-    ["Draw climber","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4ab068ddcc157ff58600b8ca9878a482.html","https://th.bing.com/th/id/OIP.EbV0Ye60DvMGXMC_Do3NyAHaHa?w=199&h=199&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Puzzle"],
-    ["dreader","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_155344af01d6542573a85dd75aa2cd53.html","https://th.bing.com/th/id/OIP.oZRoTn17tFMRDvy6kZj6dQHaEK?w=297&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["drve wild","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ceff85e78f3455cf796fc4917fd0935b.html","https://th.bing.com/th/id/OIP.XL2XV4SCk8E_luMgYw4MkwHaEK?w=276&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
-    ["SandBoxels","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ad07b8fa67cccca584d2834177df8c95.html","https://th.bing.com/th/id/OIP.9U8qs2mYg_kpf7P-h3bp5AAAAA?w=256&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sandbox"],
-    ["Short Life","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_945a9ecaeb4a435048bd2204962fe1db.html","https://th.bing.com/th/id/OIP.9DQzEHP73HfqhY92hz3AogHaEK?w=323&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Side Effects","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_26073acb012073f793464381ff37379b.html","https://th.bing.com/th/id/OIP.ij8xFalWSTMYEuCCIdahHQHaFj?w=235&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Simulation"],
-    ["Station 141","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5c218f501e6c67f5652d7baf5812b998.html","https://th.bing.com/th/id/OIP.0u2L0yHh_j2Fhn0wZPes6AAAAA?w=242&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
-    ["Gta vice city","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5462425dd3f0ea61efca0f14d5ca15ab.html","https://th.bing.com/th/id/OIP.vfq2Q2R1UJyLJE1189TT2gHaEK?w=328&h=184&c=7&r=0&o=5&pid=1.7","Action"],
-    ["Gorilla tag","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_a6c51ff15e1a14ba87f573e556fbf374.html","https://th.bing.com/th/id/OIP.hRkZtLnpiGtDS-93uMa4WQHaEK?w=260&h=180&c=7&r=0&o=5&pid=1.7","Action"],
-    ["Pizza tower","https://educateandlearnallabout.sciencevictory.com/gamefile/Pizza%20Tower.html","https://th.bing.com/th/id/OIP.H1Ue7_yzzD_FxS3vBZfkQAHaEK?w=314&h=180&c=7&r=0&o=5&pid=1.7","Action"],
-    ["customer support","https://educateandlearnallabout.sciencevictory.com/games/CustomerSupport/index.html","https://img.itch.zone/aW1nLzIyNDA0OTE0LmpwZw==/original/9EfAmY.jpg","Simulation"],
-    ["Yandere simulator","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4d6f28fc6faa51efd76501f9c6c7d931.html","https://th.bing.com/th/id/OIP.5XjLOH6gkak1CgIondP6dAHaEK?w=289&h=180&c=7&r=0&o=5&pid=1.7","Simulation"],
-    ["Baldi basics","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_71b56e8afb366e16b35005ecf06804df.html","https://th.bing.com/th/id/OIP.647bxkGN7fqaMM04BVg5YAAAAA?w=460&h=215&c=7&r=0&o=5&pid=1.7","Horror"],
-    ["Class of 09","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_832effc1899f7a12522ca28d4f3bbb61.html","https://th.bing.com/th/id/OIP.3_x6Uj56uFhhr4cn_5dWbQAAAA?w=115&h=180&c=7&r=0&o=7&pid=1.7","Simulation"],
-    ["Crazy plane landing","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5693c6ca5a5a524934f89e61e2a2441e.html","https://th.bing.com/th/id/OIP.4U20-dNtlNsK4V6Ni3xI_QHaEK?w=267&h=183&c=7&r=0&o=7&pid=1.7","Simulation"]
-];
+            ["Web Proxy", "https://d1ks901xvjj2p6.cloudfront.net/index.html#/search", "https://th.bing.com/th?q=Proxy+Adobe+PNG+Logo&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.1&pid=InlineBlock&rm=3&defcache=1&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1&mw=247", "Utility"],
+            ["School boy runaway", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_32c0c8b002c4cb975a08f1c4e11993e2.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/605.png", "Action"],
+            ["Five Nights at Freddy's: Pizza Simulator", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_8fd1120b36baff86409a8a249b866bfa.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/191.png", "Horror"],
+            ["Kindergarten 1", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_ef521b915ffa7ef66db86684a0954a82.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/445.png", "Simulation"],
+            ["Fears to fathom","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_572aa2e68dc88d7bf012e5521b5f5970.html","https://th.bing.com/th/id/OIP.pZgZfCleZe6OEQmMKUwwrAHaEK?w=300&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
+            ["FNAF 1","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_88f80b2f48655ffe2d93c945dd97c8dc.html","https://th.bing.com/th/id/OIP.tzsQpIaytSceo6d7z-pNBAHaEK?w=326&h=183&c=7&r=0&o=5&pid=1.7","Horror"],
+            ["Baldi's Basics","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b49415c7838d5272bed3689dc5bf5f3a.html","https://th.bing.com/th/id/OIP.v_jCMioFl5pXyG7IwRLZ9gHaEK?w=308&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
+            ["Drift hunters","https://sgs-game-cdn.pages.dev/Projects/Drift%20Hunters/main","https://th.bing.com/th/id/OIP.R5-k2knM3MzQGSbXhLbLKAHaEJ?w=304&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
+            ["Blade Ball","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_bbde690928dfba35150bd1a7cf17c993.html","https://th.bing.com/th/id/OIP.w9Bq0azXbFtMkqLSje-z5QAAAA?w=234&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
+            ["Minecraft 1.12","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_2dd5de6cb688fee72be5cbab95e095a0.html","https://th.bing.com/th/id/OIP.YfwEzGWk99WxLiQZXMTw1AHaEK?w=321&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sandbox"],
+            ["Super Mario 64","https://sgs-game-cdn.pages.dev/Projects/Super%20Mario%2064/main","https://th.bing.com/th/id/OIP.NJpccXzTJ0OHPflJYWgYJAHaEK?w=274&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Retro"],
+            ["Super hot","https://sgs-game-cdn.pages.dev/Projects/SuperHot/main","https://th.bing.com/th/id/OIP.5V1RdBCu6Mh0q9a1M_sfKAHaEK?w=321&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"],
+            ["Only up","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4fa7e24a1a30d8d8390701c57ece7d60.html","https://th.bing.com/th/id/OIP.fZ1gZeFVMMWhSBosF5ezxAHaF0?w=239&h=187&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
+            ["Chrome dino","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_908edc67fbe3f9f03b98e4ec322cbfa1.html","https://th.bing.com/th/id/OIP.AXkOaVfMJMHuPZ0kut5tPQHaEO?w=267&h=180&c=7&r=0&o=5&pid=1.7","Arcade"],
+            ["Subway surfers","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_2f468b2d851e314d09dcd63a635fb832.html","https://th.bing.com/th/id/OIP.h-kgCIZHfbEcXyvc1ksbWwHaEK?w=208&h=150&c=6&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
+            ["1v1.lol","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_86ec7f8b730df71e730127f41f76e9dd.html","https://th.bing.com/th/id/OIP.ASM6tUWCDbxvnZvSQT1GWgHaD4?w=309&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Action"]
+        ];
 
         const GAMES = _GAMES.map(g => ({ title: g[0], url: g[1], image: g[2], category: g[3] }));
         const CATEGORIES = ['All', 'Action', 'Horror', 'Racing', 'Arcade', 'Simulation', 'Retro', 'Strategy', 'Favorites'];
@@ -489,14 +386,9 @@
                 this.settings = { 
                     perfMode: false, oledMode: false, compactUI: false, glassmorphism: true, 
                     borderRadius: '1rem', gridGap: '1.5rem', ambientBg: true, hoverFx: true, 
-                    hideScroll: false, hideNavScroll: false,
-                    cursorStyle: 'default',
-                    fontBase: 'Outfit', fontHead: 'Space Grotesk', textSize: '16px', textTracking: 'normal',
+                    cursorStyle: 'default', fontBase: 'Outfit', fontHead: 'Space Grotesk', textSize: '16px', 
                     tabTitle: 'NOTMINE4REAL', tabIcon: '', panicUrl: 'https://classroom.google.com', 
-                    autoPauseBlur: false, muteBlur: false,
-                    panicKey: '`', blurLeave: false, noRightClick: false, noDevTools: false, 
-                    askClose: false, hideHistory: false, passLock: false, passPin: '',
-                    accentColor: '#8b5cf6'
+                    panicKey: '`', accentColor: '#8b5cf6'
                 };
                 
                 this.init();
@@ -527,21 +419,10 @@
             runIntro() {
                 document.getElementById('launcher-layer').classList.add('hidden');
                 const cs = document.getElementById('cutscene-layer');
-                const logo = document.getElementById('cs-logo');
-                
                 cs.classList.remove('hidden');
-                
-                setTimeout(() => { 
-                    logo.classList.remove('hidden'); 
-                    lucide.createIcons(); 
-                }, 300);
-
-                setTimeout(() => { 
-                    cs.classList.add('animate-slide-up-out'); 
-                    this.showMainMenu(); 
-                }, 2500);
-                
-                setTimeout(() => { cs.classList.add('hidden'); }, 3500);
+                setTimeout(() => { document.getElementById('cs-logo').classList.remove('hidden'); lucide.createIcons(); }, 300);
+                setTimeout(() => { cs.classList.add('animate-slide-up-out'); this.showMainMenu(); }, 2000);
+                setTimeout(() => { cs.classList.add('hidden'); }, 3000);
             }
 
             showMainMenu() {
@@ -558,21 +439,17 @@
             renderMainMenu() {
                 const layer = document.getElementById('menu-layer');
                 const heroGame = GAMES.find(g => g.title === "Minecraft 1.12") || GAMES[0];
-                const randomGame = GAMES[1] || GAMES[0];
                 
                 this.menuPreviewData = {
                     games: { isGame: false },
-                    featured: { isGame: true, title: heroGame.title, desc: "System Recommendation", img: heroGame.image, tag: "Featured" },
-                    random: { isGame: true, title: "Shuffle Protocol", desc: "Launch an unknown process.", img: randomGame.image, tag: "Random" },
+                    featured: { isGame: true, title: heroGame.title, desc: "Play now.", img: heroGame.image, tag: "Featured" },
+                    random: { isGame: true, title: "Random Game", desc: "Play something new.", img: GAMES[1].image, tag: "Random" },
                     chat: { isGame: false },
                     settings: { isGame: false }
                 };
 
                 const html = `
-                    <div id="menu-ambient-bg" class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black transition-opacity duration-1000 opacity-100">
-                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CjxyZWN0IHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgZmlsbD0ibm9uZSI+PC9yZWN0Pgo8Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxIiBmaWxsPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMSkiPjwvY2lyY2xlPgo8L3N2Zz4=')] bg-repeat opacity-30 ${this.settings.ambientBg ? 'animate-ambient-shift' : ''}"></div>
-                    </div>
-                    
+                    <div id="menu-ambient-bg" class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black transition-opacity duration-1000 opacity-100"></div>
                     <div id="menu-bg" class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-0 blur-xl scale-110"></div>
                     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
                     
@@ -582,10 +459,6 @@
                                 <h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4">
                                     NOTMINE<span class="text-zinc-600 block md:inline">4REAL</span>
                                 </h1>
-                                <p class="text-accent font-mono text-sm tracking-[0.4em] uppercase font-bold flex items-center gap-3">
-                                    <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-                                    System Online
-                                </p>
                             </div>
                             <div class="flex flex-col space-y-1">
                                 ${this.createMenuItem('GAMES', 'enterLibrary()', 'games', 'layout-grid')}
@@ -633,24 +506,13 @@
                 const bg = document.getElementById('menu-bg');
                 
                 if(!data || !data.isGame) {
-                    if(card) {
-                        card.classList.remove('opacity-100', 'scale-100');
-                        card.classList.add('opacity-0', 'scale-95');
-                    }
+                    if(card) { card.classList.remove('opacity-100', 'scale-100'); card.classList.add('opacity-0', 'scale-95'); }
                     if(bg) bg.style.opacity = '0';
                     return;
                 }
 
-                if(card) {
-                    card.classList.remove('opacity-0', 'scale-95');
-                    card.classList.add('opacity-100', 'scale-100');
-                }
-                
-                if(bg && data.img) {
-                    bg.style.backgroundImage = `url('${data.img}')`;
-                    bg.style.opacity = '0.4';
-                }
-
+                if(card) { card.classList.remove('opacity-0', 'scale-95'); card.classList.add('opacity-100', 'scale-100'); }
+                if(bg && data.img) { bg.style.backgroundImage = `url('${data.img}')`; bg.style.opacity = '0.4'; }
                 if(document.getElementById('menu-preview-img')) document.getElementById('menu-preview-img').src = data.img;
                 if(document.getElementById('menu-preview-title')) document.getElementById('menu-preview-title').textContent = data.title;
                 if(document.getElementById('menu-preview-desc')) document.getElementById('menu-preview-desc').textContent = data.desc;
@@ -673,7 +535,6 @@
                 this.previousLayer = 'library';
                 const menu = document.getElementById('menu-layer');
                 menu.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none');
-                
                 setTimeout(() => {
                     menu.classList.add('hidden');
                     const lib = document.getElementById('library-layer');
@@ -729,12 +590,9 @@
             playRandomFromMenu() { this.enterLibrary(); setTimeout(() => this.playRandom(), 800); }
             playRandom() { const a = GAMES; if(a.length) this.openViewer(a[Math.floor(Math.random()*a.length)].title); }
 
-            // --- FULL PAGE CHAT LAYER CONTROL ---
             openChat() {
                 this.isChatOpen = true;
                 document.body.classList.add('overflow-hidden');
-                
-                // Hide Notification Badge
                 document.getElementById('nav-chat-badge')?.classList.add('hidden');
 
                 const layer = document.getElementById('chat-layer');
@@ -770,16 +628,13 @@
                 }, 700);
             }
 
-            // --- SETTINGS CONTROL ---
             openSettings() {
                 document.body.classList.add('overflow-hidden');
                 const layer = document.getElementById('settings-layer');
                 layer.classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none');
                 layer.classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
-                
                 if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden');
                 if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden');
-
                 this.renderSettingsNav();
                 this.renderSettingsContent();
             }
@@ -788,28 +643,19 @@
                 const layer = document.getElementById('settings-layer');
                 layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none');
                 layer.classList.remove('opacity-100', 'scale-100');
-                
                 setTimeout(() => {
                     layer.classList.add('hidden');
                     layer.classList.remove('flex');
-                    if(this.previousLayer === 'menu') {
-                        document.getElementById('menu-layer').classList.remove('hidden');
-                        document.getElementById('menu-layer').classList.add('flex');
-                    }
-                    if(this.previousLayer === 'library') {
-                        document.getElementById('library-layer').classList.remove('hidden');
-                        document.body.classList.remove('overflow-hidden'); 
-                    }
+                    if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); }
+                    if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); }
                 }, 700);
             }
 
             renderSettingsNav() {
                 const nav = document.getElementById('settings-nav');
-                const cats = ['Design', 'Cursor', 'Text', 'Site', 'Security', 'Themes'];
+                const cats = ['Design', 'Site', 'Security', 'Themes'];
                 nav.innerHTML = cats.map(c => `
-                    <button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">
-                        ${c}
-                    </button>
+                    <button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>
                 `).join('');
             }
 
@@ -823,10 +669,7 @@
                     const val = this.settings[key];
                     let control = '';
                     if(type === 'toggle') {
-                        control = `
-                        <button onclick="app.updateSetting('${key}', ${!val})" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none">
-                            <div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div>
-                        </button>`;
+                        control = `<button onclick="app.updateSetting('${key}', ${!val})" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none"><div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div></button>`;
                     } else if (type === 'action') {
                         const isActive = extras.match === val;
                         control = `<button onclick="app.updateSetting('${key}', '${extras.match}')" class="px-4 py-2 rounded-lg text-sm font-bold ${isActive ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'} transition-colors">${extras.label}</button>`;
@@ -835,77 +678,26 @@
                     } else if (type === 'button') {
                         control = `<button onclick="${extras.onClick}" class="px-4 py-2 rounded-lg text-sm font-bold ${extras.danger ? 'bg-red-900/50 text-red-500 hover:bg-red-800 hover:text-white' : 'bg-zinc-800 text-white hover:bg-zinc-700'} transition-colors">${extras.label}</button>`;
                     }
-                    return `
-                    <div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center">
-                        <div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">${title}</span>${type !== 'input' ? control : ''}</div>
-                        ${type === 'input' ? control : ''}
-                    </div>`;
+                    return `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">${title}</span>${type !== 'input' ? control : ''}</div>${type === 'input' ? control : ''}</div>`;
                 };
 
                 if(this.activeSettingsTab === 'Design') {
                     optionsHtml = [
-                        createRow("Performance Mode", "toggle", "perfMode"), createRow("OLED Black Mode", "toggle", "oledMode"),
-                        createRow("Compact UI Grid", "toggle", "compactUI"), createRow("Glassmorphism FX", "toggle", "glassmorphism"),
-                        createRow("Corners: Sharp", "action", "borderRadius", {match: '0px', label: 'Select'}),
-                        createRow("Corners: Normal", "action", "borderRadius", {match: '1rem', label: 'Select'}),
+                        createRow("Performance Mode", "toggle", "perfMode"), createRow("Compact UI Grid", "toggle", "compactUI"),
                         createRow("Corners: Pill", "action", "borderRadius", {match: '2rem', label: 'Select'}),
-                        createRow("Grid Gap Size", "action", "gridGap", {match: '2.5rem', label: 'Large'}),
-                        createRow("Ambient Animations", "toggle", "ambientBg"), createRow("Card Hover Lift", "toggle", "hoverFx")
-                    ].join('');
-                }
-                else if(this.activeSettingsTab === 'Cursor') {
-                    optionsHtml = [
-                        createRow("System Default", "action", "cursorStyle", {match: 'default', label: 'Apply'}),
-                        createRow("Crosshair Target", "action", "cursorStyle", {match: 'crosshair', label: 'Apply'}),
-                        createRow("Data Cell", "action", "cursorStyle", {match: 'cell', label: 'Apply'}),
-                        createRow("Text Select", "action", "cursorStyle", {match: 'text', label: 'Apply'}),
-                        createRow("Help / Query", "action", "cursorStyle", {match: 'help', label: 'Apply'}),
-                        createRow("Move / Pan", "action", "cursorStyle", {match: 'move', label: 'Apply'}),
-                        createRow("Not Allowed", "action", "cursorStyle", {match: 'not-allowed', label: 'Apply'}),
-                        createRow("Wait / Loading", "action", "cursorStyle", {match: 'wait', label: 'Apply'}),
-                        createRow("Grab / Hand", "action", "cursorStyle", {match: 'grab', label: 'Apply'})
-                    ].join('');
-                }
-                else if(this.activeSettingsTab === 'Text') {
-                    optionsHtml = [
-                        createRow("Font: Outfit (Sans)", "action", "fontBase", {match: 'Outfit', label: 'Set Base'}),
-                        createRow("Font: Grotesk (Display)", "action", "fontHead", {match: 'Space Grotesk', label: 'Set Head'}),
-                        createRow("Font: JetBrains (Mono)", "action", "fontBase", {match: 'JetBrains Mono', label: 'Set Base'}),
-                        createRow("Font: Playfair (Serif)", "action", "fontBase", {match: 'Playfair Display', label: 'Set Base'}),
-                        createRow("Font: Pixel 8-Bit", "action", "fontHead", {match: '"Press Start 2P"', label: 'Set Head'}),
-                        createRow("Size: Small", "action", "textSize", {match: '14px', label: 'Apply'}),
-                        createRow("Size: Normal", "action", "textSize", {match: '16px', label: 'Apply'}),
-                        createRow("Size: Large", "action", "textSize", {match: '18px', label: 'Apply'}),
-                        createRow("Tracking: Tighter", "action", "textTracking", {match: '-0.05em', label: 'Apply'}),
-                        createRow("Tracking: Wider", "action", "textTracking", {match: '0.1em', label: 'Apply'})
+                        createRow("Card Hover Lift", "toggle", "hoverFx")
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Site') {
                     optionsHtml = [
                         createRow("Disguise: Google", "button", "", {onClick: "app.setCloakPreset('Google', 'https://www.google.com/favicon.ico')", label: 'Apply'}),
-                        createRow("Disguise: Classroom", "button", "", {onClick: "app.setCloakPreset('Classes', 'https://ssl.gstatic.com/classroom/favicon.png')", label: 'Apply'}),
-                        createRow("Disguise: Drive", "button", "", {onClick: "app.setCloakPreset('My Drive', 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_32dp.png')", label: 'Apply'}),
-                        createRow("Disguise: Default", "button", "", {onClick: "app.setCloakPreset('NOTMINE4REAL', '')", label: 'Reset'}),
-                        createRow("Custom Tab Title", "input", "tabTitle", {ph: 'Enter title...'}),
-                        createRow("Custom Favicon URL", "input", "tabIcon", {ph: 'https://...'}),
-                        createRow("Panic Redirect URL", "input", "panicUrl", {ph: 'https://...'}),
                         createRow("Open in About:Blank", "button", "", {onClick: "app.cloak()", label: 'Execute'}),
-                        createRow("Auto-Pause on Blur", "toggle", "autoPauseBlur"),
-                        createRow("Mute on Blur", "toggle", "muteBlur")
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Security') {
                     optionsHtml = [
                         createRow("Panic Keybind", "input", "panicKey", {ph: 'e.g. ` or Esc'}),
-                        createRow("Blur Window on Leave", "toggle", "blurLeave"),
-                        createRow("Disable Right Click", "toggle", "noRightClick"),
-                        createRow("Disable Inspect (F12)", "toggle", "noDevTools"),
-                        createRow("Ask Before Closing Tab", "toggle", "askClose"),
-                        createRow("Hide Browser History", "toggle", "hideHistory"),
-                        createRow("Password Lock Boot", "toggle", "passLock"),
-                        createRow("Set Access PIN", "input", "passPin", {ph: 'Numeric PIN'}),
-                        createRow("Nuclear Self Destruct", "button", "", {onClick: "app.selfDestruct()", label: 'NUKE', danger: true}),
-                        createRow("Factory Reset System", "button", "", {onClick: "app.resetData()", label: 'RESET', danger: true})
+                        createRow("Panic Redirect URL", "input", "panicUrl", {ph: 'https://...'}),
                     ].join('');
                 }
                 else if(this.activeSettingsTab === 'Themes') {
@@ -916,7 +708,6 @@
                             <button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button>
                         </div>
                     `).join('');
-                    optionsHtml += createRow("Custom Hex Accent", "input", "accentColor", {ph: '#RRGGBB'});
                 }
 
                 grid.innerHTML = optionsHtml;
@@ -939,21 +730,12 @@
                 const s = this.settings;
                 const root = document.documentElement;
                 root.style.setProperty('--accent', s.accentColor);
-                root.style.setProperty('--font-base', s.fontBase);
-                root.style.setProperty('--font-head', s.fontHead);
-                root.style.setProperty('--text-size', s.textSize);
-                root.style.setProperty('--tracking', s.textTracking);
                 root.style.setProperty('--radius', s.borderRadius);
-                root.style.setProperty('--grid-gap', s.gridGap);
-                root.style.setProperty('--custom-cursor', s.cursorStyle);
 
                 const setCls = (c, act) => act ? document.body.classList.add(c) : document.body.classList.remove(c);
                 setCls('perf-mode', s.perfMode);
-                setCls('oled-mode', s.oledMode);
                 setCls('compact-ui', s.compactUI);
-                setCls('hide-scroll', s.hideScroll);
                 setCls('no-hover-fx', !s.hoverFx);
-                setCls('cursor-override', s.cursorStyle !== 'default');
 
                 document.title = s.tabTitle || 'NOTMINE4REAL';
                 let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
@@ -965,9 +747,7 @@
             setupSecurity() {
                 document.addEventListener('keydown', e => {
                     if (e.key === this.settings.panicKey) { e.preventDefault(); this.panic(); }
-                    if (this.settings.noDevTools && (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I'))) e.preventDefault();
                 });
-                document.addEventListener('contextmenu', e => { if(this.settings.noRightClick) e.preventDefault(); });
             }
 
             panic() {
@@ -1010,7 +790,7 @@
 
 
         // ==========================================
-        // 🔥 GLOBAL MULTIPLAYER CHAT SYSTEM 🔥
+        // 🔥 GLOBAL CHAT + FRIENDS + CALLING 🔥
         // ==========================================
         class ChatSystem {
             constructor() {
@@ -1020,9 +800,21 @@
                 this.submitBtn = document.getElementById('chat-submit-btn');
                 this.navBadge = document.getElementById('nav-chat-badge');
                 
-                // Read saved username
                 this.username = localStorage.getItem('nm4r-custom-user');
+                this.friends = JSON.parse(localStorage.getItem('nm4r-friends') || '[]');
+                this.groups = JSON.parse(localStorage.getItem('nm4r-groups') || '[]');
                 
+                this.currentChannel = 'global';
+                this.currentChannelName = 'Global Chat';
+                
+                this.messagesListener = null;
+
+                // WebRTC Variables
+                this.localStream = null;
+                this.peerConnection = null;
+                this.callRef = null;
+                this.isCalling = false;
+
                 this.form.addEventListener('submit', (e) => {
                     e.preventDefault();
                     this.sendMessage();
@@ -1039,34 +831,35 @@
                   appId: "1:446821268917:web:181c7ad0e0b4241b02adfc"
                 };
 
-                // Initialize Firebase Database
                 firebase.initializeApp(firebaseConfig);
-                this.db = firebase.database().ref('global_chat_v2');
+                this.db = firebase.database();
                 
-                // Listen for new messages globally
-                this.db.limitToLast(50).on('child_added', (snapshot) => {
-                    this.receiveMessage(snapshot.val());
-                });
+                this.renderSidebar();
+                
+                if (this.username) {
+                    this.listenForCalls();
+                }
             }
 
             checkUsername() {
                 const modal = document.getElementById('chat-setup-modal');
-                const display = document.getElementById('current-username-display');
+                const display = document.getElementById('sidebar-username');
+                const initial = document.getElementById('sidebar-user-initial');
                 
                 if (!this.username) {
-                    // Show Username Prompt
                     modal.classList.remove('hidden', 'pointer-events-none');
                     modal.classList.add('opacity-100');
                     document.getElementById('username-setup-input').focus();
                 } else {
-                    // Hide Prompt, Unlock Chat
                     modal.classList.add('opacity-0', 'pointer-events-none');
                     setTimeout(() => modal.classList.add('hidden'), 500);
                     
                     this.input.disabled = false;
                     this.submitBtn.disabled = false;
-                    this.input.focus();
-                    display.textContent = `Logged in as: ${this.username}`;
+                    display.textContent = this.username;
+                    initial.textContent = this.username.charAt(0).toUpperCase();
+                    
+                    this.switchChannel('global', 'Global Chat');
                 }
             }
 
@@ -1077,17 +870,112 @@
                 
                 this.username = rawName;
                 localStorage.setItem('nm4r-custom-user', this.username);
+                this.checkUsername();
+                this.listenForCalls();
+            }
+
+            // --- UI Navigation ---
+            
+            renderSidebar() {
+                const fList = document.getElementById('friends-list');
+                fList.innerHTML = this.friends.map(f => `
+                    <button onclick="globalChat.switchChannel('dm_${[this.username, f].sort().join('_')}', '${f}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="dm_${[this.username, f].sort().join('_')}">
+                        <div class="w-6 h-6 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold group-hover:text-white">${f.charAt(0).toUpperCase()}</div>
+                        <span class="font-medium text-zinc-400 group-hover:text-white truncate">${f}</span>
+                    </button>
+                `).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No friends added.</p>';
+
+                const gList = document.getElementById('groups-list');
+                gList.innerHTML = this.groups.map(g => `
+                    <button onclick="globalChat.switchChannel('group_${g}', '${g}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="group_${g}">
+                        <div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center group-hover:text-white"><i data-lucide="users" class="w-3 h-3 text-zinc-400 group-hover:text-white"></i></div>
+                        <span class="font-medium text-zinc-400 group-hover:text-white truncate">${g}</span>
+                    </button>
+                `).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>';
                 
-                // Broadcast system join message
-                this.db.push({
-                    user: "System",
-                    text: `${this.username} has joined the chat.`,
-                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                    sys: true
+                lucide.createIcons();
+            }
+
+            openAddModal(type) {
+                this.addType = type;
+                const modal = document.getElementById('add-modal');
+                const title = document.getElementById('add-modal-title');
+                const input = document.getElementById('add-modal-input');
+                const err = document.getElementById('add-modal-error');
+                
+                title.textContent = type === 'friend' ? 'Add a Friend' : 'Create Group';
+                input.placeholder = type === 'friend' ? 'Enter their exact username...' : 'Enter Group Name...';
+                input.value = '';
+                err.classList.add('hidden');
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+                input.focus();
+            }
+
+            closeAddModal() {
+                const modal = document.getElementById('add-modal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+
+            confirmAdd() {
+                const input = document.getElementById('add-modal-input').value.trim();
+                const err = document.getElementById('add-modal-error');
+                
+                if(!input) { err.textContent = "Please enter a name."; err.classList.remove('hidden'); return; }
+                if(input === this.username && this.addType === 'friend') { err.textContent = "You can't add yourself."; err.classList.remove('hidden'); return; }
+                
+                if (this.addType === 'friend') {
+                    if(!this.friends.includes(input)) {
+                        this.friends.push(input);
+                        localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
+                    }
+                } else {
+                    if(!this.groups.includes(input)) {
+                        this.groups.push(input);
+                        localStorage.setItem('nm4r-groups', JSON.stringify(this.groups));
+                    }
+                }
+                
+                this.renderSidebar();
+                this.closeAddModal();
+            }
+
+            switchChannel(channelId, channelName, isDM = false) {
+                this.currentChannel = channelId;
+                this.currentChannelName = channelName;
+                
+                document.getElementById('current-room-name').textContent = channelName;
+                document.getElementById('chat-messages').innerHTML = ''; // Clear chat
+                
+                // Show/Hide Call Button
+                const callBtn = document.getElementById('start-call-btn');
+                if (isDM) callBtn.classList.remove('hidden');
+                else callBtn.classList.add('hidden');
+
+                // Update Sidebar highlight
+                document.querySelectorAll('.channel-btn').forEach(btn => {
+                    btn.classList.remove('bg-zinc-800');
+                    if(btn.dataset.id === channelId) btn.classList.add('bg-zinc-800');
                 });
 
-                this.checkUsername();
+                // Detach old listener
+                if (this.messagesListener) {
+                    this.messagesListener.off();
+                }
+
+                // Listen to new channel
+                const path = `messages/${channelId}`;
+                this.messagesListener = this.db.ref(path).limitToLast(50);
+                this.messagesListener.on('child_added', (snapshot) => {
+                    this.receiveMessage(snapshot.val());
+                });
+
+                this.input.focus();
             }
+
+            // --- Messaging ---
 
             sendMessage() {
                 const text = this.input.value.trim();
@@ -1099,43 +987,29 @@
                     time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
                 };
 
-                // Send to global database
-                this.db.push(msg);
+                this.db.ref(`messages/${this.currentChannel}`).push(msg);
                 this.input.value = '';
                 this.input.focus();
             }
 
             receiveMessage(msg) {
                 const isMe = msg.user === this.username;
-                const isSys = msg.sys;
-                
-                let html = '';
-                if(isSys) {
-                    html = `
-                    <div class="w-full flex justify-center animate-reveal-up">
-                        <div class="px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-zinc-400 tracking-wider">
-                            ${msg.text}
+                let html = `
+                    <div class="flex flex-col w-full ${isMe ? 'items-end' : 'items-start'} animate-reveal-up" style="animation-duration: 0.3s">
+                        <div class="flex items-baseline gap-2 mb-1 px-1">
+                            <span class="text-[13px] font-bold tracking-wide ${isMe ? 'text-accent' : 'text-zinc-300'}">${msg.user}</span>
+                            <span class="text-[10px] font-mono text-zinc-600">${msg.time}</span>
                         </div>
-                    </div>`;
-                } else {
-                    html = `
-                        <div class="flex flex-col w-full ${isMe ? 'items-end' : 'items-start'} animate-reveal-up" style="animation-duration: 0.4s">
-                            <div class="flex items-baseline gap-2 mb-1 px-1">
-                                <span class="text-[13px] font-bold tracking-wide ${isMe ? 'text-accent' : 'text-zinc-300'}">${msg.user}</span>
-                                <span class="text-[10px] font-mono text-zinc-600">${msg.time}</span>
-                            </div>
-                            <div class="px-5 py-3.5 text-[15px] max-w-[85%] md:max-w-[70%] ${isMe ? 'bg-accent text-white rounded-[1.5rem] rounded-tr-sm shadow-[0_5px_20px_rgba(139,92,246,0.3)]' : 'bg-zinc-800 text-zinc-100 rounded-[1.5rem] rounded-tl-sm shadow-lg'} break-words leading-relaxed font-sans border border-white/5">
-                                ${this.escapeHTML(msg.text)}
-                            </div>
+                        <div class="px-4 py-3 text-[14px] max-w-[85%] md:max-w-[70%] ${isMe ? 'bg-accent text-white rounded-[1.2rem] rounded-tr-sm' : 'bg-zinc-800 text-zinc-100 rounded-[1.2rem] rounded-tl-sm'} break-words">
+                            ${this.escapeHTML(msg.text)}
                         </div>
-                    `;
-                }
+                    </div>
+                `;
                 
                 this.messagesContainer.insertAdjacentHTML('beforeend', html);
                 this.scrollToBottom();
 
-                // Notification Dot logic
-                if(!app.isChatOpen && !isMe && !isSys && this.navBadge) {
+                if(!app.isChatOpen && !isMe && this.navBadge) {
                     this.navBadge.classList.remove('hidden');
                 }
             }
@@ -1148,6 +1022,163 @@
                 return str.replace(/[&<>'"]/g, tag => ({
                     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
                 }[tag]));
+            }
+
+            // ==========================================
+            // 🔥 VOICE CALLING SYSTEM (WebRTC) 🔥
+            // ==========================================
+
+            listenForCalls() {
+                // Listen to all possible DM channels the user might be in
+                this.friends.forEach(friend => {
+                    const channelId = `dm_${[this.username, friend].sort().join('_')}`;
+                    this.db.ref(`calls/${channelId}`).on('value', snapshot => {
+                        const callData = snapshot.val();
+                        
+                        // If there is an offer, and I am NOT the caller
+                        if (callData && callData.offer && callData.caller !== this.username && !this.isCalling) {
+                            this.showIncomingCall(callData.caller, channelId);
+                        }
+                        
+                        // If someone answered my call
+                        if (callData && callData.answer && callData.caller === this.username && this.isCalling) {
+                            if (!this.peerConnection.currentRemoteDescription) {
+                                this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.answer));
+                            }
+                        }
+
+                        // Handle ICE Candidates
+                        if (callData && callData.candidates) {
+                            Object.values(callData.candidates).forEach(c => {
+                                if (c.user !== this.username && this.peerConnection) {
+                                    this.peerConnection.addIceCandidate(new RTCIceCandidate(c.candidate)).catch(e=>console.error(e));
+                                }
+                            });
+                        }
+
+                        // If call was cleared (hung up)
+                        if (!callData && this.isCalling) {
+                            this.endCall(false); // End call visually without rewriting to DB
+                        }
+                    });
+                });
+            }
+
+            async setupWebRTC(channelId) {
+                const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+                this.peerConnection = new RTCPeerConnection(configuration);
+                this.callRef = this.db.ref(`calls/${channelId}`);
+
+                // Get local audio
+                try {
+                    this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    this.localStream.getTracks().forEach(track => {
+                        this.peerConnection.addTrack(track, this.localStream);
+                    });
+                } catch (e) {
+                    alert("Microphone access denied or not available. (Needs HTTPS)");
+                    return false;
+                }
+
+                // Play remote audio
+                this.peerConnection.ontrack = event => {
+                    document.getElementById('remote-audio').srcObject = event.streams[0];
+                };
+
+                // Send ICE candidates to Firebase
+                this.peerConnection.onicecandidate = event => {
+                    if (event.candidate) {
+                        this.callRef.child('candidates').push({
+                            user: this.username,
+                            candidate: event.candidate.toJSON()
+                        });
+                    }
+                };
+
+                this.isCalling = true;
+                this.showActiveCallUI(channelId.replace(`dm_`, '').replace(this.username, '').replace('_', ''));
+                return true;
+            }
+
+            async initiateCall() {
+                if (!this.currentChannel.startsWith('dm_')) return;
+                
+                const success = await this.setupWebRTC(this.currentChannel);
+                if (!success) return;
+
+                const offer = await this.peerConnection.createOffer();
+                await this.peerConnection.setLocalDescription(offer);
+
+                this.callRef.set({
+                    caller: this.username,
+                    offer: { type: offer.type, sdp: offer.sdp }
+                });
+            }
+
+            showIncomingCall(callerName, channelId) {
+                this.pendingCallChannel = channelId;
+                document.getElementById('incoming-caller-name').textContent = `${callerName} is calling...`;
+                const modal = document.getElementById('incoming-call-modal');
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+
+            async acceptCall() {
+                const modal = document.getElementById('incoming-call-modal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+
+                if (!this.pendingCallChannel) return;
+
+                const success = await this.setupWebRTC(this.pendingCallChannel);
+                if (!success) return;
+
+                const snapshot = await this.callRef.once('value');
+                const callData = snapshot.val();
+                
+                await this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
+                const answer = await this.peerConnection.createAnswer();
+                await this.peerConnection.setLocalDescription(answer);
+
+                this.callRef.update({
+                    answer: { type: answer.type, sdp: answer.sdp }
+                });
+            }
+
+            declineCall() {
+                const modal = document.getElementById('incoming-call-modal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+                
+                if (this.pendingCallChannel) {
+                    this.db.ref(`calls/${this.pendingCallChannel}`).remove();
+                    this.pendingCallChannel = null;
+                }
+            }
+
+            showActiveCallUI(name) {
+                document.getElementById('active-call-name').textContent = name;
+                document.getElementById('active-call-bar').classList.remove('hidden');
+                document.getElementById('active-call-bar').classList.add('flex');
+            }
+
+            endCall(clearDb = true) {
+                this.isCalling = false;
+                document.getElementById('active-call-bar').classList.add('hidden');
+                document.getElementById('active-call-bar').classList.remove('flex');
+                document.getElementById('remote-audio').srcObject = null;
+
+                if (this.localStream) {
+                    this.localStream.getTracks().forEach(track => track.stop());
+                    this.localStream = null;
+                }
+                if (this.peerConnection) {
+                    this.peerConnection.close();
+                    this.peerConnection = null;
+                }
+                if (this.callRef && clearDb) {
+                    this.callRef.remove();
+                }
             }
         }
         
