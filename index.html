@@ -206,23 +206,23 @@
         <!-- Incoming Call Overlay -->
         <div id="incoming-call-modal" class="absolute inset-0 z-[70] bg-black/90 backdrop-blur-md hidden items-center justify-center opacity-0 transition-opacity duration-300">
             <div class="text-center">
-                <div class="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-fast border-4 border-accent">
-                    <i data-lucide="phone" class="w-10 h-10 text-white animate-bounce"></i>
+                <div class="w-24 h-24 bg-zinc-800 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse-fast border-4 border-accent" id="incoming-call-icon-box">
+                    <i data-lucide="phone" class="w-10 h-10 text-white animate-bounce" id="incoming-call-icon"></i>
                 </div>
-                <h3 class="text-3xl font-display font-black text-white mb-2">Incoming Call</h3>
+                <h3 class="text-3xl font-display font-black text-white mb-2" id="incoming-call-type-title">Incoming Call</h3>
                 <p id="incoming-caller-name" class="text-zinc-400 text-lg mb-8">User is calling you...</p>
                 <div class="flex items-center justify-center gap-6">
                     <button onclick="globalChat.declineCall()" class="w-16 h-16 bg-red-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_20px_rgba(239,68,68,0.5)]"><i data-lucide="phone-off" class="w-6 h-6"></i></button>
-                    <button onclick="globalChat.acceptCall()" class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_20px_rgba(34,197,94,0.5)]"><i data-lucide="phone" class="w-6 h-6"></i></button>
+                    <button onclick="globalChat.acceptCall()" class="w-16 h-16 bg-green-500 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-[0_0_20px_rgba(34,197,94,0.5)]"><i data-lucide="phone" class="w-6 h-6" id="incoming-accept-icon"></i></button>
                 </div>
             </div>
         </div>
 
-        <!-- Active Call Bar -->
+        <!-- Active Audio Call Bar (For Audio Only) -->
         <div id="active-call-bar" class="absolute top-16 left-0 right-0 z-30 bg-green-600/90 backdrop-blur-sm hidden items-center justify-between px-6 py-2 border-b border-green-500 shadow-lg">
             <div class="flex items-center gap-3">
                 <i data-lucide="phone-call" class="w-5 h-5 text-white animate-pulse"></i>
-                <span class="text-white font-bold text-sm">Call Active <span id="active-call-name" class="opacity-80 ml-1"></span></span>
+                <span class="text-white font-bold text-sm">Voice Call Active <span id="active-call-name" class="opacity-80 ml-1"></span></span>
             </div>
             <button onclick="globalChat.endCall()" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full transition-colors">Hang Up</button>
         </div>
@@ -245,7 +245,6 @@
                 </div>
                 
                 <div class="flex-1 overflow-y-auto p-3 space-y-6 scrollbar-hide">
-                    
                     <!-- Global Room -->
                     <div>
                         <button onclick="globalChat.switchChannel('global', 'Global Chat')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn active-channel" data-id="global">
@@ -260,9 +259,7 @@
                             <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Friends</span>
                             <button onclick="globalChat.openAddModal('friend')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
-                        <div id="friends-list" class="space-y-1">
-                            <!-- Populated by JS -->
-                        </div>
+                        <div id="friends-list" class="space-y-1"></div>
                     </div>
 
                     <!-- Groups -->
@@ -271,35 +268,50 @@
                             <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Groups</span>
                             <button onclick="globalChat.openAddModal('group')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
-                        <div id="groups-list" class="space-y-1">
-                            <!-- Populated by JS -->
-                        </div>
+                        <div id="groups-list" class="space-y-1"></div>
                     </div>
-
                 </div>
             </div>
 
             <!-- Chat Area -->
             <div class="flex-1 flex flex-col bg-[#0a0a0a] relative">
+                
                 <!-- Chat Area Header -->
-                <div class="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#080808]">
+                <div class="h-14 border-b border-white/5 flex items-center justify-between px-6 bg-[#080808] shrink-0">
                     <div class="flex items-center gap-2">
                         <i data-lucide="hash" class="w-4 h-4 text-zinc-500"></i>
                         <span class="font-bold text-white" id="current-room-name">Global Chat</span>
                     </div>
-                    <!-- Call Button (Visible in DMs and Groups) -->
-                    <button id="start-call-btn" onclick="globalChat.initiateCall()" class="hidden px-3 py-1.5 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
-                        <i data-lucide="phone" class="w-4 h-4"></i> Call
-                    </button>
+                    <!-- Call Buttons (Visible in DMs and Groups) -->
+                    <div id="call-controls-container" class="hidden flex items-center gap-2">
+                        <button onclick="globalChat.initiateCall(false)" class="p-2 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg transition-colors" title="Voice Call">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="globalChat.initiateCall(true)" class="p-2 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg transition-colors" title="Video Call">
+                            <i data-lucide="video" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Video Call Overlay UI (Hidden by default) -->
+                <div id="video-call-ui" class="absolute inset-0 z-[40] bg-black hidden flex-col border-l border-white/5">
+                    <!-- Remote Video (Fills screen) -->
+                    <video id="remote-video" class="w-full h-full object-cover" autoplay playsinline></video>
+                    <!-- Local Video (Picture in Picture) -->
+                    <video id="local-video" class="absolute bottom-6 right-6 w-48 h-auto bg-zinc-900 border-2 border-white/10 rounded-xl shadow-2xl object-cover transform scale-x-[-1]" autoplay muted playsinline></video>
+                    <!-- Controls Overlay -->
+                    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center gap-6 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl">
+                        <button onclick="globalChat.endCall()" class="w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"><i data-lucide="phone-off" class="w-6 h-6"></i></button>
+                    </div>
                 </div>
 
                 <!-- Messages -->
-                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide">
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide relative z-10">
                     <!-- Messages will be injected here -->
                 </div>
 
                 <!-- Input -->
-                <div class="p-4 bg-[#080808] border-t border-white/5">
+                <div class="p-4 bg-[#080808] border-t border-white/5 relative z-10">
                     <form id="chat-form" class="flex items-center gap-3">
                         <input type="text" id="chat-input" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 transition-colors disabled:opacity-50" placeholder="Type a message..." autocomplete="off" disabled>
                         <button type="submit" id="chat-submit-btn" class="p-3 bg-white text-black rounded-xl hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
@@ -327,9 +339,7 @@
             <div class="w-72 bg-[#080808] border-r border-white/5 flex flex-col p-6 space-y-2 overflow-y-auto scrollbar-hide shrink-0" id="settings-nav"></div>
             <div class="flex-1 bg-black overflow-y-auto scrollbar-hide relative p-10">
                 <div class="max-w-4xl mx-auto">
-                    <div class="mb-10">
-                        <h3 id="settings-cat-title" class="text-5xl font-display font-black text-white tracking-tighter mb-2">Category</h3>
-                    </div>
+                    <div class="mb-10"><h3 id="settings-cat-title" class="text-5xl font-display font-black text-white tracking-tighter mb-2">Category</h3></div>
                     <div id="settings-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20"></div>
                 </div>
             </div>
@@ -417,16 +427,10 @@
                     const s = JSON.parse(localStorage.getItem('nm4r-settings'));
                     if (s) this.settings = { ...this.settings, ...s };
                 } catch(e){}
-
                 this.applySettings();
                 this.setupSecurity();
                 lucide.createIcons();
-
-                document.getElementById('search-input')?.addEventListener('input', e => {
-                    this.searchQuery = e.target.value;
-                    this.renderLibrary();
-                });
-
+                document.getElementById('search-input')?.addEventListener('input', e => { this.searchQuery = e.target.value; this.renderLibrary(); });
                 if (window.self !== window.top) this.showLauncher();
                 else this.runIntro();
             }
@@ -473,11 +477,7 @@
                     
                     <div class="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center p-8 md:p-16 lg:p-24 gap-12 lg:gap-24">
                         <div class="w-full md:w-[45%] flex flex-col justify-center space-y-8 animate-reveal-up">
-                            <div class="mb-6">
-                                <h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4">
-                                    NOTMINE<span class="text-zinc-600 block md:inline">4REAL</span>
-                                </h1>
-                            </div>
+                            <div class="mb-6"><h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4">NOTMINE<span class="text-zinc-600 block md:inline">4REAL</span></h1></div>
                             <div class="flex flex-col space-y-1">
                                 ${this.createMenuItem('GAMES', 'enterLibrary()', 'games', 'layout-grid')}
                                 ${this.createMenuItem('FEATURED', `openViewer('${heroGame.title.replace(/'/g, "\\'")}')`, 'featured', 'star')}
@@ -492,9 +492,7 @@
                                   <img id="menu-preview-img" src="" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 opacity-80" />
                                   <div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div>
                                   <div class="absolute bottom-0 left-0 p-10 w-full transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
-                                      <div class="flex items-center justify-between mb-4">
-                                          <div id="menu-preview-tag" class="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-widest">Tag</div>
-                                      </div>
+                                      <div class="flex items-center justify-between mb-4"><div id="menu-preview-tag" class="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-widest">Tag</div></div>
                                       <h2 id="menu-preview-title" class="font-display font-extrabold text-5xl text-white mb-2 leading-tight drop-shadow-lg">Title</h2>
                                       <p id="menu-preview-desc" class="font-sans text-zinc-300 text-lg opacity-80">Desc</p>
                                   </div>
@@ -506,27 +504,14 @@
             }
 
             createMenuItem(text, action, key, icon) {
-                return `
-                    <button onclick="app.${action}" onmouseenter="app.updateMenuPreview('${key}')" class="group w-full text-left py-6 border-b border-zinc-900 hover:border-zinc-500 transition-colors duration-500 flex items-center justify-between relative overflow-hidden">
-                        <span class="font-display font-bold text-4xl md:text-5xl tracking-tight text-zinc-600 group-hover:text-white transition-colors duration-500 relative z-10">${text}</span>
-                        <div class="flex items-center gap-6 relative z-10 transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out">
-                            <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500">
-                                <i data-lucide="${icon}" class="w-5 h-5"></i>
-                            </div>
-                        </div>
-                    </button>
-                `;
+                return `<button onclick="app.${action}" onmouseenter="app.updateMenuPreview('${key}')" class="group w-full text-left py-6 border-b border-zinc-900 hover:border-zinc-500 transition-colors duration-500 flex items-center justify-between relative overflow-hidden"><span class="font-display font-bold text-4xl md:text-5xl tracking-tight text-zinc-600 group-hover:text-white transition-colors duration-500 relative z-10">${text}</span><div class="flex items-center gap-6 relative z-10 transform translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-500 ease-out"><div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-500"><i data-lucide="${icon}" class="w-5 h-5"></i></div></div></button>`;
             }
 
             updateMenuPreview(key) {
                 const data = this.menuPreviewData[key];
                 const card = document.getElementById('menu-preview-card');
                 const bg = document.getElementById('menu-bg');
-                if(!data || !data.isGame) {
-                    if(card) { card.classList.remove('opacity-100', 'scale-100'); card.classList.add('opacity-0', 'scale-95'); }
-                    if(bg) bg.style.opacity = '0';
-                    return;
-                }
+                if(!data || !data.isGame) { if(card) { card.classList.remove('opacity-100', 'scale-100'); card.classList.add('opacity-0', 'scale-95'); } if(bg) bg.style.opacity = '0'; return; }
                 if(card) { card.classList.remove('opacity-0', 'scale-95'); card.classList.add('opacity-100', 'scale-100'); }
                 if(bg && data.img) { bg.style.backgroundImage = `url('${data.img}')`; bg.style.opacity = '0.4'; }
                 if(document.getElementById('menu-preview-img')) document.getElementById('menu-preview-img').src = data.img;
@@ -563,9 +548,7 @@
 
             renderLibrary() {
                 const filters = document.getElementById('filter-container');
-                filters.innerHTML = CATEGORIES.map(cat => `
-                    <button onclick="app.setCategory('${cat}')" class="px-6 py-2 rounded-full text-sm font-bold tracking-wide transition-all ${this.activeCategory === cat ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]' : 'bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800 border border-zinc-800/50'}">${cat}</button>
-                `).join('');
+                filters.innerHTML = CATEGORIES.map(cat => `<button onclick="app.setCategory('${cat}')" class="px-6 py-2 rounded-full text-sm font-bold tracking-wide transition-all ${this.activeCategory === cat ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]' : 'bg-zinc-900/50 text-zinc-400 hover:bg-zinc-800 border border-zinc-800/50'}">${cat}</button>`).join('');
 
                 const grid = document.getElementById('games-grid');
                 let games = GAMES;
@@ -588,9 +571,7 @@
                                 <div class="mt-4 px-1 pb-1 flex-1 flex flex-col justify-between">
                                     <div class="flex items-start justify-between gap-2">
                                         <h3 class="font-display font-bold text-white text-lg leading-tight line-clamp-2">${g.title}</h3>
-                                        <button onclick="app.toggleFav('${safeTitle}', event)" class="p-1.5 rounded-md hover:bg-zinc-800 shrink-0">
-                                            <i data-lucide="heart" class="w-4 h-4 ${fav ? 'fill-red-500 text-red-500' : 'text-zinc-500'}"></i>
-                                        </button>
+                                        <button onclick="app.toggleFav('${safeTitle}', event)" class="p-1.5 rounded-md hover:bg-zinc-800 shrink-0"><i data-lucide="heart" class="w-4 h-4 ${fav ? 'fill-red-500 text-red-500' : 'text-zinc-500'}"></i></button>
                                     </div>
                                     <p class="text-[10px] font-mono text-zinc-600 uppercase mt-3">${g.category}</p>
                                 </div>
@@ -610,18 +591,12 @@
                 this.isChatOpen = true;
                 document.body.classList.add('overflow-hidden');
                 document.getElementById('nav-chat-badge')?.classList.add('hidden');
-
                 const layer = document.getElementById('chat-layer');
                 layer.classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none');
                 layer.classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
-                
                 if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden');
                 if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden');
-                
-                if (globalChat) {
-                    globalChat.checkUsername();
-                    globalChat.scrollToBottom();
-                }
+                if (globalChat) { globalChat.checkUsername(); globalChat.scrollToBottom(); }
             }
 
             closeChat() {
@@ -629,18 +604,11 @@
                 const layer = document.getElementById('chat-layer');
                 layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none');
                 layer.classList.remove('opacity-100', 'scale-100');
-                
                 setTimeout(() => {
                     layer.classList.add('hidden');
                     layer.classList.remove('flex');
-                    if(this.previousLayer === 'menu') {
-                        document.getElementById('menu-layer').classList.remove('hidden');
-                        document.getElementById('menu-layer').classList.add('flex');
-                    }
-                    if(this.previousLayer === 'library') {
-                        document.getElementById('library-layer').classList.remove('hidden');
-                        document.body.classList.remove('overflow-hidden'); 
-                    }
+                    if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); }
+                    if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); }
                 }, 700);
             }
 
@@ -670,9 +638,7 @@
             renderSettingsNav() {
                 const nav = document.getElementById('settings-nav');
                 const cats = ['Design', 'Site', 'Security', 'Themes'];
-                nav.innerHTML = cats.map(c => `
-                    <button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>
-                `).join('');
+                nav.innerHTML = cats.map(c => `<button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>`).join('');
             }
 
             renderSettingsContent() {
@@ -680,7 +646,6 @@
                 document.getElementById('settings-cat-title').textContent = this.activeSettingsTab;
                 const grid = document.getElementById('settings-options-grid');
                 let optionsHtml = '';
-                
                 const createRow = (title, type, key, extras) => {
                     const val = this.settings[key];
                     let control = '';
@@ -725,63 +690,33 @@
                         </div>
                     `).join('');
                 }
-
                 grid.innerHTML = optionsHtml;
             }
 
-            updateSetting(key, val) {
-                this.settings[key] = val;
-                localStorage.setItem('nm4r-settings', JSON.stringify(this.settings));
-                this.applySettings();
-                this.renderSettingsContent(); 
-            }
-
-            setCloakPreset(title, icon) {
-                this.settings.tabTitle = title;
-                this.settings.tabIcon = icon;
-                this.updateSetting('tabTitle', title);
-            }
-
+            updateSetting(key, val) { this.settings[key] = val; localStorage.setItem('nm4r-settings', JSON.stringify(this.settings)); this.applySettings(); this.renderSettingsContent(); }
+            setCloakPreset(title, icon) { this.settings.tabTitle = title; this.settings.tabIcon = icon; this.updateSetting('tabTitle', title); }
             applySettings() {
-                const s = this.settings;
-                const root = document.documentElement;
-                root.style.setProperty('--accent', s.accentColor);
-                root.style.setProperty('--radius', s.borderRadius);
-
+                const s = this.settings; const root = document.documentElement;
+                root.style.setProperty('--accent', s.accentColor); root.style.setProperty('--radius', s.borderRadius);
                 const setCls = (c, act) => act ? document.body.classList.add(c) : document.body.classList.remove(c);
-                setCls('perf-mode', s.perfMode);
-                setCls('compact-ui', s.compactUI);
-                setCls('no-hover-fx', !s.hoverFx);
-
+                setCls('perf-mode', s.perfMode); setCls('compact-ui', s.compactUI); setCls('no-hover-fx', !s.hoverFx);
                 document.title = s.tabTitle || 'NOTMINE4REAL';
                 let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
                 link.type = 'image/x-icon'; link.rel = 'shortcut icon';
                 link.href = s.tabIcon || document.getElementById('app-favicon').src;
                 document.head.appendChild(link);
             }
-
-            setupSecurity() {
-                document.addEventListener('keydown', e => {
-                    if (e.key === this.settings.panicKey) { e.preventDefault(); this.panic(); }
-                });
-            }
-
-            panic() {
-                let url = this.settings.panicUrl;
-                if (!url.startsWith('http')) url = 'https://' + url;
-                window.location.replace(url);
-            }
+            setupSecurity() { document.addEventListener('keydown', e => { if (e.key === this.settings.panicKey) { e.preventDefault(); this.panic(); }}); }
+            panic() { let url = this.settings.panicUrl; if (!url.startsWith('http')) url = 'https://' + url; window.location.replace(url); }
 
             openViewer(gameTitle) {
                 document.body.classList.add('overflow-hidden');
                 const game = GAMES.find(g => g.title === gameTitle);
                 if (!game) return;
                 this.currentGame = game;
-                
                 document.getElementById('viewer-title').textContent = game.title;
                 document.getElementById('viewer-category').textContent = game.category;
                 document.getElementById('viewer-bg').style.backgroundImage = `url(${game.image})`;
-                
                 const viewer = document.getElementById('viewer-layer');
                 viewer.classList.remove('hidden', 'opacity-0', 'scale-[1.02]', 'pointer-events-none');
                 viewer.classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
@@ -793,20 +728,15 @@
                 viewer.classList.remove('flex', 'opacity-100', 'scale-100', 'pointer-events-auto');
                 viewer.classList.add('opacity-0', 'scale-[1.02]', 'pointer-events-none');
                 document.body.classList.remove('overflow-hidden'); 
-
-                setTimeout(() => {
-                    viewer.classList.add('hidden');
-                    document.getElementById('game-frame').src = '';
-                }, 700);
+                setTimeout(() => { viewer.classList.add('hidden'); document.getElementById('game-frame').src = ''; }, 700);
                 this.currentGame = null;
             }
         }
-
         const app = new App();
 
 
         // ==========================================
-        // 🔥 GLOBAL CHAT + FRIENDS + CALLING 🔥
+        // 🔥 GLOBAL CHAT + FRIENDS + VIDEO/VOICE CALLING 🔥
         // ==========================================
         class ChatSystem {
             constructor() {
@@ -830,13 +760,11 @@
                 this.peerConnection = null;
                 this.callRef = null;
                 this.isCalling = false;
+                this.isVideoCall = false;
                 this.pendingCallChannel = null;
                 this.pendingFriendRequest = null;
 
-                this.form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.sendMessage();
-                });
+                this.form.addEventListener('submit', (e) => { e.preventDefault(); this.sendMessage(); });
 
                 // --- FIREBASE CONFIGURATION ---
                 const firebaseConfig = {
@@ -864,7 +792,6 @@
                 const modal = document.getElementById('chat-setup-modal');
                 const display = document.getElementById('sidebar-username');
                 const initial = document.getElementById('sidebar-user-initial');
-                
                 if (!this.username) {
                     modal.classList.remove('hidden', 'pointer-events-none');
                     modal.classList.add('opacity-100');
@@ -872,12 +799,8 @@
                 } else {
                     modal.classList.add('opacity-0', 'pointer-events-none');
                     setTimeout(() => modal.classList.add('hidden'), 500);
-                    
-                    this.input.disabled = false;
-                    this.submitBtn.disabled = false;
-                    display.textContent = this.username;
-                    initial.textContent = this.username.charAt(0).toUpperCase();
-                    
+                    this.input.disabled = false; this.submitBtn.disabled = false;
+                    display.textContent = this.username; initial.textContent = this.username.charAt(0).toUpperCase();
                     this.switchChannel('global', 'Global Chat');
                 }
             }
@@ -886,7 +809,6 @@
                 e.preventDefault();
                 const rawName = document.getElementById('username-setup-input').value.trim();
                 if (!rawName) return;
-                
                 this.username = rawName;
                 localStorage.setItem('nm4r-custom-user', this.username);
                 this.checkUsername();
@@ -894,16 +816,10 @@
                 this.listenForFriendRequests();
             }
 
-            // --- Friends & Group System ---
-
             listenForFriendRequests() {
-                // Listen for incoming friend requests
                 this.db.ref(`requests/${this.username}`).on('child_added', snapshot => {
-                    const sender = snapshot.key;
-                    this.showFriendRequest(sender);
+                    this.showFriendRequest(snapshot.key);
                 });
-
-                // Listen for people accepting MY requests
                 this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => {
                     const target = snapshot.key;
                     if(!this.friends.includes(target)) {
@@ -911,7 +827,6 @@
                         localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
                         this.renderSidebar();
                     }
-                    // Clean up accept node
                     this.db.ref(`accepts/${this.username}/${target}`).remove();
                 });
             }
@@ -934,24 +849,19 @@
                 `).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>';
                 
                 lucide.createIcons();
-                this.listenForCalls(); // refresh call listeners for new groups
+                this.listenForCalls();
             }
 
             openAddModal(type) {
                 this.addType = type;
                 const modal = document.getElementById('add-modal');
-                const title = document.getElementById('add-modal-title');
-                const input = document.getElementById('add-modal-input');
-                const err = document.getElementById('add-modal-error');
-                
-                title.textContent = type === 'friend' ? 'Add a Friend' : 'Create Group';
-                input.placeholder = type === 'friend' ? 'Enter exact Username...' : 'Enter Group Name...';
-                input.value = '';
-                err.classList.add('hidden');
-                
+                document.getElementById('add-modal-title').textContent = type === 'friend' ? 'Add a Friend' : 'Create Group';
+                document.getElementById('add-modal-input').placeholder = type === 'friend' ? 'Enter exact Username...' : 'Enter Group Name...';
+                document.getElementById('add-modal-input').value = '';
+                document.getElementById('add-modal-error').classList.add('hidden');
                 modal.classList.remove('hidden');
                 setTimeout(() => modal.classList.remove('opacity-0'), 10);
-                input.focus();
+                document.getElementById('add-modal-input').focus();
             }
 
             closeAddModal() {
@@ -963,28 +873,19 @@
             confirmAdd() {
                 const input = document.getElementById('add-modal-input').value.trim();
                 const err = document.getElementById('add-modal-error');
-                
                 if(!input) { err.textContent = "Please enter a name."; err.classList.remove('hidden'); return; }
                 if(input === this.username && this.addType === 'friend') { err.textContent = "You can't add yourself."; err.classList.remove('hidden'); return; }
                 
                 if (this.addType === 'friend') {
-                    if(this.friends.includes(input)) {
-                        err.textContent = "Already friends."; err.classList.remove('hidden'); return; 
-                    }
-                    // Send Friend Request
+                    if(this.friends.includes(input)) { err.textContent = "Already friends."; err.classList.remove('hidden'); return; }
                     this.db.ref(`requests/${input}/${this.username}`).set(Date.now());
-                    
-                    err.classList.remove('hidden', 'text-accent');
-                    err.classList.add('text-green-500');
-                    err.textContent = "Friend Request Sent!";
+                    err.classList.remove('hidden', 'text-accent'); err.classList.add('text-green-500'); err.textContent = "Friend Request Sent!";
                     setTimeout(() => this.closeAddModal(), 1500);
-                    
                 } else {
                     if(!this.groups.includes(input)) {
                         this.groups.push(input);
                         localStorage.setItem('nm4r-groups', JSON.stringify(this.groups));
-                        this.renderSidebar();
-                        this.closeAddModal();
+                        this.renderSidebar(); this.closeAddModal();
                     }
                 }
             }
@@ -993,41 +894,28 @@
                 this.pendingFriendRequest = sender;
                 document.getElementById('friend-request-name').innerHTML = `<span class="text-white font-bold">${sender}</span> wants to add you.`;
                 const modal = document.getElementById('friend-request-modal');
-                modal.classList.remove('hidden');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+                modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10);
             }
 
             acceptFriendRequest() {
                 if(!this.pendingFriendRequest) return;
                 const sender = this.pendingFriendRequest;
-                
-                // Add to my local list
                 if(!this.friends.includes(sender)) {
-                    this.friends.push(sender);
-                    localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
+                    this.friends.push(sender); localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
                 }
-                
-                // Notify sender to add me
                 this.db.ref(`accepts/${sender}/${this.username}`).set(Date.now());
-                
-                // Delete request
                 this.db.ref(`requests/${this.username}/${sender}`).remove();
                 
                 const modal = document.getElementById('friend-request-modal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-                
-                this.pendingFriendRequest = null;
-                this.renderSidebar();
+                modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
+                this.pendingFriendRequest = null; this.renderSidebar();
             }
 
             declineFriendRequest() {
                 if(!this.pendingFriendRequest) return;
                 this.db.ref(`requests/${this.username}/${this.pendingFriendRequest}`).remove();
-                
                 const modal = document.getElementById('friend-request-modal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
+                modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
                 this.pendingFriendRequest = null;
             }
 
@@ -1037,9 +925,9 @@
                 document.getElementById('current-room-name').textContent = channelName;
                 document.getElementById('chat-messages').innerHTML = ''; 
                 
-                const callBtn = document.getElementById('start-call-btn');
-                if (showCallBtn) callBtn.classList.remove('hidden');
-                else callBtn.classList.add('hidden');
+                const controls = document.getElementById('call-controls-container');
+                if (showCallBtn) controls.classList.remove('hidden');
+                else controls.classList.add('hidden');
 
                 document.querySelectorAll('.channel-btn').forEach(btn => {
                     btn.classList.remove('bg-zinc-800');
@@ -1049,66 +937,41 @@
                 if (this.messagesListener) this.messagesListener.off();
 
                 this.messagesListener = this.db.ref(`messages/${channelId}`).limitToLast(50);
-                this.messagesListener.on('child_added', (snapshot) => {
-                    this.receiveMessage(snapshot.val());
-                });
-
+                this.messagesListener.on('child_added', (snapshot) => { this.receiveMessage(snapshot.val()); });
                 this.input.focus();
             }
-
-            // --- Messaging ---
 
             sendMessage() {
                 const text = this.input.value.trim();
                 if(!text || !this.username) return;
-
-                const msg = {
-                    user: this.username,
-                    text: text,
-                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                };
-
+                const msg = { user: this.username, text: text, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
                 this.db.ref(`messages/${this.currentChannel}`).push(msg);
-                this.input.value = '';
-                this.input.focus();
+                this.input.value = ''; this.input.focus();
             }
 
             receiveMessage(msg) {
                 const isMe = msg.user === this.username;
                 let html = `
                     <div class="flex flex-col w-full ${isMe ? 'items-end' : 'items-start'} animate-reveal-up" style="animation-duration: 0.3s">
-                        <div class="flex items-baseline gap-2 mb-1 px-1">
-                            <span class="text-[13px] font-bold tracking-wide ${isMe ? 'text-accent' : 'text-zinc-300'}">${msg.user}</span>
-                            <span class="text-[10px] font-mono text-zinc-600">${msg.time}</span>
-                        </div>
+                        <div class="flex items-baseline gap-2 mb-1 px-1"><span class="text-[13px] font-bold tracking-wide ${isMe ? 'text-accent' : 'text-zinc-300'}">${msg.user}</span><span class="text-[10px] font-mono text-zinc-600">${msg.time}</span></div>
                         <div class="px-4 py-3 text-[14px] max-w-[85%] md:max-w-[70%] ${isMe ? 'bg-accent text-white rounded-[1.2rem] rounded-tr-sm' : 'bg-zinc-800 text-zinc-100 rounded-[1.2rem] rounded-tl-sm'} break-words">
                             ${this.escapeHTML(msg.text)}
                         </div>
                     </div>
                 `;
-                
                 this.messagesContainer.insertAdjacentHTML('beforeend', html);
                 this.scrollToBottom();
-
-                if(!app.isChatOpen && !isMe && this.navBadge) {
-                    this.navBadge.classList.remove('hidden');
-                }
+                if(!app.isChatOpen && !isMe && this.navBadge) this.navBadge.classList.remove('hidden');
             }
 
-            scrollToBottom() {
-                setTimeout(() => { this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight; }, 50);
-            }
-
-            escapeHTML(str) {
-                return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
-            }
+            scrollToBottom() { setTimeout(() => { this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight; }, 50); }
+            escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])); }
 
             // ==========================================
-            // 🔥 VOICE CALLING SYSTEM (WebRTC) 🔥
+            // 🔥 VOICE & VIDEO CALLING (WebRTC) 🔥
             // ==========================================
 
             listenForCalls() {
-                // Compile all possible channels (Friends + Groups)
                 const channelsToListen = [];
                 this.friends.forEach(f => channelsToListen.push(`dm_${[this.username, f].sort().join('_')}`));
                 this.groups.forEach(g => channelsToListen.push(`group_${g}`));
@@ -1119,7 +982,7 @@
                         
                         // Incoming call (Not initiated by me)
                         if (callData && callData.offer && callData.caller !== this.username && !this.isCalling) {
-                            this.showIncomingCall(callData.caller, channelId);
+                            this.showIncomingCall(callData.caller, channelId, callData.isVideo);
                         }
                         
                         // Answer received (I initiated it)
@@ -1139,30 +1002,39 @@
                         }
 
                         // Call was hung up
-                        if (!callData && this.isCalling) {
-                            this.endCall(false); 
-                        }
+                        if (!callData && this.isCalling) this.endCall(false); 
                     });
                 });
             }
 
-            async setupWebRTC(channelId) {
+            async setupWebRTC(channelId, isVideo = false) {
                 const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
                 this.peerConnection = new RTCPeerConnection(configuration);
                 this.callRef = this.db.ref(`calls/${channelId}`);
+                this.isVideoCall = isVideo;
 
                 try {
-                    this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                    this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo });
+                    
+                    if (isVideo) {
+                        const localVid = document.getElementById('local-video');
+                        localVid.srcObject = this.localStream;
+                    }
+
                     this.localStream.getTracks().forEach(track => {
                         this.peerConnection.addTrack(track, this.localStream);
                     });
                 } catch (e) {
-                    alert("Microphone access blocked. Ensure you are on HTTPS or have given permissions.");
+                    alert("Hardware access blocked. Ensure you are on HTTPS, or check camera/mic permissions.");
                     return false;
                 }
 
                 this.peerConnection.ontrack = event => {
-                    document.getElementById('remote-audio').srcObject = event.streams[0];
+                    if(isVideo) {
+                        document.getElementById('remote-video').srcObject = event.streams[0];
+                    } else {
+                        document.getElementById('remote-audio').srcObject = event.streams[0];
+                    }
                 };
 
                 this.peerConnection.onicecandidate = event => {
@@ -1173,17 +1045,15 @@
 
                 this.isCalling = true;
                 
-                // Format name nicely for the UI
                 let cleanName = channelId.replace('dm_', '').replace('group_', '').replace(this.username, '').replace('_', '');
-                this.showActiveCallUI(cleanName);
-                
+                this.showActiveCallUI(cleanName, isVideo);
                 return true;
             }
 
-            async initiateCall() {
+            async initiateCall(isVideo) {
                 if (this.currentChannel === 'global') return;
                 
-                const success = await this.setupWebRTC(this.currentChannel);
+                const success = await this.setupWebRTC(this.currentChannel, isVideo);
                 if (!success) return;
 
                 const offer = await this.peerConnection.createOffer();
@@ -1191,58 +1061,53 @@
 
                 this.callRef.set({
                     caller: this.username,
+                    isVideo: isVideo,
                     offer: { type: offer.type, sdp: offer.sdp }
                 });
             }
 
-            showIncomingCall(callerName, channelId) {
+            showIncomingCall(callerName, channelId, isVideo) {
                 this.pendingCallChannel = channelId;
                 document.getElementById('incoming-caller-name').textContent = `${callerName} is calling...`;
+                document.getElementById('incoming-call-type-title').textContent = isVideo ? 'Incoming Video Call' : 'Incoming Voice Call';
                 
+                document.getElementById('incoming-call-icon').setAttribute('data-lucide', isVideo ? 'video' : 'phone');
+                document.getElementById('incoming-accept-icon').setAttribute('data-lucide', isVideo ? 'video' : 'phone');
+                lucide.createIcons();
+
                 const modal = document.getElementById('incoming-call-modal');
-                modal.classList.remove('hidden');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+                modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10);
                 
-                // Play Ringtone
                 this.ringtone.currentTime = 0;
                 this.ringtone.play().catch(e => console.log("Audio autoplay blocked by browser."));
             }
 
             async acceptCall() {
                 this.ringtone.pause();
-                
                 const modal = document.getElementById('incoming-call-modal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
+                modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
 
                 if (!this.pendingCallChannel) return;
 
-                const success = await this.setupWebRTC(this.pendingCallChannel);
-                if (!success) return;
-
-                const snapshot = await this.callRef.once('value');
+                const snapshot = await this.db.ref(`calls/${this.pendingCallChannel}`).once('value');
                 const callData = snapshot.val();
                 
-                // If it was already answered by someone else (in a group)
-                if(!callData || callData.answer) {
-                    this.endCall(false);
-                    return;
-                }
+                if(!callData || callData.answer) { this.endCall(false); return; }
+
+                const success = await this.setupWebRTC(this.pendingCallChannel, callData.isVideo);
+                if (!success) return;
                 
                 await this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
                 const answer = await this.peerConnection.createAnswer();
                 await this.peerConnection.setLocalDescription(answer);
 
-                this.callRef.update({
-                    answer: { type: answer.type, sdp: answer.sdp }
-                });
+                this.callRef.update({ answer: { type: answer.type, sdp: answer.sdp } });
             }
 
             declineCall() {
                 this.ringtone.pause();
                 const modal = document.getElementById('incoming-call-modal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
+                modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300);
                 
                 if (this.pendingCallChannel) {
                     this.db.ref(`calls/${this.pendingCallChannel}`).remove();
@@ -1250,34 +1115,39 @@
                 }
             }
 
-            showActiveCallUI(name) {
-                document.getElementById('active-call-name').textContent = name;
-                document.getElementById('active-call-bar').classList.remove('hidden');
-                document.getElementById('active-call-bar').classList.add('flex');
+            showActiveCallUI(name, isVideo) {
+                if (isVideo) {
+                    const vidUI = document.getElementById('video-call-ui');
+                    vidUI.classList.remove('hidden'); vidUI.classList.add('flex');
+                } else {
+                    document.getElementById('active-call-name').textContent = name;
+                    const bar = document.getElementById('active-call-bar');
+                    bar.classList.remove('hidden'); bar.classList.add('flex');
+                }
             }
 
             endCall(clearDb = true) {
                 this.isCalling = false;
+                this.isVideoCall = false;
                 this.ringtone.pause();
                 
-                document.getElementById('active-call-bar').classList.add('hidden');
-                document.getElementById('active-call-bar').classList.remove('flex');
-                document.getElementById('remote-audio').srcObject = null;
+                // Hide Voice UI
+                const bar = document.getElementById('active-call-bar');
+                bar.classList.add('hidden'); bar.classList.remove('flex');
                 
-                // Hide modal if it was ringing
+                // Hide Video UI
+                const vidUI = document.getElementById('video-call-ui');
+                vidUI.classList.add('hidden'); vidUI.classList.remove('flex');
+
+                document.getElementById('remote-audio').srcObject = null;
+                document.getElementById('remote-video').srcObject = null;
+                document.getElementById('local-video').srcObject = null;
+                
                 document.getElementById('incoming-call-modal').classList.add('opacity-0', 'hidden');
 
-                if (this.localStream) {
-                    this.localStream.getTracks().forEach(track => track.stop());
-                    this.localStream = null;
-                }
-                if (this.peerConnection) {
-                    this.peerConnection.close();
-                    this.peerConnection = null;
-                }
-                if (this.callRef && clearDb) {
-                    this.callRef.remove();
-                }
+                if (this.localStream) { this.localStream.getTracks().forEach(track => track.stop()); this.localStream = null; }
+                if (this.peerConnection) { this.peerConnection.close(); this.peerConnection = null; }
+                if (this.callRef && clearDb) { this.callRef.remove(); }
             }
         }
         
