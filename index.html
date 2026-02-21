@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <!-- Cutscene Layer (Ensured it doesn't block clicks) -->
+    <!-- Cutscene Layer -->
     <div id="cutscene-layer" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center overflow-hidden hidden pointer-events-none">
         <div id="cs-logo" class="relative z-10 text-center hidden">
             <div class="inline-flex items-center justify-center w-24 h-24 bg-zinc-900 rounded-3xl mb-10 shadow-2xl border border-zinc-800 animate-pop-in">
@@ -439,9 +439,30 @@
         </div>
     </div>
 
+    <!-- INITIALIZE FIREBASE GLOBALLY FIRST -->
     <script>
+        // --- GLOBAL DATABASE INIT (CRITICAL) ---
+        let db = null;
+        try {
+            const firebaseConfig = {
+              apiKey: "AIzaSyDKqhSa-fFT-R8DGWeGq0tFsuHySTto2NU",
+              authDomain: "notminechat-71bd0.firebaseapp.com",
+              databaseURL: "https://notminechat-71bd0-default-rtdb.firebaseio.com",
+              projectId: "notminechat-71bd0",
+              storageBucket: "notminechat-71bd0.firebasestorage.app",
+              messagingSenderId: "446821268917",
+              appId: "1:446821268917:web:181c7ad0e0b4241b02adfc"
+            };
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            console.log("Firebase Connected Successfully");
+        } catch(e) {
+            console.error("Critical Firebase Error: ", e);
+            alert("Database Connection Failed. Chat & Admin features disabled.");
+        }
+
         // --- DATA ---
-        var _GAMES = [
+       var _GAMES = [
     ["Five nights at Epstein's", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d7b5efdff8c12e973faa40020d911b3e.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/710.png", "Horror"],
     ["Midnight shift", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f7629dd04a219c53bdf6d0f2421fcfd7.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/658.png", "Horror"],
     ["Iron Lung", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_e09fd370d40766ca1ffcc5bdb591d229.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/705.png", "Horror"],
@@ -652,15 +673,12 @@
                 setTimeout(() => { cs.classList.add('hidden'); }, 3000);
             }
 
-            // ... (Core App Navigation Methods remain same) ...
             showMainMenu() { this.previousLayer = 'menu'; const menu = document.getElementById('menu-layer'); menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.classList.add('overflow-hidden'); this.renderMainMenu(); this.setupMenuTilt(); lucide.createIcons(); }
             
             renderMainMenu() {
                 const layer = document.getElementById('menu-layer');
                 const heroGame = GAMES.find(g => g.title === "Minecraft 1.12") || GAMES[0];
                 this.menuPreviewData = { games: { isGame: false }, featured: { isGame: true, title: heroGame.title, desc: "Play now.", img: heroGame.image, tag: "Featured" }, random: { isGame: true, title: "Random Game", desc: "Play something new.", img: GAMES[1].image, tag: "Random" }, chat: { isGame: false }, settings: { isGame: false } };
-                
-                // (Menu HTML omitted for brevity - same as before)
                 layer.innerHTML = `<div id="menu-ambient-bg" class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-zinc-900/40 via-black to-black transition-opacity duration-1000 opacity-100"></div><div id="menu-bg" class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-0 blur-xl scale-110"></div><div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div><div class="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center p-8 md:p-16 lg:p-24 gap-12 lg:gap-24"><div class="w-full md:w-[45%] flex flex-col justify-center space-y-8 animate-reveal-up"><div class="mb-6"><h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4">NOTMINE<span class="text-zinc-600 block md:inline">4REAL</span></h1></div><div class="flex flex-col space-y-1">${this.createMenuItem('GAMES', 'enterLibrary()', 'games', 'layout-grid')}${this.createMenuItem('FEATURED', `openViewer('${heroGame.title.replace(/'/g, "\\'")}')`, 'featured', 'star')}${this.createMenuItem('SHUFFLE', 'playRandomFromMenu()', 'random', 'shuffle')}${this.createMenuItem('CHAT', 'openChat()', 'chat', 'message-square')}${this.createMenuItem('SETTINGS', 'openSettings()', 'settings', 'settings')}</div></div><div class="hidden md:flex w-full md:w-[55%] h-full max-h-[600px] items-center justify-center"><div id="menu-preview-card" class="w-full max-w-xl aspect-video bg-zinc-900 rounded-[2rem] overflow-hidden relative shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-white/10 transition-all duration-700 opacity-0 scale-95 pointer-events-none group perspective-1000"><img id="menu-preview-img" src="" class="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110 opacity-80" /><div class="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90"></div><div class="absolute bottom-0 left-0 p-10 w-full transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0"><div class="flex items-center justify-between mb-4"><div id="menu-preview-tag" class="px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold uppercase tracking-widest">Tag</div></div><h2 id="menu-preview-title" class="font-display font-extrabold text-5xl text-white mb-2 leading-tight drop-shadow-lg">Title</h2><p id="menu-preview-desc" class="font-sans text-zinc-300 text-lg opacity-80">Desc</p></div></div></div></div>`;
             }
 
@@ -709,21 +727,19 @@
             // === ADMIN COMMAND LISTENER (Global Client Side) ===
             listenForAdminCommands() {
                 try {
-                    if (window.firebase) {
-                        firebase.database().ref('global_commands').limitToLast(1).on('child_added', (snapshot) => {
-                            const cmd = snapshot.val();
-                            if (Date.now() - cmd.timestamp > 10000) return; // Ignore old commands
-                            switch(cmd.type) {
-                                case 'global_alert': alert("SYSTEM MESSAGE:\n\n" + (cmd.payload || "Alert")); break;
-                                case 'force_reload': location.reload(); break;
-                                case 'system_lock': document.getElementById('blur-overlay').classList.remove('hidden', 'opacity-0'); document.body.classList.add('blur-locked'); break;
-                                case 'rickroll': window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; break;
-                                case 'matrix_mode': document.body.classList.toggle('matrix-mode'); break;
-                                case 'clear_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = ''; break;
-                            }
-                        });
-                    }
-                } catch(e) { console.log('Admin Listener Skipped: ' + e); }
+                    db.ref('global_commands').limitToLast(1).on('child_added', (snapshot) => {
+                        const cmd = snapshot.val();
+                        if (Date.now() - cmd.timestamp > 15000) return; // Increased buffer to 15s
+                        switch(cmd.type) {
+                            case 'global_alert': alert("SYSTEM MESSAGE:\n\n" + (cmd.payload || "Alert")); break;
+                            case 'force_reload': location.reload(); break;
+                            case 'system_lock': document.getElementById('blur-overlay').classList.remove('hidden', 'opacity-0'); document.body.classList.add('blur-locked'); break;
+                            case 'rickroll': window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; break;
+                            case 'matrix_mode': document.body.classList.toggle('matrix-mode'); break;
+                            case 'clear_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = ''; break;
+                        }
+                    });
+                } catch(e) { console.log('Admin Listener Error: ' + e); }
             }
         }
         const app = new App();
@@ -754,14 +770,19 @@
             }
 
             sendCommand(type, payload = null) {
-                if(!window.firebase) return;
-                const db = firebase.database();
+                if(!db) { alert("Admin Error: DB not connected."); return; }
                 db.ref('global_commands').push({
                     type: type,
                     payload: payload,
                     timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
                 if(type === 'clear_chat') { db.ref('messages/global').remove(); }
+                
+                // Visual Feedback
+                const btn = event.currentTarget;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<span class="text-green-500 font-bold">COMMAND SENT ✔</span>`;
+                setTimeout(() => { btn.innerHTML = originalText; }, 1500);
             }
         }
         const adminSystem = new AdminSystem();
@@ -776,26 +797,8 @@
                 this.currentChannel = 'global'; this.currentChannelName = 'Global Chat'; this.messagesListener = null;
                 this.localStream = null; this.peerConnection = null; this.callRef = null; this.isCalling = false; this.isVideoCall = false; this.pendingCallChannel = null; this.pendingFriendRequest = null;
                 this.form.addEventListener('submit', (e) => { e.preventDefault(); this.sendMessage(); });
-
-                // Try-Catch to prevent UI freeze if Firebase fails
-                try {
-                    const firebaseConfig = {
-                      apiKey: "AIzaSyDKqhSa-fFT-R8DGWeGq0tFsuHySTto2NU",
-                      authDomain: "notminechat-71bd0.firebaseapp.com",
-                      databaseURL: "https://notminechat-71bd0-default-rtdb.firebaseio.com",
-                      projectId: "notminechat-71bd0",
-                      storageBucket: "notminechat-71bd0.firebasestorage.app",
-                      messagingSenderId: "446821268917",
-                      appId: "1:446821268917:web:181c7ad0e0b4241b02adfc"
-                    };
-                    firebase.initializeApp(firebaseConfig); 
-                    this.db = firebase.database();
-                    this.renderSidebar(); 
-                    if (this.username) { this.listenForCalls(); this.listenForFriendRequests(); }
-                } catch(e) {
-                    console.error("Chat System Failed:", e);
-                    this.messagesContainer.innerHTML = '<div class="text-red-500 p-4">Chat Unavailable (Check Network)</div>';
-                }
+                this.db = db; // Use global DB
+                if(this.db) { this.renderSidebar(); if (this.username) { this.listenForCalls(); this.listenForFriendRequests(); } }
             }
 
             checkUsername() {
