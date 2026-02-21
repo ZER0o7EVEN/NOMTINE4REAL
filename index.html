@@ -162,7 +162,7 @@
                 <i data-lucide="arrow-left" class="w-4 h-4"></i> Back
             </button>
             <h2 class="font-display font-black text-xl text-white tracking-wide">Chat Room</h2>
-            <div class="w-20"></div> <!-- Spacer for center alignment -->
+            <div class="w-20"></div>
         </div>
 
         <!-- Username Setup Modal -->
@@ -183,8 +183,23 @@
                 <button onclick="globalChat.closeAddModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
                 <h3 id="add-modal-title" class="text-xl font-bold text-white mb-4">Add Friend</h3>
                 <input type="text" id="add-modal-input" placeholder="Enter Username..." class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white mb-4 focus:outline-none focus:border-accent">
-                <p id="add-modal-error" class="text-red-500 text-sm hidden mb-4"></p>
-                <button onclick="globalChat.confirmAdd()" class="w-full py-3 bg-accent text-white font-bold rounded-xl hover:bg-accent/80 transition-colors">Confirm</button>
+                <p id="add-modal-error" class="text-accent text-sm hidden mb-4"></p>
+                <button onclick="globalChat.confirmAdd()" class="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors">Confirm</button>
+            </div>
+        </div>
+
+        <!-- Incoming Friend Request Modal -->
+        <div id="friend-request-modal" class="absolute inset-0 z-[65] bg-black/80 backdrop-blur-sm hidden items-center justify-center opacity-0 transition-opacity duration-300">
+            <div class="bg-zinc-900 border border-zinc-700 p-8 rounded-2xl w-full max-w-sm shadow-2xl text-center">
+                <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4 text-white">
+                    <i data-lucide="user-plus" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white mb-2">Friend Request</h3>
+                <p id="friend-request-name" class="text-zinc-400 mb-6">User wants to be friends!</p>
+                <div class="flex gap-4">
+                    <button onclick="globalChat.declineFriendRequest()" class="flex-1 py-3 bg-zinc-800 hover:bg-red-500 hover:text-white text-zinc-300 font-bold rounded-xl transition-colors">Decline</button>
+                    <button onclick="globalChat.acceptFriendRequest()" class="flex-1 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors">Accept</button>
+                </div>
             </div>
         </div>
 
@@ -212,7 +227,10 @@
             <button onclick="globalChat.endCall()" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full transition-colors">Hang Up</button>
         </div>
 
+        <!-- Hidden Audio Elements -->
         <audio id="remote-audio" autoplay hidden></audio>
+        <!-- Ringtone Sound -->
+        <audio id="ringtone-audio" loop preload="auto" hidden src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3"></audio>
 
         <!-- Main Discord-like UI Layout -->
         <div class="flex-1 flex overflow-hidden relative z-10 bg-black">
@@ -239,7 +257,7 @@
                     <!-- Friends / DMs -->
                     <div>
                         <div class="flex items-center justify-between px-2 mb-2">
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Direct Messages</span>
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Friends</span>
                             <button onclick="globalChat.openAddModal('friend')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
                         </div>
                         <div id="friends-list" class="space-y-1">
@@ -269,7 +287,7 @@
                         <i data-lucide="hash" class="w-4 h-4 text-zinc-500"></i>
                         <span class="font-bold text-white" id="current-room-name">Global Chat</span>
                     </div>
-                    <!-- Call Button (Only visible in DMs) -->
+                    <!-- Call Button (Visible in DMs and Groups) -->
                     <button id="start-call-btn" onclick="globalChat.initiateCall()" class="hidden px-3 py-1.5 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2">
                         <i data-lucide="phone" class="w-4 h-4"></i> Call
                     </button>
@@ -504,13 +522,11 @@
                 const data = this.menuPreviewData[key];
                 const card = document.getElementById('menu-preview-card');
                 const bg = document.getElementById('menu-bg');
-                
                 if(!data || !data.isGame) {
                     if(card) { card.classList.remove('opacity-100', 'scale-100'); card.classList.add('opacity-0', 'scale-95'); }
                     if(bg) bg.style.opacity = '0';
                     return;
                 }
-
                 if(card) { card.classList.remove('opacity-0', 'scale-95'); card.classList.add('opacity-100', 'scale-100'); }
                 if(bg && data.img) { bg.style.backgroundImage = `url('${data.img}')`; bg.style.opacity = '0.4'; }
                 if(document.getElementById('menu-preview-img')) document.getElementById('menu-preview-img').src = data.img;
@@ -799,6 +815,7 @@
                 this.input = document.getElementById('chat-input');
                 this.submitBtn = document.getElementById('chat-submit-btn');
                 this.navBadge = document.getElementById('nav-chat-badge');
+                this.ringtone = document.getElementById('ringtone-audio');
                 
                 this.username = localStorage.getItem('nm4r-custom-user');
                 this.friends = JSON.parse(localStorage.getItem('nm4r-friends') || '[]');
@@ -806,7 +823,6 @@
                 
                 this.currentChannel = 'global';
                 this.currentChannelName = 'Global Chat';
-                
                 this.messagesListener = null;
 
                 // WebRTC Variables
@@ -814,6 +830,8 @@
                 this.peerConnection = null;
                 this.callRef = null;
                 this.isCalling = false;
+                this.pendingCallChannel = null;
+                this.pendingFriendRequest = null;
 
                 this.form.addEventListener('submit', (e) => {
                     e.preventDefault();
@@ -838,6 +856,7 @@
                 
                 if (this.username) {
                     this.listenForCalls();
+                    this.listenForFriendRequests();
                 }
             }
 
@@ -872,10 +891,31 @@
                 localStorage.setItem('nm4r-custom-user', this.username);
                 this.checkUsername();
                 this.listenForCalls();
+                this.listenForFriendRequests();
             }
 
-            // --- UI Navigation ---
-            
+            // --- Friends & Group System ---
+
+            listenForFriendRequests() {
+                // Listen for incoming friend requests
+                this.db.ref(`requests/${this.username}`).on('child_added', snapshot => {
+                    const sender = snapshot.key;
+                    this.showFriendRequest(sender);
+                });
+
+                // Listen for people accepting MY requests
+                this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => {
+                    const target = snapshot.key;
+                    if(!this.friends.includes(target)) {
+                        this.friends.push(target);
+                        localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
+                        this.renderSidebar();
+                    }
+                    // Clean up accept node
+                    this.db.ref(`accepts/${this.username}/${target}`).remove();
+                });
+            }
+
             renderSidebar() {
                 const fList = document.getElementById('friends-list');
                 fList.innerHTML = this.friends.map(f => `
@@ -887,13 +927,14 @@
 
                 const gList = document.getElementById('groups-list');
                 gList.innerHTML = this.groups.map(g => `
-                    <button onclick="globalChat.switchChannel('group_${g}', '${g}')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="group_${g}">
+                    <button onclick="globalChat.switchChannel('group_${g}', '${g}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="group_${g}">
                         <div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center group-hover:text-white"><i data-lucide="users" class="w-3 h-3 text-zinc-400 group-hover:text-white"></i></div>
                         <span class="font-medium text-zinc-400 group-hover:text-white truncate">${g}</span>
                     </button>
                 `).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>';
                 
                 lucide.createIcons();
+                this.listenForCalls(); // refresh call listeners for new groups
             }
 
             openAddModal(type) {
@@ -904,7 +945,7 @@
                 const err = document.getElementById('add-modal-error');
                 
                 title.textContent = type === 'friend' ? 'Add a Friend' : 'Create Group';
-                input.placeholder = type === 'friend' ? 'Enter their exact username...' : 'Enter Group Name...';
+                input.placeholder = type === 'friend' ? 'Enter exact Username...' : 'Enter Group Name...';
                 input.value = '';
                 err.classList.add('hidden');
                 
@@ -927,47 +968,87 @@
                 if(input === this.username && this.addType === 'friend') { err.textContent = "You can't add yourself."; err.classList.remove('hidden'); return; }
                 
                 if (this.addType === 'friend') {
-                    if(!this.friends.includes(input)) {
-                        this.friends.push(input);
-                        localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
+                    if(this.friends.includes(input)) {
+                        err.textContent = "Already friends."; err.classList.remove('hidden'); return; 
                     }
+                    // Send Friend Request
+                    this.db.ref(`requests/${input}/${this.username}`).set(Date.now());
+                    
+                    err.classList.remove('hidden', 'text-accent');
+                    err.classList.add('text-green-500');
+                    err.textContent = "Friend Request Sent!";
+                    setTimeout(() => this.closeAddModal(), 1500);
+                    
                 } else {
                     if(!this.groups.includes(input)) {
                         this.groups.push(input);
                         localStorage.setItem('nm4r-groups', JSON.stringify(this.groups));
+                        this.renderSidebar();
+                        this.closeAddModal();
                     }
                 }
-                
-                this.renderSidebar();
-                this.closeAddModal();
             }
 
-            switchChannel(channelId, channelName, isDM = false) {
+            showFriendRequest(sender) {
+                this.pendingFriendRequest = sender;
+                document.getElementById('friend-request-name').innerHTML = `<span class="text-white font-bold">${sender}</span> wants to add you.`;
+                const modal = document.getElementById('friend-request-modal');
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+            }
+
+            acceptFriendRequest() {
+                if(!this.pendingFriendRequest) return;
+                const sender = this.pendingFriendRequest;
+                
+                // Add to my local list
+                if(!this.friends.includes(sender)) {
+                    this.friends.push(sender);
+                    localStorage.setItem('nm4r-friends', JSON.stringify(this.friends));
+                }
+                
+                // Notify sender to add me
+                this.db.ref(`accepts/${sender}/${this.username}`).set(Date.now());
+                
+                // Delete request
+                this.db.ref(`requests/${this.username}/${sender}`).remove();
+                
+                const modal = document.getElementById('friend-request-modal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+                
+                this.pendingFriendRequest = null;
+                this.renderSidebar();
+            }
+
+            declineFriendRequest() {
+                if(!this.pendingFriendRequest) return;
+                this.db.ref(`requests/${this.username}/${this.pendingFriendRequest}`).remove();
+                
+                const modal = document.getElementById('friend-request-modal');
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+                this.pendingFriendRequest = null;
+            }
+
+            switchChannel(channelId, channelName, showCallBtn = false) {
                 this.currentChannel = channelId;
                 this.currentChannelName = channelName;
-                
                 document.getElementById('current-room-name').textContent = channelName;
-                document.getElementById('chat-messages').innerHTML = ''; // Clear chat
+                document.getElementById('chat-messages').innerHTML = ''; 
                 
-                // Show/Hide Call Button
                 const callBtn = document.getElementById('start-call-btn');
-                if (isDM) callBtn.classList.remove('hidden');
+                if (showCallBtn) callBtn.classList.remove('hidden');
                 else callBtn.classList.add('hidden');
 
-                // Update Sidebar highlight
                 document.querySelectorAll('.channel-btn').forEach(btn => {
                     btn.classList.remove('bg-zinc-800');
                     if(btn.dataset.id === channelId) btn.classList.add('bg-zinc-800');
                 });
 
-                // Detach old listener
-                if (this.messagesListener) {
-                    this.messagesListener.off();
-                }
+                if (this.messagesListener) this.messagesListener.off();
 
-                // Listen to new channel
-                const path = `messages/${channelId}`;
-                this.messagesListener = this.db.ref(path).limitToLast(50);
+                this.messagesListener = this.db.ref(`messages/${channelId}`).limitToLast(50);
                 this.messagesListener.on('child_added', (snapshot) => {
                     this.receiveMessage(snapshot.val());
                 });
@@ -1019,9 +1100,7 @@
             }
 
             escapeHTML(str) {
-                return str.replace(/[&<>'"]/g, tag => ({
-                    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-                }[tag]));
+                return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
             }
 
             // ==========================================
@@ -1029,18 +1108,21 @@
             // ==========================================
 
             listenForCalls() {
-                // Listen to all possible DM channels the user might be in
-                this.friends.forEach(friend => {
-                    const channelId = `dm_${[this.username, friend].sort().join('_')}`;
+                // Compile all possible channels (Friends + Groups)
+                const channelsToListen = [];
+                this.friends.forEach(f => channelsToListen.push(`dm_${[this.username, f].sort().join('_')}`));
+                this.groups.forEach(g => channelsToListen.push(`group_${g}`));
+
+                channelsToListen.forEach(channelId => {
                     this.db.ref(`calls/${channelId}`).on('value', snapshot => {
                         const callData = snapshot.val();
                         
-                        // If there is an offer, and I am NOT the caller
+                        // Incoming call (Not initiated by me)
                         if (callData && callData.offer && callData.caller !== this.username && !this.isCalling) {
                             this.showIncomingCall(callData.caller, channelId);
                         }
                         
-                        // If someone answered my call
+                        // Answer received (I initiated it)
                         if (callData && callData.answer && callData.caller === this.username && this.isCalling) {
                             if (!this.peerConnection.currentRemoteDescription) {
                                 this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.answer));
@@ -1056,9 +1138,9 @@
                             });
                         }
 
-                        // If call was cleared (hung up)
+                        // Call was hung up
                         if (!callData && this.isCalling) {
-                            this.endCall(false); // End call visually without rewriting to DB
+                            this.endCall(false); 
                         }
                     });
                 });
@@ -1069,39 +1151,37 @@
                 this.peerConnection = new RTCPeerConnection(configuration);
                 this.callRef = this.db.ref(`calls/${channelId}`);
 
-                // Get local audio
                 try {
                     this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
                     this.localStream.getTracks().forEach(track => {
                         this.peerConnection.addTrack(track, this.localStream);
                     });
                 } catch (e) {
-                    alert("Microphone access denied or not available. (Needs HTTPS)");
+                    alert("Microphone access blocked. Ensure you are on HTTPS or have given permissions.");
                     return false;
                 }
 
-                // Play remote audio
                 this.peerConnection.ontrack = event => {
                     document.getElementById('remote-audio').srcObject = event.streams[0];
                 };
 
-                // Send ICE candidates to Firebase
                 this.peerConnection.onicecandidate = event => {
                     if (event.candidate) {
-                        this.callRef.child('candidates').push({
-                            user: this.username,
-                            candidate: event.candidate.toJSON()
-                        });
+                        this.callRef.child('candidates').push({ user: this.username, candidate: event.candidate.toJSON() });
                     }
                 };
 
                 this.isCalling = true;
-                this.showActiveCallUI(channelId.replace(`dm_`, '').replace(this.username, '').replace('_', ''));
+                
+                // Format name nicely for the UI
+                let cleanName = channelId.replace('dm_', '').replace('group_', '').replace(this.username, '').replace('_', '');
+                this.showActiveCallUI(cleanName);
+                
                 return true;
             }
 
             async initiateCall() {
-                if (!this.currentChannel.startsWith('dm_')) return;
+                if (this.currentChannel === 'global') return;
                 
                 const success = await this.setupWebRTC(this.currentChannel);
                 if (!success) return;
@@ -1118,12 +1198,19 @@
             showIncomingCall(callerName, channelId) {
                 this.pendingCallChannel = channelId;
                 document.getElementById('incoming-caller-name').textContent = `${callerName} is calling...`;
+                
                 const modal = document.getElementById('incoming-call-modal');
                 modal.classList.remove('hidden');
                 setTimeout(() => modal.classList.remove('opacity-0'), 10);
+                
+                // Play Ringtone
+                this.ringtone.currentTime = 0;
+                this.ringtone.play().catch(e => console.log("Audio autoplay blocked by browser."));
             }
 
             async acceptCall() {
+                this.ringtone.pause();
+                
                 const modal = document.getElementById('incoming-call-modal');
                 modal.classList.add('opacity-0');
                 setTimeout(() => modal.classList.add('hidden'), 300);
@@ -1136,6 +1223,12 @@
                 const snapshot = await this.callRef.once('value');
                 const callData = snapshot.val();
                 
+                // If it was already answered by someone else (in a group)
+                if(!callData || callData.answer) {
+                    this.endCall(false);
+                    return;
+                }
+                
                 await this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer));
                 const answer = await this.peerConnection.createAnswer();
                 await this.peerConnection.setLocalDescription(answer);
@@ -1146,6 +1239,7 @@
             }
 
             declineCall() {
+                this.ringtone.pause();
                 const modal = document.getElementById('incoming-call-modal');
                 modal.classList.add('opacity-0');
                 setTimeout(() => modal.classList.add('hidden'), 300);
@@ -1164,9 +1258,14 @@
 
             endCall(clearDb = true) {
                 this.isCalling = false;
+                this.ringtone.pause();
+                
                 document.getElementById('active-call-bar').classList.add('hidden');
                 document.getElementById('active-call-bar').classList.remove('flex');
                 document.getElementById('remote-audio').srcObject = null;
+                
+                // Hide modal if it was ringing
+                document.getElementById('incoming-call-modal').classList.add('opacity-0', 'hidden');
 
                 if (this.localStream) {
                     this.localStream.getTracks().forEach(track => track.stop());
