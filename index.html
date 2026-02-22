@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&family=Press+Start+2P&family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet" />
     
     <!-- Tailwind CSS & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,8 +25,8 @@
         darkMode: 'class',
         theme: {
           extend: {
-            fontFamily: { sans: ['var(--font-base)', 'sans-serif'], display: ['var(--font-head)', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], },
-            colors: { accent: 'var(--accent)', 'accent-dark': 'var(--accent-dark)', zinc: { 850: '#1f1f22', 900: '#18181b', 950: '#050505' }, black: '#000000', },
+            fontFamily: { sans: ['var(--font-base)', 'sans-serif'], display: ['var(--font-head)', 'sans-serif'], mono: ['var(--font-mono)', 'monospace'], },
+            colors: { accent: 'var(--accent)', 'accent-dark': 'var(--accent-dark)', 'bg-primary': 'var(--bg-primary)', 'bg-secondary': 'var(--bg-secondary)', 'text-primary': 'var(--text-primary)', 'text-secondary': 'var(--text-secondary)' },
             animation: { 'reveal-up': 'revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', 'fade-in': 'fadeIn 0.8s ease-out forwards', 'float': 'float 6s ease-in-out infinite', 'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'slide-up-out': 'slideUpOut 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards', 'border-beam': 'borderBeam 5s infinite linear', 'spin-slow': 'spin 10s linear infinite', 'float-away': 'floatAway 5s ease-in forwards'},
             keyframes: { revealUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }, float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }, slideUpOut: { '0%': { transform: 'translateY(0)', opacity: '1' }, '100%': { transform: 'translateY(-100%)', opacity: '0' } }, borderBeam: { '0%': { 'transform': 'translateX(-100%)' }, '100%': { 'transform': 'translateX(100%)' } }, floatAway: { '0%': { transform: 'translateY(0)', opacity: 1 }, '100%': { transform: 'translateY(-200vh)', opacity: 0 } } }
           }
@@ -34,16 +34,20 @@
       }
     </script>
     <style>
-      :root { --accent: #a78bfa; --accent-dark: #7c3aed; --font-base: 'Outfit'; --font-head: 'Space Grotesk'; --text-size: 16px; --tracking: normal; --radius: 1.25rem; --grid-gap: 1.5rem; }
-      body { background-color: #000000; color: #f4f4f5; overflow-x: hidden; transition: background-color 0.5s ease; font-size: var(--text-size); letter-spacing: var(--tracking); background-image: radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.1), transparent 35%), radial-gradient(circle at 75% 75%, rgba(124, 58, 237, 0.08), transparent 35%); }
+      :root { --accent: #a78bfa; --accent-dark: #7c3aed; --bg-primary: #000000; --bg-secondary: #0A0A0A; --text-primary: #f4f4f5; --text-secondary: #a1a1aa; --font-base: 'Outfit', sans-serif; --font-head: 'Space Grotesk', sans-serif; --font-mono: 'JetBrains Mono', monospace; --text-size: 16px; --tracking: normal; --radius: 1.25rem; --grid-gap: 1.5rem; }
+      body { background-color: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; transition: background-color 0.5s ease; font-size: var(--text-size); letter-spacing: var(--tracking); font-family: var(--font-base); background-image: radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.1), transparent 35%), radial-gradient(circle at 75% 75%, rgba(124, 58, 237, 0.08), transparent 35%); }
+      body.theme-nord { --bg-primary: #2E3440; --bg-secondary: #3B4252; --accent: #88C0D0; --text-primary: #ECEFF4; --text-secondary: #D8DEE9; }
+      body.theme-solarized { --bg-primary: #002b36; --bg-secondary: #073642; --accent: #268bd2; --text-primary: #839496; --text-secondary: #586e75; }
+      body.theme-terminal { --bg-primary: #000000; --bg-secondary: #0A0A0A; --accent: #00FF00; --text-primary: #00FF00; --text-secondary: #00C000; font-family: 'Roboto Mono', monospace !important; }
+      body.no-animations * { animation: none !important; transition: none !important; }
+      
       ::-webkit-scrollbar { width: 6px; height: 6px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #52525b; }
       .glass-panel { background: rgba(5, 5, 5, 0.6); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.05); }
       .scrollbar-hide::-webkit-scrollbar { display: none; } .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
       .text-accent { color: var(--accent) !important; } .bg-accent { background-color: var(--accent) !important; } .border-accent { border-color: var(--accent) !important; } .group:hover .group-hover\:text-accent { color: var(--accent) !important; } .rounded-dynamic { border-radius: var(--radius) !important; }
-      body.perf-mode .glass-panel, body.perf-mode .backdrop-blur-xl { backdrop-filter: none !important; background-color: #0a0a0a !important; }
       body.compact-ui #games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; }
       body.blur-locked > *:not(#blur-overlay):not(#admin-alert-modal) { filter: blur(20px); pointer-events: none; user-select: none; }
-      #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+      #bg-canvas.hidden { display: none; }
       
       .gradient-text { background: linear-gradient(to right, var(--accent), #d8b4fe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
       .game-card-wrapper { position: relative; }
@@ -55,6 +59,9 @@
       body.matrix-mode *:not(i) { border-color: #0f0 !important; color: #0f0 !important; font-family: 'JetBrains Mono', monospace !important; }
       body.matrix-mode .bg-accent, body.matrix-mode .bg-zinc-900 { background-color: #001100 !important; }
       body.matrix-mode img, body.matrix-mode svg { filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(500%) !important; }
+      body.grayscale-mode { filter: grayscale(100%); }
+      body.blur-mode > *:not(#admin-layer):not(#owner-layer) { filter: blur(5px); }
+      body.invert-scroll-mode { overflow: hidden; } /* JS will handle scroll reversal */
       
       @keyframes hue-rotate-anim { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
       body.rainbow-mode { animation: hue-rotate-anim 3s linear infinite !important; }
@@ -348,12 +355,15 @@
                         <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Brainrot Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('brainrot_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('brainrot_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                         <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Spin Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_spin_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_spin_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                         <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Float Away</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_float_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_float_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Grayscale</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('grayscale_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('grayscale_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Blur UI</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('blur_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('blur_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+
                         <div class="col-span-full mt-4 mb-4"><h3 class="text-zinc-500 text-sm font-mono uppercase tracking-widest border-b border-zinc-800 pb-2">Instant Actions</h3></div>
                         <button onclick="adminSystem.sendCustomAlert()" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="megaphone" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Custom Alert</h3><p class="text-zinc-500 text-xs font-mono">Send popup.</p></button>
                         <button onclick="adminSystem.sendCommand('force_reload')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="refresh-cw" class="w-8 h-8 text-blue-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Force Refresh</h3><p class="text-zinc-500 text-xs font-mono">Reload browsers.</p></button>
-                        <button onclick="adminSystem.sendCommand('rickroll')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="music" class="w-8 h-8 text-purple-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Protocol 42</h3><p class="text-zinc-500 text-xs font-mono">Execute Rickroll.</p></button>
-                        <button onclick="adminSystem.sendCommand('clear_chat')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="trash-2" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Wipe Chat</h3><p class="text-zinc-500 text-xs font-mono">Delete global chat.</p></button>
+                        <button onclick="adminSystem.sendCommand('force_logout')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-orange-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Force Logout</h3><p class="text-zinc-500 text-xs font-mono">Log out a user.</p></button>
+                        <button onclick="adminSystem.sendCommand('mute_user')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="mic-off" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Mute User</h3><p class="text-zinc-500 text-xs font-mono">Silence in global chat.</p></button>
+                        <button onclick="adminSystem.sendCommand('unmute_user')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="mic" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Unmute User</h3><p class="text-zinc-500 text-xs font-mono">Unsilence in global.</p></button>
                     </div>
                 </div>
             </div>
@@ -389,6 +399,8 @@
                                 <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="bug" class="w-5 h-5 text-green-500"></i>Glitch Effect</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_glitch_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_glitch_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                                 <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="mouse-pointer-2" class="w-5 h-5 text-purple-500"></i>Fake Cursor</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_fake_cursor_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_fake_cursor_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                                 <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="volume-x" class="w-5 h-5 text-red-400"></i>Global Siren</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_siren_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_siren_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="wrap-text" class="w-5 h-5 text-lime-400"></i>Gibberish</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('text_gibberish_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('text_gibberish_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="arrow-down-up" class="w-5 h-5 text-teal-400"></i>Invert Scroll</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('invert_scroll_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('invert_scroll_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                             </div>
                         </div>
                         <div>
@@ -398,20 +410,22 @@
                                 <button onclick="adminSystem.sendCommand('owner_flashbang')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="zap" class="w-8 h-8 text-yellow-200 mb-4"></i><h3 class="text-lg font-bold text-white">Flashbang</h3></button>
                                 <button onclick="adminSystem.sendCommand('owner_cowboy')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user" class="w-8 h-8 text-yellow-600 mb-4"></i><h3 class="text-lg font-bold text-white">Cowboy</h3></button>
                                 <button onclick="adminSystem.sendCommand('owner_spam_alerts')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="alert-octagon" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-lg font-bold text-white">Spam Alerts</h3></button>
+                                <button onclick="adminSystem.sendCommand('play_all_sounds')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="volume-2" class="w-8 h-8 text-rose-400 mb-4"></i><h3 class="text-lg font-bold text-white">Cacophony</h3></button>
                                 <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between col-span-1"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="eye-off" class="w-5 h-5 text-blue-400"></i>Hide UI</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_hide_ui_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_hide_ui_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                                 <button onclick="adminSystem.sendCommand('owner_random_theme')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="palette" class="w-8 h-8 text-pink-400 mb-4"></i><h3 class="text-lg font-bold text-white">Random Theme</h3></button>
                             </div>
                         </div>
                         <div>
-                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">Destructive Actions</h3>
+                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">User Management & Destructive Actions</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <button onclick="adminSystem.banUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="ban" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-lg font-bold text-white">Ban User</h3></button>
+                                <button onclick="adminSystem.unbanUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="shield-check" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-lg font-bold text-white">Unban User</h3></button>
+                                <button onclick="adminSystem.promoteUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user-plus" class="w-8 h-8 text-blue-400 mb-4"></i><h3 class="text-lg font-bold text-white">Promote Admin</h3></button>
+                                <button onclick="adminSystem.demoteUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user-minus" class="w-8 h-8 text-orange-400 mb-4"></i><h3 class="text-lg font-bold text-white">Demote Admin</h3></button>
                                 <button onclick="adminSystem.sendCommand('owner_kick')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-lg font-bold text-white">Kick User</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_disable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic-off" class="w-8 h-8 text-red-400 mb-4"></i><h3 class="text-lg font-bold text-white">Lock Chat</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_enable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic" class="w-8 h-8 text-green-400 mb-4"></i><h3 class="text-lg font-bold text-white">Unlock Chat</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_nuke_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="bomb" class="w-8 h-8 text-red-600 mb-4"></i><h3 class="text-lg font-bold text-white">Nuke Chat DB</h3></button>
                                 <button onclick="adminSystem.sendCommand('owner_wipe_pfp')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="image-off" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-lg font-bold text-white">Wipe PFP</h3></button>
+                                <button onclick="adminSystem.resetUserSettings()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="settings-2" class="w-8 h-8 text-cyan-400 mb-4"></i><h3 class="text-lg font-bold text-white">Reset Settings</h3></button>
                                 <button onclick="adminSystem.sendCommand('owner_shutdown')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="power-off" class="w-8 h-8 text-zinc-500 mb-4"></i><h3 class="text-lg font-bold text-white">Client Shutdown</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_wipe_db')" class="p-6 border-2 border-red-600 bg-red-900/20 hover:bg-red-600 hover:text-white rounded-xl text-left transition-all group"><i data-lucide="skull" class="w-8 h-8 text-red-500 group-hover:text-white mb-4"></i><h3 class="text-lg font-black">NUCLEAR WIPE</h3></button>
                             </div>
                         </div>
                     </div>
@@ -593,7 +607,7 @@
             db = firebase.database();
         } catch(e) { console.error("Firebase Error: ", e); }
 
-       var _GAMES = [
+        var _GAMES = [
             ["Proxy", "https://d1ks901xvjj2p6.cloudfront.net/index.html#/search", "https://tse1.mm.bing.net/th/id/OIP.jZphni_Ys5sEP7nbPzZfLQHaFl?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3", "Utility"],
             ["Cloud Gaming", "https://th.bing.com/th/id/OIP.kOFzpwfkS0fVQh8cKaiHbQHaHa?w=108&h=108&c=1&bgcl=76c541&r=0&o=7&dpr=1.1&pid=ImgRC&rm=3", "Utility"],
             ["Ultimate Custom Night", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0ed522122460b64053fcb0f9e96ab2f5.html", "https://th.bing.com/th/id/OIP.L3G13SaoY-bak_N78VFmOAHaEK?w=254&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3", "Horror"],
@@ -787,6 +801,14 @@
                 btn.textContent = "Authenticating...";
 
                 try {
+                    // Check for ban first
+                    const banSnap = await db.ref(`bans/${user}`).once('value');
+                    if (banSnap.exists()) {
+                        alert("ACCESS DENIED: This account has been permanently banned.");
+                        btn.textContent = "Login / Create";
+                        return;
+                    }
+
                     const snap = await db.ref(`accounts/${user}`).once('value');
                     const data = snap.val();
 
@@ -802,7 +824,8 @@
                         const newData = {
                             password: pass,
                             favorites: JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'),
-                            settings: JSON.parse(localStorage.getItem('nm4r-settings') || '{}')
+                            settings: JSON.parse(localStorage.getItem('nm4r-settings') || '{}'),
+                            status: "No status set."
                         };
                         await db.ref(`accounts/${user}`).set(newData);
                         this.completeLogin(user, pass, newData);
@@ -819,10 +842,11 @@
                 localStorage.setItem('nm4r-pass', pass);
                 if(data.favorites) localStorage.setItem('nm4r-favorites', JSON.stringify(data.favorites));
                 if(data.settings) localStorage.setItem('nm4r-settings', JSON.stringify(data.settings));
+                if(data.role === 'admin') window.isAppAdmin = true; // Set app-wide admin status
 
                 this.username = user;
                 app.favorites = new Set(data.favorites || []);
-                app.settings = { ...app.settings, ...(data.settings || {}) };
+                app.settings = { ...app.defaultSettings, ...app.settings, ...(data.settings || {}) };
                 app.applySettings();
                 app.renderLibrary();
 
@@ -835,9 +859,10 @@
                     document.getElementById('sidebar-user-initial').textContent = user.charAt(0).toUpperCase();
                     globalChat.input.disabled = false;
                     globalChat.submitBtn.disabled = false;
+                    globalChat.db.ref(`users/${user}`).onDisconnect().remove();
                     globalChat.db.ref(`users/${user}`).set(Date.now());
                     globalChat.renderSidebar();
-                    globalChat.listenForCalls();
+                    globalChat.listenForCalls(); 
                     globalChat.listenForFriendRequests();
                 } else {
                     globalChat = new ChatSystem();
@@ -862,19 +887,49 @@
                 alert("Username changed! Reloading system...");
                 location.reload();
             }
+            
+            async changePassword() {
+                if(!this.username) return;
+                const newPass = prompt("Enter new password/PIN:");
+                if(newPass) {
+                    await db.ref(`accounts/${this.username}/password`).set(newPass);
+                    localStorage.setItem('nm4r-pass', newPass);
+                    this.password = newPass;
+                    alert("Password updated successfully.");
+                }
+            }
+            
+            async updateStatus() {
+                if(!this.username) return;
+                const newStatus = prompt("Set a new status (max 50 chars):", app.settings.status || "");
+                if(newStatus !== null && newStatus.length <= 50) {
+                    await db.ref(`accounts/${this.username}/status`).set(newStatus);
+                    app.updateSetting('status', newStatus);
+                    alert("Status updated.");
+                } else if(newStatus !== null) {
+                    alert("Status cannot be longer than 50 characters.");
+                }
+            }
+
 
             async syncData() {
                 if(!this.username) return;
-                const data = {
+                const dataToSync = {
                     password: this.password,
                     favorites: JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'),
-                    settings: JSON.parse(localStorage.getItem('nm4r-settings') || '{}')
+                    settings: JSON.parse(localStorage.getItem('nm4r-settings') || '{}'),
+                    status: app.settings.status || "No status set."
                 };
-                await db.ref(`accounts/${this.username}`).set(data);
+                // Preserve role if it exists
+                const snap = await db.ref(`accounts/${this.username}/role`).once('value');
+                if (snap.exists()) dataToSync.role = snap.val();
+
+                await db.ref(`accounts/${this.username}`).set(dataToSync);
                 alert("Cloud Sync Complete!");
             }
             
             logout() {
+                db.ref(`users/${this.username}`).remove();
                 localStorage.removeItem('nm4r-user');
                 localStorage.removeItem('nm4r-pass');
                 location.reload();
@@ -884,6 +939,15 @@
 
         class App {
             constructor() {
+                this.defaultSettings = { 
+                    perfMode: false, oledMode: false, compactUI: false, noAnimations: false, noParticles: false,
+                    borderRadius: '1.25rem', gridGap: '1.5rem', 
+                    fontBase: "'Outfit', sans-serif", fontHead: "'Space Grotesk', sans-serif", textSize: '16px', tracking: 'normal',
+                    tabTitle: 'NOTMINE4REAL', tabIcon: '', panicUrl: 'https://classroom.google.com', panicKey: '`', 
+                    accentColor: '#a78bfa', profilePic: '', status: 'No status set.',
+                    theme: 'default'
+                };
+                this.settings = { ...this.defaultSettings };
                 this.activeCategory = 'All'; this.searchQuery = ''; this.currentGame = null;
                 this.favorites = new Set(JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'));
                 this.activeSettingsTab = 'Design'; this.previousLayer = 'menu';
@@ -891,13 +955,6 @@
                 this.notifications = [];
                 this.brainrotInterval = null;
                 this.fakeCursor = null;
-                this.settings = { 
-                    perfMode: false, oledMode: false, compactUI: false, glassmorphism: true, 
-                    borderRadius: '1.25rem', gridGap: '1.5rem', ambientBg: true, hoverFx: true, 
-                    cursorStyle: 'default', fontBase: 'Outfit', fontHead: 'Space Grotesk', textSize: '16px', 
-                    tabTitle: 'NOTMINE4REAL', tabIcon: '', panicUrl: 'https://classroom.google.com', 
-                    panicKey: '`', accentColor: '#a78bfa', profilePic: ''
-                };
                 this.init();
             }
 
@@ -908,6 +965,7 @@
                 document.getElementById('search-input')?.addEventListener('input', e => { this.searchQuery = e.target.value; this.renderLibrary(); });
                 if (window.self !== window.top) this.showLauncher(); else this.runIntro();
                 this.listenForAdminCommands();
+                window.onwheel = e => { if (document.body.classList.contains('invert-scroll-mode')) window.scrollBy(0, -e.deltaY); };
             }
 
             showLauncher() { document.getElementById('launcher-layer').classList.remove('hidden', 'opacity-0'); }
@@ -1057,7 +1115,7 @@
                 if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden'); 
                 if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); 
                 if (globalChat) { 
-                    globalChat.checkUsername(); 
+                    globalChat.username = accountSystem.username;
                     globalChat.scrollToBottom(); 
                 } 
             }
@@ -1073,41 +1131,54 @@
                 const grid = document.getElementById('settings-options-grid'); 
                 let optionsHtml = ''; 
                 
-                const createRow = (title, type, key, extras) => { const val = this.settings[key]; let control = ''; if(type === 'toggle') { control = `<button onclick="app.updateSetting('${key}', ${!val})" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none"><div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div></button>`; } else if (type === 'action') { control = `<button onclick="app.updateSetting('${key}', '${extras.match}')" class="px-4 py-2 rounded-lg text-sm font-bold ${extras.match === val ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700'} transition-colors">${extras.label}</button>`; } else if (type === 'input') { control = `<input type="text" value="${val}" onchange="app.updateSetting('${key}', this.value)" placeholder="${extras.ph}" class="w-full mt-3 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500 font-mono">`; } return `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">${title}</span>${type !== 'input' ? control : ''}</div>${type === 'input' ? control : ''}</div>`; };
+                const createRow = (title, type, key, extras) => { 
+                    const val = this.settings[key]; let control = ''; 
+                    if(type === 'toggle') { control = `<button onclick="app.updateSetting('${key}', ${!val})" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none"><div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div></button>`; } 
+                    else if (type === 'action') { control = `<button onclick="${extras.action}" class="px-4 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-zinc-200 hover:bg-white hover:text-black transition-colors">${extras.label}</button>`; } 
+                    else if (type === 'input') { control = `<input type="text" value="${val}" onchange="app.updateSetting('${key}', this.value)" placeholder="${extras.ph}" class="w-full mt-3 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500 font-mono">`; }
+                    else if (type === 'slider') { control = `<div class="flex items-center gap-4 w-full mt-2"><input type="range" min="${extras.min}" max="${extras.max}" step="${extras.step}" value="${parseFloat(val)}" oninput="app.updateSetting('${key}', this.value + '${extras.unit}')" class="w-full"><span class="text-xs font-mono text-zinc-500 w-16 text-right">${val}</span></div>`; }
+                    else if (type === 'select') { control = `<select onchange="app.updateSetting('${key}', this.value)" class="w-full mt-2 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500">${extras.options.map(o => `<option value="${o.value}" ${val === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}</select>`; }
+                    return `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center col-span-${extras && extras.span ? extras.span : '1'}"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">${title}</span>${type==='toggle' || type==='action' ? control : ''}</div>${type!=='toggle' && type!=='action' ? control : ''}</div>`; 
+                };
                 
                 if(this.activeSettingsTab === 'Account') {
-                    optionsHtml = `
-                    <div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-6 flex flex-col gap-4 col-span-full">
-                        <div class="flex items-center gap-6">
-                            <div class="relative group">
-                                <img id="pfp-preview" src="${this.settings.profilePic || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" class="w-24 h-24 rounded-full object-cover bg-zinc-800 border-2 border-zinc-700">
-                                <label for="pfp-upload" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                    <i data-lucide="camera" class="w-8 h-8"></i>
-                                </label>
-                                <input type="file" id="pfp-upload" accept="image/*" class="hidden" onchange="app.handlePfpUpload(event)">
-                            </div>
-                            <div>
-                                <h4 class="text-xl font-bold text-white">Cloud Profile</h4>
-                                <p class="text-sm text-zinc-400 mt-1">Logged in as: <span class="text-accent font-bold">${accountSystem.username || 'Guest'}</span></p>
-                            </div>
-                            <div class="ml-auto flex gap-2">
-                                <button onclick="accountSystem.changeName()" class="px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black text-white text-sm font-bold rounded-xl transition-colors">Change Name</button>
-                                <button onclick="accountSystem.logout()" class="px-4 py-2 bg-red-900/50 hover:bg-red-600 text-red-200 hover:text-white text-sm font-bold rounded-xl transition-colors">Logout</button>
-                            </div>
-                        </div>
-                        <hr class="border-zinc-800 my-2">
-                        <div class="flex items-center justify-between">
-                            <div><h4 class="text-md font-bold text-white">Cloud Sync</h4><p class="text-xs text-zinc-500 mt-1">Force save settings, favorites, and PFP.</p></div>
-                            <button onclick="accountSystem.syncData()" class="px-4 py-2 bg-accent hover:bg-accent/80 text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-accent/20">Sync Now</button>
-                        </div>
-                        ${!accountSystem.username ? `<hr class="border-zinc-800 my-2"><div class="w-full"><button onclick="document.getElementById('auth-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('auth-modal').classList.remove('opacity-0'),10)" class="w-full px-4 py-3 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-colors">Login / Create Account</button></div>` : ''}
-                    </div>`;
-                    setTimeout(() => lucide.createIcons(), 10);
+                    optionsHtml = `<div class="col-span-full">${createRow("Change Password", "action", "", {action: 'accountSystem.changePassword()', label: 'Update'})}</div>
+                    <div class="col-span-full">${createRow("Update Status", "input", "status", {ph: "Set your status..."})}</div>
+                    <div class="col-span-full flex items-center justify-end"><button onclick="accountSystem.updateStatus()" class="px-4 py-2 rounded-lg text-sm font-bold bg-accent text-white">Save Status</button></div>`;
                 }
-                else if(this.activeSettingsTab === 'Design') optionsHtml = [createRow("Performance Mode", "toggle", "perfMode"), createRow("Compact UI Grid", "toggle", "compactUI"), createRow("Corners: Pill", "action", "borderRadius", {match: '2rem', label: 'Select'}), createRow("Card Hover Lift", "toggle", "hoverFx")].join('');
-                else if(this.activeSettingsTab === 'Site') { optionsHtml = [createRow("Tab Title", "input", "tabTitle", {ph: 'e.g. Google Classroom'}), createRow("Tab Icon URL", "input", "tabIcon", {ph: 'e.g. https://www.google.com/favicon.ico'})].join('') + `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center col-span-full"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">Open in about:blank</span><button onclick="app.cloak()" class="px-4 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-zinc-200 hover:bg-white hover:text-black transition-colors">Execute</button></div></div>`; }
+                else if(this.activeSettingsTab === 'Design') {
+                    const fontOptions = [{value: "'Outfit', sans-serif", label: "Outfit (Default)"}, {value: "'Inter', sans-serif", label: "Inter"}, {value: "'Roboto Mono', monospace", label: "Roboto Mono"}];
+                    optionsHtml = [
+                        createRow("Performance Mode", "toggle", "perfMode"), 
+                        createRow("Disable Animations", "toggle", "noAnimations"),
+                        createRow("Disable Particles", "toggle", "noParticles"),
+                        createRow("Compact UI Grid", "toggle", "compactUI"),
+                        createRow("Card Hover Lift", "toggle", "hoverFx"),
+                        createRow("Base Font", "select", "fontBase", {options: fontOptions, span: 2}),
+                        createRow("Font Size", "slider", "textSize", {min: 12, max: 20, step: 1, unit: 'px', span: 2}),
+                        createRow("Letter Spacing", "slider", "tracking", {min: -1, max: 2, step: 0.1, unit: 'px', span: 2})
+                    ].join('');
+                }
+                else if(this.activeSettingsTab === 'Site') { 
+                    optionsHtml = [
+                        createRow("Tab Title", "input", "tabTitle", {ph: 'e.g. Google Classroom', span: 2}), 
+                        createRow("Tab Icon URL", "input", "tabIcon", {ph: 'e.g. https://www.google.com/favicon.ico', span: 2}),
+                        `<div class="col-span-full"><h4 class="text-sm font-bold text-zinc-400 mb-2">Cloaking Presets</h4><div class="grid grid-cols-3 gap-2">
+                           <button onclick="app.updateSetting('tabTitle', 'Google'); app.updateSetting('tabIcon', 'https://www.google.com/favicon.ico')" class="px-4 py-2 text-sm bg-zinc-800 rounded-lg">Google</button>
+                           <button onclick="app.updateSetting('tabTitle', 'Classes'); app.updateSetting('tabIcon', 'https://www.gstatic.com/classroom/favicon.ico')" class="px-4 py-2 text-sm bg-zinc-800 rounded-lg">Classroom</button>
+                           <button onclick="app.updateSetting('tabTitle', 'Canvas'); app.updateSetting('tabIcon', 'https://canvas.instructure.com/favicon.ico')" class="px-4 py-2 text-sm bg-zinc-800 rounded-lg">Canvas</button>
+                        </div></div>`
+                    ].join('');
+                }
                 else if(this.activeSettingsTab === 'Security') optionsHtml = [createRow("Panic Keybind", "input", "panicKey", {ph: 'e.g. ` or Esc'}), createRow("Panic Redirect URL", "input", "panicUrl", {ph: 'https://...'})].join('');
-                else if(this.activeSettingsTab === 'Themes') { optionsHtml = THEME_COLORS.map((hex, i) => `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex items-center justify-between"><div class="flex items-center gap-4"><div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div><span class="text-base font-medium text-zinc-200">Color Variant 0${i+1}</span></div><button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button></div>`).join(''); }
+                else if(this.activeSettingsTab === 'Themes') { 
+                    const themeButtons = [
+                        {label: 'Default', value: 'default'}, {label: 'Nord', value: 'theme-nord'}, {label: 'Solarized', value: 'theme-solarized'}, {label: 'Terminal', value: 'theme-terminal'}
+                    ].map(theme => `<button onclick="app.updateSetting('theme', '${theme.value}')" class="px-4 py-3 rounded-lg text-sm font-bold ${this.settings.theme === theme.value ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'}">${theme.label}</button>`).join('');
+                    
+                    optionsHtml = `<div class="col-span-full"><h4 class="text-sm font-bold text-zinc-400 mb-2">Full Themes</h4><div class="grid grid-cols-2 gap-2">${themeButtons}</div></div>` +
+                    THEME_COLORS.map((hex, i) => `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex items-center justify-between"><div class="flex items-center gap-4"><div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div><span class="text-base font-medium text-zinc-200">Accent 0${i+1}</span></div><button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button></div>`).join(''); 
+                }
                 grid.innerHTML = optionsHtml;
             }
 
@@ -1136,8 +1207,53 @@
             }
 
             updateSetting(key, val) { this.settings[key] = val; localStorage.setItem('nm4r-settings', JSON.stringify(this.settings)); this.applySettings(); this.renderSettingsContent(); }
-            setCloakPreset(title, icon) { this.settings.tabTitle = title; this.settings.tabIcon = icon; this.updateSetting('tabTitle', title); }
-            applySettings() { const s = this.settings; const root = document.documentElement; root.style.setProperty('--accent', s.accentColor); root.style.setProperty('--radius', s.borderRadius); const setCls = (c, act) => act ? document.body.classList.add(c) : document.body.classList.remove(c); setCls('perf-mode', s.perfMode); setCls('compact-ui', s.compactUI); setCls('no-hover-fx', !s.hoverFx); document.title = s.tabTitle || 'NOTMINE4REAL'; let link = document.querySelector("link[rel*='icon']") || document.createElement('link'); link.type = 'image/x-icon'; link.rel = 'shortcut icon'; link.href = s.tabIcon || document.getElementById('app-favicon').href; document.head.appendChild(link); const pfp = document.getElementById('sidebar-pfp'); const initial = document.getElementById('sidebar-user-initial'); if (pfp && initial) { if (s.profilePic) { pfp.src = s.profilePic; pfp.classList.remove('hidden'); initial.classList.add('hidden'); } else { pfp.classList.add('hidden'); initial.classList.remove('hidden'); } } }
+            
+            applySettings() {
+                const s = this.settings;
+                const root = document.documentElement;
+                const body = document.body;
+
+                // Apply theme class
+                body.className = body.className.replace(/theme-\w+/g, '').trim();
+                if(s.theme && s.theme !== 'default') body.classList.add(s.theme);
+
+                // Set CSS variables
+                root.style.setProperty('--accent', s.accentColor);
+                root.style.setProperty('--radius', s.borderRadius);
+                root.style.setProperty('--font-base', s.fontBase);
+                root.style.setProperty('--font-head', s.fontHead);
+                root.style.setProperty('--text-size', s.textSize);
+                root.style.setProperty('--tracking', s.tracking);
+
+                // Toggle classes
+                const toggle = (className, condition) => body.classList.toggle(className, condition);
+                toggle('perf-mode', s.perfMode);
+                toggle('compact-ui', s.compactUI);
+                toggle('no-hover-fx', !s.hoverFx);
+                toggle('no-animations', s.noAnimations);
+                document.getElementById('bg-canvas').classList.toggle('hidden', s.noParticles);
+
+                // Tab Cloaking
+                document.title = s.tabTitle || 'NOTMINE4REAL';
+                let link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+                link.type = 'image/x-icon'; link.rel = 'shortcut icon';
+                link.href = s.tabIcon || document.getElementById('app-favicon').href;
+                document.head.appendChild(link);
+                
+                // PFP
+                const pfp = document.getElementById('sidebar-pfp');
+                const initial = document.getElementById('sidebar-user-initial');
+                if (pfp && initial) {
+                    if (s.profilePic) {
+                        pfp.src = s.profilePic;
+                        pfp.classList.remove('hidden');
+                        initial.classList.add('hidden');
+                    } else {
+                        pfp.classList.add('hidden');
+                        initial.classList.remove('hidden');
+                    }
+                }
+            }
             setupSecurity() { document.addEventListener('keydown', e => { if (e.key === this.settings.panicKey) { e.preventDefault(); this.panic(); }}); }
             panic() { let url = this.settings.panicUrl; if (!url.startsWith('http')) url = 'https://' + url; window.location.replace(url); }
             cloak() { const newWindow = window.open('about:blank', '_blank'); if (newWindow) { const iframe = newWindow.document.createElement('iframe'); const currentIcon = document.querySelector("link[rel*='icon']").href; const currentTitle = document.title; newWindow.document.title = currentTitle; let link = newWindow.document.createElement('link'); link.rel = 'icon'; link.href = currentIcon; newWindow.document.head.appendChild(link); iframe.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;border:0;'; iframe.src = window.location.href; newWindow.document.body.appendChild(iframe); } else { alert('Please allow popups to use this feature.'); } }
@@ -1215,6 +1331,30 @@
                     this.fakeCursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
                 }
             }
+            
+            toggleGibberish(enable) {
+                const elements = document.querySelectorAll('h1, h2, h3, h4, p, span, button, a');
+                if (enable) {
+                    document.body.classList.add('text-gibberish-mode');
+                    elements.forEach(el => {
+                        if (!el.closest('#admin-layer, #owner-layer')) {
+                            const originalText = el.textContent;
+                            if (originalText.trim().length > 0) {
+                                el.dataset.originalText = originalText;
+                                el.textContent = originalText.replace(/[a-zA-Z0-9]/g, () => '█');
+                            }
+                        }
+                    });
+                } else {
+                    document.body.classList.remove('text-gibberish-mode');
+                    elements.forEach(el => {
+                        if (el.dataset.originalText) {
+                            el.textContent = el.dataset.originalText;
+                            delete el.dataset.originalText;
+                        }
+                    });
+                }
+            }
 
             listenForAdminCommands() {
                 try {
@@ -1244,7 +1384,14 @@
                             case 'rainbow_off': document.body.classList.remove('rainbow-mode'); break;
                             case 'brainrot_on': this.startBrainrot(); break;
                             case 'brainrot_off': this.stopBrainrot(); break;
-                            
+                            case 'grayscale_on': document.body.classList.add('grayscale-mode'); break;
+                            case 'grayscale_off': document.body.classList.remove('grayscale-mode'); break;
+                            case 'blur_on': document.body.classList.add('blur-mode'); break;
+                            case 'blur_off': document.body.classList.remove('blur-mode'); break;
+                            case 'force_logout': accountSystem.logout(); break;
+                            case 'mute_user': if(globalChat) globalChat.isMuted = true; break;
+                            case 'unmute_user': if(globalChat) globalChat.isMuted = false; break;
+
                             // OWNER COMMANDS
                             case 'owner_jumpscare': this.executeJumpscare(); break;
                             case 'owner_earthquake_on': document.body.classList.add('earthquake-mode'); break;
@@ -1265,11 +1412,16 @@
                             case 'owner_hide_ui_off': document.body.classList.remove('hide-ui-mode'); break;
                             case 'owner_siren_on': siren.play().catch(e=>{}); break;
                             case 'owner_siren_off': siren.pause(); siren.currentTime = 0; break;
+                            case 'text_gibberish_on': this.toggleGibberish(true); break;
+                            case 'text_gibberish_off': this.toggleGibberish(false); break;
+                            case 'invert_scroll_on': document.body.classList.add('invert-scroll-mode'); break;
+                            case 'invert_scroll_off': document.body.classList.remove('invert-scroll-mode'); break;
                             case 'owner_cowboy': 
                                 cowboy.play().catch(e=>{});
                                 const cOverlay = document.createElement('div'); cOverlay.className = 'screaming-cowboy-overlay'; cOverlay.innerHTML = `<img src="https://media1.tenor.com/m/5-2h23aO0s0AAAAC/sky-screaming.gif" class="screaming-cowboy-img">`; document.body.appendChild(cOverlay);
                                 setTimeout(() => cOverlay.remove(), 4000);
                                 break;
+                            case 'play_all_sounds': siren.play(); cowboy.play(); break;
                             case 'owner_spam_alerts': 
                                 let i = 0; 
                                 const spam = setInterval(() => { this.addNotification('admin', 'SYSTEM WARNING', 'CRITICAL ERROR DETECTED'); if(i++ > 15) clearInterval(spam); }, 200);
@@ -1287,7 +1439,7 @@
                             case 'owner_kick': window.location.href = "https://www.google.com"; break;
                             case 'owner_nuke_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = '<p class="text-red-500 font-bold text-center">ALL CHAT HISTORY HAS BEEN INCINERATED.</p>'; break;
                             case 'owner_wipe_db': alert("YOUR ACCOUNT HAS BEEN DELETED."); localStorage.clear(); location.reload(); break;
-                            case 'owner_wipe_pfp': case 'owner_random_theme': location.reload(); break; // Reload to apply server-side settings change
+                            case 'owner_wipe_pfp': case 'owner_random_theme': case 'reset_user_settings': location.reload(); break; // Reload to apply server-side settings change
                             case 'owner_flashbang': 
                                 const f = document.createElement('div');
                                 f.style.cssText = 'position:fixed;inset:0;background:white;z-index:999999;transition:opacity 2s;';
@@ -1329,7 +1481,6 @@
                 await this.populateUserList();
                 if (accountSystem.username.toLowerCase() === 'owner') {
                     this.addGameRequestTab();
-                    this.loadGameRequests();
                 }
                 lucide.createIcons();
             }
@@ -1342,9 +1493,9 @@
             }
 
             async loadGameRequests() {
-                this.switchTab('requests', 'owner');
                 const listEl = document.getElementById('game-requests-list');
                 if (!listEl) return;
+                listEl.innerHTML = '<p class="text-zinc-500">Loading requests...</p>';
                 try {
                     const snapshot = await db.ref('game_requests').orderByChild('timestamp').once('value');
                     const requests = snapshot.val();
@@ -1433,7 +1584,7 @@
                 db.ref('global_commands').push(commandData); 
                 
                 if(type === 'clear_chat' || type === 'owner_nuke_chat') { db.ref('messages/global').remove(); } 
-                if(type === 'owner_wipe_db') { db.ref('accounts').remove(); } 
+                if(type === 'owner_wipe_db') { db.ref('accounts').remove(); db.ref('bans').remove(); } 
                 
                 const btn = event.currentTarget; 
                 if(btn && btn.tagName === 'BUTTON') {
@@ -1441,6 +1592,54 @@
                     setTimeout(() => { btn.classList.remove('border-green-500'); }, 500); 
                 }
             }
+            
+            getTargetUser(promptMsg) {
+                const targetUser = document.getElementById('owner-target-user').value.trim();
+                return targetUser || prompt(promptMsg);
+            }
+
+            async banUser() {
+                const userToBan = this.getTargetUser("Enter the username to BAN:");
+                if (userToBan) {
+                    await db.ref(`bans/${userToBan}`).set(true);
+                    alert(`${userToBan} has been banned.`);
+                }
+            }
+
+            async unbanUser() {
+                const userToUnban = this.getTargetUser("Enter the username to UNBAN:");
+                if (userToUnban) {
+                    await db.ref(`bans/${userToUnban}`).remove();
+                    alert(`${userToUnban} has been unbanned.`);
+                }
+            }
+
+            async promoteUser() {
+                const userToPromote = this.getTargetUser("Enter username to promote to Admin:");
+                if (userToPromote) {
+                    await db.ref(`accounts/${userToPromote}/role`).set('admin');
+                    alert(`${userToPromote} is now an admin.`);
+                }
+            }
+
+            async demoteUser() {
+                const userToDemote = this.getTargetUser("Enter username to demote:");
+                if (userToDemote) {
+                    await db.ref(`accounts/${userToDemote}/role`).remove();
+                    alert(`${userToDemote} is no longer an admin.`);
+                }
+            }
+            
+            async resetUserSettings() {
+                const userToReset = this.getTargetUser("Enter username to reset settings for:");
+                if(userToReset && confirm(`Are you sure you want to reset all settings for ${userToReset}?`)) {
+                    await db.ref(`accounts/${userToReset}/settings`).set(app.defaultSettings);
+                    this.sendCommand('reset_user_settings'); // Force reload client
+                    alert(`${userToReset}'s settings have been reset.`);
+                }
+            }
+
+
             sendCustomAlert() { const msg = prompt("Enter the message to send to all users:"); if (msg) { this.sendCommand('global_alert', msg); } }
             
             switchTab(tabName, panelType) {
@@ -1448,7 +1647,7 @@
                 document.querySelectorAll(`.${panelType}-tab-btn`).forEach(btn => {
                     const color = panelType === 'owner' ? 'yellow' : 'red';
                     btn.classList.remove(`bg-${color}-900/20`, 'text-white');
-                    btn.classList.add(`text-${color}-500/80`, `hover:bg-${color}-900/10`);
+                    btn.classList.add(`text-zinc-400`, `hover:bg-${color}-900/10`, `hover:text-white`);
                     btn.style.borderColor = 'transparent';
                 });
                 document.querySelectorAll(`.${panelType}-tab-content`).forEach(content => {
@@ -1459,12 +1658,12 @@
                 if(activeBtn) {
                     const color = panelType === 'owner' ? 'yellow' : 'red';
                     activeBtn.classList.add(`bg-${color}-900/20`, 'text-white');
-                    activeBtn.classList.remove(`text-${color}-500/80`, `hover:bg-${color}-900/10`);
+                    activeBtn.classList.remove(`text-zinc-400`);
                     activeBtn.style.borderColor = `var(--${color}-900/30)`;
                 }
                 document.getElementById(`${panelType}-tab-content-${tabName}`).classList.remove('hidden');
 
-                if (tabName === 'requests') {
+                if (tabName === 'requests' && panelType === 'owner') {
                     this.loadGameRequests();
                 }
             }
@@ -1484,6 +1683,7 @@
                 this.friends = JSON.parse(localStorage.getItem('nm4r-friends') || '[]');
                 this.groups = JSON.parse(localStorage.getItem('nm4r-groups') || '[]');
                 this.unreadCounts = JSON.parse(localStorage.getItem('nm4r-unread') || '{}');
+                this.isMuted = false;
                 
                 this.currentChannel = 'global';
                 this.currentChannelName = 'Global Chat';
@@ -1543,7 +1743,7 @@
             handleAutocomplete(e) { const query = e.target.value.toLowerCase(); const dropdown = document.getElementById('autocomplete-dropdown'); if(!query || this.addType !== 'friend') { dropdown.classList.add('hidden'); return; } const matches = this.allUsers.filter(u => u.toLowerCase().includes(query) && u !== this.username && !this.friends.includes(u)).slice(0, 5); if(matches.length === 0) { dropdown.classList.add('hidden'); return; } dropdown.innerHTML = matches.map(m => `<div class="px-4 py-3 hover:bg-zinc-700 cursor-pointer text-white border-b border-zinc-700/50 last:border-0 transition-colors" onclick="globalChat.selectSuggestion('${m}')">${m}</div>`).join(''); dropdown.classList.remove('hidden'); }
             selectSuggestion(user) { document.getElementById('add-modal-input').value = user; document.getElementById('autocomplete-dropdown').classList.add('hidden'); document.getElementById('add-modal-input').focus(); }
             listenForFriendRequests() { this.db.ref(`requests/${this.username}`).on('child_added', snapshot => { this.showFriendRequest(snapshot.key); app.addNotification('friend', 'Friend Request', `${snapshot.key} wants to be your friend.`) }); this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => { const target = snapshot.key; if(!this.friends.includes(target)) { this.friends.push(target); localStorage.setItem('nm4r-friends', JSON.stringify(this.friends)); this.renderSidebar(); } this.db.ref(`accepts/${this.username}/${target}`).remove(); }); }
-            renderSidebar() { const fList = document.getElementById('friends-list'); fList.innerHTML = this.friends.map(f => `<button onclick="globalChat.switchChannel('dm_${[this.username, f].sort().join('_')}', '${f}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn relative" data-id="dm_${[this.username, f].sort().join('_')}"><div class="w-6 h-6 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold group-hover:text-white shrink-0">${f.charAt(0).toUpperCase()}</div><span class="font-medium text-zinc-400 group-hover:text-white truncate flex-1 text-left">${f}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No friends added.</p>'; const gList = document.getElementById('groups-list'); gList.innerHTML = this.groups.map(g => `<button onclick="globalChat.switchChannel('group_${g}', '${g}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn relative" data-id="group_${g}"><div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center group-hover:text-white shrink-0"><i data-lucide="users" class="w-3 h-3 text-zinc-400 group-hover:text-white"></i></div><span class="font-medium text-zinc-400 group-hover:text-white truncate flex-1 text-left">${g}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>'; lucide.createIcons(); this.listenForCalls(); this.updateSidebarBadges(); }
+            renderSidebar() { const fList = document.getElementById('friends-list'); fList.innerHTML = this.friends.map(f => `<button onclick="globalChat.switchChannel('dm_${[this.username, f].sort().join('_')}', '${f}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn relative" data-id="dm_${[this.username, f].sort().join('_')}"><div class="w-8 h-8 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold group-hover:text-white shrink-0">${f.charAt(0).toUpperCase()}</div><span class="font-medium text-zinc-400 group-hover:text-white truncate flex-1 text-left">${f}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No friends added.</p>'; const gList = document.getElementById('groups-list'); gList.innerHTML = this.groups.map(g => `<button onclick="globalChat.switchChannel('group_${g}', '${g}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn relative" data-id="group_${g}"><div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center group-hover:text-white shrink-0"><i data-lucide="users" class="w-4 h-4 text-zinc-400 group-hover:text-white"></i></div><span class="font-medium text-zinc-400 group-hover:text-white truncate flex-1 text-left">${g}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>'; lucide.createIcons(); this.listenForCalls(); this.updateSidebarBadges(); }
             openAddModal(type) { this.addType = type; const modal = document.getElementById('add-modal'); document.getElementById('add-modal-title').textContent = type === 'friend' ? 'Add a Friend' : 'Create Group'; document.getElementById('add-modal-input').placeholder = type === 'friend' ? 'Search Username...' : 'Enter Group Name...'; document.getElementById('add-modal-input').value = ''; document.getElementById('add-modal-error').classList.add('hidden'); document.getElementById('autocomplete-dropdown').classList.add('hidden'); modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10); document.getElementById('add-modal-input').focus(); }
             closeAddModal() { const modal = document.getElementById('add-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); }
             confirmAdd() { const input = document.getElementById('add-modal-input').value.trim(); const err = document.getElementById('add-modal-error'); if(!input) { err.textContent = "Please enter a name."; err.classList.remove('hidden'); return; } if(input === this.username && this.addType === 'friend') { err.textContent = "You can't add yourself."; err.classList.remove('hidden'); return; } if (this.addType === 'friend') { if(this.friends.includes(input)) { err.textContent = "Already friends."; err.classList.remove('hidden'); return; } this.db.ref(`requests/${input}/${this.username}`).set(Date.now()); err.classList.remove('hidden', 'text-accent'); err.classList.add('text-green-500'); err.textContent = "Friend Request Sent!"; setTimeout(() => this.closeAddModal(), 1500); } else { if(!this.groups.includes(input)) { this.groups.push(input); localStorage.setItem('nm4r-groups', JSON.stringify(this.groups)); this.renderSidebar(); this.closeAddModal(); } } }
@@ -1634,7 +1834,16 @@
                 e.target.value = ''; 
             }
 
-            sendMessage() { const text = this.input.value.trim(); if(!text || !this.username) return; const msg = { user: this.username, text: text, pfp: app.settings.profilePic || null, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), replyTo: this.replyingTo || null }; this.db.ref(`messages/${this.currentChannel}`).push(msg); this.input.value = ''; this.cancelReply(); this.input.focus(); }
+            sendMessage() { 
+                const text = this.input.value.trim(); 
+                if(!text || !this.username) return; 
+                if (this.currentChannel === 'global' && this.isMuted) {
+                    alert("You are muted in the global chat.");
+                    return;
+                }
+                const msg = { user: this.username, text: text, pfp: app.settings.profilePic || null, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), replyTo: this.replyingTo || null }; 
+                this.db.ref(`messages/${this.currentChannel}`).push(msg); this.input.value = ''; this.cancelReply(); this.input.focus(); 
+            }
             
             receiveMessage(msg, channelId) {
                 const isMe = msg.user === this.username; 
@@ -1842,6 +2051,10 @@
             }
 
             function animateParticles() {
+                if (document.getElementById('bg-canvas').classList.contains('hidden')) {
+                     requestAnimationFrame(animateParticles);
+                     return;
+                }
                 ctx.clearRect(0, 0, width, height);
                 for (let i = 0; i < particles.length; i++) { particles[i].draw(); particles[i].update(); }
                 requestAnimationFrame(animateParticles);
