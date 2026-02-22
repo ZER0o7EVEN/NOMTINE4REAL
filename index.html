@@ -458,22 +458,6 @@
     </div>
 
 
-    <!-- PROFILE VIEW MODAL -->
-    <div id="profile-view-modal" class="fixed inset-0 z-[180] bg-black/90 backdrop-blur-xl flex items-center justify-center hidden opacity-0 transition-opacity duration-300 pointer-events-auto">
-        <div class="bg-[#0a0a0a] border border-accent/30 p-10 rounded-3xl shadow-2xl max-w-lg w-full relative overflow-hidden">
-            <button onclick="profileSystem.closeProfileModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <div id="profile-content" class="min-h-64 flex items-center justify-center text-zinc-500">Loading profile...</div>
-        </div>
-    </div>
-
-    <!-- SHOP MODAL -->
-    <div id="shop-modal" class="fixed inset-0 z-[180] bg-black/90 backdrop-blur-xl flex items-center justify-center hidden opacity-0 transition-opacity duration-300 overflow-y-auto pointer-events-auto">
-        <div class="bg-[#0a0a0a] border border-accent/30 p-10 rounded-3xl shadow-2xl max-w-4xl w-full my-10 relative">
-            <button onclick="shopSystem.closeShop()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <div id="shop-content" class="min-h-64 flex items-center justify-center text-zinc-500">Loading shop...</div>
-        </div>
-    </div>
-
     <!-- CHAT UI -->
     <div id="image-viewer-modal" class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-lg flex items-center justify-center hidden opacity-0 transition-opacity duration-300" onclick="globalChat.hideImageModal()">
         <img id="image-viewer-img" src="" class="max-w-[90vw] max-h-[90vh] object-contain rounded-lg shadow-2xl">
@@ -586,357 +570,17 @@
     </div>
 
     <!-- SETTINGS LAYER -->
-    <!-- SETTINGS LAYER -->
-    <div id="settings-layer" class="fixed inset-0 z-[150] bg-black hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
-        <!-- HEADER -->
-        <div class="bg-gradient-to-r from-black via-black to-accent/5 border-b border-white/10 px-8 py-6 shrink-0">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <button onclick="app.closeSettings()" class="p-2 hover:bg-zinc-800 rounded-lg transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                        </svg>
-                    </button>
-                    <div>
-                        <h1 class="font-display text-3xl font-black">Settings</h1>
-                        <p class="text-xs text-zinc-400 font-mono tracking-widest mt-1">CUSTOMIZE YOUR EXPERIENCE</p>
-                    </div>
-                </div>
-                <div id="user-display" class="flex items-center gap-3">
-                    <div>
-                        <p class="text-sm font-bold" id="username-display">Not Logged In</p>
-                        <p class="text-xs text-zinc-400">Cloud Sync Ready</p>
-                    </div>
-                </div>
+    <div id="settings-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
+        <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0 pointer-events-auto">
+            <div class="flex items-center gap-6">
+                <button onclick="app.closeSettings()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i> Back</button>
+                <div class="h-8 w-[1px] bg-zinc-800"></div><h2 class="font-display font-black text-3xl tracking-tight text-white">Settings</h2>
             </div>
         </div>
-
-        <!-- BODY -->
-        <div class="flex flex-1 overflow-hidden">
-            <!-- NAVIGATION -->
-            <div class="settings-nav">
-                <button class="nav-btn active" onclick="app.switchSettingsTab('account')">
-                    <i data-lucide="user" class="w-5 h-5"></i>
-                    <span>Account</span>
-                </button>
-                <button class="nav-btn" onclick="app.switchSettingsTab('design')">
-                    <i data-lucide="palette" class="w-5 h-5"></i>
-                    <span>Design</span>
-                </button>
-                <button class="nav-btn" onclick="app.switchSettingsTab('profile')">
-                    <i data-lucide="image" class="w-5 h-5"></i>
-                    <span>Profile</span>
-                </button>
-                <button class="nav-btn" onclick="app.switchSettingsTab('site')">
-                    <i data-lucide="globe" class="w-5 h-5"></i>
-                    <span>Site</span>
-                </button>
-                <button class="nav-btn" onclick="app.switchSettingsTab('security')">
-                    <i data-lucide="lock" class="w-5 h-5"></i>
-                    <span>Security</span>
-                </button>
-                <button class="nav-btn" onclick="app.switchSettingsTab('themes')">
-                    <i data-lucide="sparkles" class="w-5 h-5"></i>
-                    <span>Themes</span>
-                </button>
-            </div>
-
-            <!-- CONTENT -->
-            <div class="settings-content">
-                <div class="settings-main">
-                    <!-- ACCOUNT TAB -->
-                    <div id="tab-account" class="tab-content">
-                        <div class="section-title">Account Settings</div>
-                        <div class="section-desc">Manage your account, profile picture, and cloud sync</div>
-                        <div class="form-group">
-                            <div class="flex items-start gap-6">
-                                <div class="relative group">
-                                    <img id="pfp-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" class="w-32 h-32 rounded-2xl border-4 border-accent object-cover">
-                                    <label for="pfp-upload" class="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                        <i data-lucide="camera" class="w-8 h-8 text-white"></i>
-                                    </label>
-                                    <input type="file" id="pfp-upload" accept="image/*" class="hidden" onchange="app.handlePfpUpload(event)">
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-2xl font-bold text-white mb-1">Cloud Profile</h3>
-                                    <p class="text-sm text-zinc-400 mb-6">Logged in as: <span class="text-accent font-bold" id="settings-username">Guest</span></p>
-                                    <div class="space-y-2">
-                                        <button onclick="accountSystem.changeName()" class="w-full px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black text-white font-bold rounded-lg transition-all">Change Username</button>
-                                        <button onclick="accountSystem.changePassword()" class="w-full px-4 py-2 bg-zinc-800 hover:bg-accent text-white font-bold rounded-lg transition-all">Change Password</button>
-                                        <button onclick="accountSystem.syncData()" class="w-full px-4 py-2 bg-accent/20 hover:bg-accent text-accent hover:text-white font-bold rounded-lg transition-all">Sync to Cloud</button>
-                                        <button onclick="accountSystem.logout()" class="w-full px-4 py-2 bg-red-900/30 hover:bg-red-600 text-red-400 hover:text-white font-bold rounded-lg transition-all">Logout</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Status Message</label>
-                            <textarea id="status-input" placeholder="What are you doing?" class="form-input" maxlength="50" rows="2" onchange="app.updateSetting('status', this.value)"></textarea>
-                            <p class="text-xs text-zinc-500 mt-2">Visible to other players (50 chars max)</p>
-                        </div>
-                    </div>
-
-                    <!-- DESIGN TAB -->
-                    <div id="tab-design" class="tab-content hidden">
-                        <div class="section-title">Design & Layout</div>
-                        <div class="section-desc">Customize how the interface looks and feels</div>
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label class="form-label">Corner Roundness</label>
-                                <div class="slider-container">
-                                    <input type="range" id="border-radius" min="0" max="30" value="20" oninput="app.updateSetting('borderRadius', this.value + 'px'); document.getElementById('border-radius-display').textContent = this.value + 'px';" class="slider-input rounded-lg h-2 bg-zinc-800 accent-accent">
-                                    <span class="slider-value" id="border-radius-display">20px</span>
-                                </div>
-                                <p class="text-xs text-zinc-500 mt-2">Makes corners more or less rounded</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Base Font Size</label>
-                                <div class="slider-container">
-                                    <input type="range" id="text-size" min="12" max="20" value="16" oninput="app.updateSetting('textSize', this.value + 'px'); document.getElementById('text-size-display').textContent = this.value + 'px';" class="slider-input rounded-lg h-2 bg-zinc-800 accent-accent">
-                                    <span class="slider-value" id="text-size-display">16px</span>
-                                </div>
-                                <p class="text-xs text-zinc-500 mt-2">Larger text = easier to read</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Font Style</label>
-                            <select id="font-base" class="select-input" onchange="app.updateSetting('fontBase', this.value)">
-                                <option value="'Outfit', sans-serif">Outfit (Default)</option>
-                                <option value="'Inter', sans-serif">Inter</option>
-                                <option value="'Roboto Mono', monospace">Roboto Mono</option>
-                            </select>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="settings-switch">
-                                <div>
-                                    <p class="font-bold">Performance Mode</p>
-                                    <p class="text-xs text-zinc-400">Reduces animations and effects</p>
-                                </div>
-                                <button id="perf-mode-toggle" class="toggle-btn" onclick="app.togglePerf()">
-                                    <div class="toggle-dot"></div>
-                                </button>
-                            </div>
-                            <div class="settings-switch">
-                                <div>
-                                    <p class="font-bold">Disable Animations</p>
-                                    <p class="text-xs text-zinc-400">Everything instantly</p>
-                                </div>
-                                <button id="no-anim-toggle" class="toggle-btn" onclick="app.toggleAnimations()">
-                                    <div class="toggle-dot"></div>
-                                </button>
-                            </div>
-                            <div class="settings-switch">
-                                <div>
-                                    <p class="font-bold">Disable Particles</p>
-                                    <p class="text-xs text-zinc-400">Removes background effects</p>
-                                </div>
-                                <button id="no-particles-toggle" class="toggle-btn" onclick="app.toggleParticles()">
-                                    <div class="toggle-dot"></div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PROFILE TAB -->
-                    <div id="tab-profile" class="tab-content hidden">
-                        <div class="section-title">Profile Customization</div>
-                        <div class="section-desc">Make your profile unique with 20+ options</div>
-                        <div class="grid-2">
-                            <div class="form-group col-span-2">
-                                <label class="form-label">Bio</label>
-                                <textarea id="bio-input" placeholder="Tell us about yourself..." class="form-input" maxlength="100" rows="3" onchange="app.updateProfileSetting('bio', this.value)"></textarea>
-                                <p class="text-xs text-zinc-500 mt-2">Max 100 characters</p>
-                            </div>
-                            <div class="form-group col-span-2">
-                                <label class="form-label">Status Message</label>
-                                <input type="text" id="profile-status" placeholder="e.g. Playing games..." maxlength="50" class="form-input" onchange="app.updateProfileSetting('statusText', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Profile Layout</label>
-                                <select id="layout-select" class="select-input" onchange="app.updateProfileSetting('layout', this.value)">
-                                    <option value="vertical">Vertical (Classic)</option>
-                                    <option value="horizontal">Horizontal (Modern)</option>
-                                    <option value="compact">Compact (Minimal)</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Photo Style</label>
-                                <select id="pfp-style" class="select-input" onchange="app.updateProfileSetting('pfpStyle', this.value)">
-                                    <option value="rounded-full">Circle</option>
-                                    <option value="rounded-2xl">Rounded Square</option>
-                                    <option value="rounded-lg">Square</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Profile Background</label>
-                                <input type="color" id="bg-color" class="color-picker" onchange="app.updateProfileSetting('bgColor', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Accent Color</label>
-                                <input type="color" id="accent-color" class="color-picker" onchange="app.updateProfileSetting('accentColor', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Name Color</label>
-                                <input type="color" id="name-color" class="color-picker" onchange="app.updateProfileSetting('nameColor', this.value)">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Theme Preset</label>
-                                <select id="theme-preset" class="select-input" onchange="app.updateProfileSetting('theme', this.value)">
-                                    <option value="default">Default Dark</option>
-                                    <option value="nord">Nord Blue</option>
-                                    <option value="neon">Neon</option>
-                                    <option value="vaporwave">Vaporwave</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-span-2">
-                                <label class="form-label mb-4 block">Profile Features</label>
-                                <div class="space-y-3">
-                                    <div class="settings-switch">
-                                        <span>Show Status</span>
-                                        <button id="show-status-toggle" class="toggle-btn active" onclick="app.toggleProfileFeature('showStatus')">
-                                            <div class="toggle-dot"></div>
-                                        </button>
-                                    </div>
-                                    <div class="settings-switch">
-                                        <span>Show Rank Badge</span>
-                                        <button id="show-rank-toggle" class="toggle-btn active" onclick="app.toggleProfileFeature('displayRank')">
-                                            <div class="toggle-dot"></div>
-                                        </button>
-                                    </div>
-                                    <div class="settings-switch">
-                                        <span>Glow Effect</span>
-                                        <button id="glow-toggle" class="toggle-btn active" onclick="app.toggleProfileFeature('profileGlowEffect')">
-                                            <div class="toggle-dot"></div>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group mt-6">
-                            <button onclick="profileSystem.showProfileModal(accountSystem.username)" class="w-full py-4 bg-gradient-to-r from-accent to-accent/70 text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(167,139,250,0.5)] transition-all">
-                                👁️ Preview Profile
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- SITE TAB -->
-                    <div id="tab-site" class="tab-content hidden">
-                        <div class="section-title">Site Cloaking</div>
-                        <div class="section-desc">Make the tab look like something else</div>
-                        <div class="form-group">
-                            <label class="form-label">Tab Title</label>
-                            <input type="text" id="tab-title" placeholder="e.g. Google Classroom" class="form-input" onchange="app.updateSetting('tabTitle', this.value)">
-                            <p class="text-xs text-zinc-500 mt-2">What appears in the browser tab</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tab Icon URL</label>
-                            <input type="url" id="tab-icon" placeholder="https://..." class="form-input" onchange="app.updateSetting('tabIcon', this.value)">
-                            <p class="text-xs text-zinc-500 mt-2">Favicon image URL</p>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Quick Presets</label>
-                            <div class="grid-3">
-                                <button onclick="app.setCloak('Google', 'https://www.google.com/favicon.ico')" class="p-4 bg-zinc-800 hover:bg-accent hover:text-white rounded-lg font-bold transition-all"><i data-lucide="search" class="w-6 h-6 mx-auto mb-2"></i>Google</button>
-                                <button onclick="app.setCloak('Classes', 'https://www.gstatic.com/classroom/favicon.ico')" class="p-4 bg-zinc-800 hover:bg-accent hover:text-white rounded-lg font-bold transition-all"><i data-lucide="book-open" class="w-6 h-6 mx-auto mb-2"></i>Classroom</button>
-                                <button onclick="app.setCloak('Canvas', 'https://canvas.instructure.com/favicon.ico')" class="p-4 bg-zinc-800 hover:bg-accent hover:text-white rounded-lg font-bold transition-all"><i data-lucide="layout" class="w-6 h-6 mx-auto mb-2"></i>Canvas</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <button onclick="app.cloak()" class="w-full py-3 bg-accent text-white font-bold rounded-lg hover:bg-accent/80 transition-all">
-                                Open in about:blank
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- SECURITY TAB -->
-                    <div id="tab-security" class="tab-content hidden">
-                        <div class="section-title">Security & Privacy</div>
-                        <div class="section-desc">Keep your account safe and set up panic options</div>
-                        <div class="grid-2">
-                            <div class="form-group">
-                                <label class="form-label">Panic Key</label>
-                                <input type="text" id="panic-key" placeholder="e.g. ` or Esc" class="form-input" maxlength="10" onchange="app.updateSetting('panicKey', this.value)">
-                                <p class="text-xs text-zinc-500 mt-2">Press this key to panic</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Redirect URL</label>
-                                <input type="url" id="panic-url" placeholder="https://classroom.google.com" class="form-input" onchange="app.updateSetting('panicUrl', this.value)">
-                                <p class="text-xs text-zinc-500 mt-2">Where panic button goes</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Quick Presets</label>
-                            <div class="space-y-2">
-                                <button onclick="app.setPanicPreset('https://classroom.google.com')" class="w-full p-3 bg-zinc-800 hover:bg-accent hover:text-white text-left rounded-lg transition-all font-bold">
-                                    Google Classroom
-                                </button>
-                                <button onclick="app.setPanicPreset('https://canvas.instructure.com')" class="w-full p-3 bg-zinc-800 hover:bg-accent hover:text-white text-left rounded-lg transition-all font-bold">
-                                    Canvas LMS
-                                </button>
-                                <button onclick="app.setPanicPreset('https://google.com')" class="w-full p-3 bg-zinc-800 hover:bg-accent hover:text-white text-left rounded-lg transition-all font-bold">
-                                    Google Search
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- THEMES TAB -->
-                    <div id="tab-themes" class="tab-content hidden">
-                        <div class="section-title">Color Themes</div>
-                        <div class="section-desc">Choose from beautiful color schemes</div>
-                        <div class="grid-2 mb-8">
-                            <button onclick="app.setTheme('default')" class="p-6 rounded-2xl border-2 border-white/20 hover:border-accent transition-all bg-gradient-to-br from-zinc-900 to-black">
-                                <div class="flex gap-2 mb-3">
-                                    <div class="w-6 h-6 bg-purple-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-zinc-700 rounded"></div>
-                                    <div class="w-6 h-6 bg-white rounded"></div>
-                                </div>
-                                <p class="font-bold">Default Dark</p>
-                            </button>
-                            <button onclick="app.setTheme('nord')" class="p-6 rounded-2xl border-2 border-white/20 hover:border-accent transition-all bg-gradient-to-br from-blue-900 to-black">
-                                <div class="flex gap-2 mb-3">
-                                    <div class="w-6 h-6 bg-blue-400 rounded"></div>
-                                    <div class="w-6 h-6 bg-blue-700 rounded"></div>
-                                    <div class="w-6 h-6 bg-gray-300 rounded"></div>
-                                </div>
-                                <p class="font-bold">Nord Blue</p>
-                            </button>
-                            <button onclick="app.setTheme('neon')" class="p-6 rounded-2xl border-2 border-white/20 hover:border-accent transition-all bg-gradient-to-br from-cyan-900 to-black">
-                                <div class="flex gap-2 mb-3">
-                                    <div class="w-6 h-6 bg-cyan-400 rounded"></div>
-                                    <div class="w-6 h-6 bg-pink-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-lime-400 rounded"></div>
-                                </div>
-                                <p class="font-bold">Neon</p>
-                            </button>
-                            <button onclick="app.setTheme('vaporwave')" class="p-6 rounded-2xl border-2 border-white/20 hover:border-accent transition-all bg-gradient-to-br from-purple-900 to-black">
-                                <div class="flex gap-2 mb-3">
-                                    <div class="w-6 h-6 bg-pink-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-purple-500 rounded"></div>
-                                    <div class="w-6 h-6 bg-cyan-400 rounded"></div>
-                                </div>
-                                <p class="font-bold">Vaporwave</p>
-                            </button>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Custom Accent Color</label>
-                            <div class="color-palette">
-                                <button onclick="app.setAccentColor('#a78bfa')" class="color-swatch active" style="background-color: #a78bfa;"></button>
-                                <button onclick="app.setAccentColor('#4ade80')" class="color-swatch" style="background-color: #4ade80;"></button>
-                                <button onclick="app.setAccentColor('#f87171')" class="color-swatch" style="background-color: #f87171;"></button>
-                                <button onclick="app.setAccentColor('#60a5fa')" class="color-swatch" style="background-color: #60a5fa;"></button>
-                                <button onclick="app.setAccentColor('#fb923c')" class="color-swatch" style="background-color: #fb923c;"></button>
-                                <button onclick="app.setAccentColor('#facc15')" class="color-swatch" style="background-color: #facc15;"></button>
-                                <button onclick="app.setAccentColor('#f472b6')" class="color-swatch" style="background-color: #f472b6;"></button>
-                                <button onclick="app.setAccentColor('#22d3ee')" class="color-swatch" style="background-color: #22d3ee;"></button>
-                                <button onclick="app.setAccentColor('#ffffff')" class="color-swatch" style="background-color: #ffffff;"></button>
-                                <button onclick="app.setCustomColor()" class="color-swatch border-2 border-dashed border-zinc-600 flex items-center justify-center">
-                                    <i data-lucide="plus" class="w-5 h-5"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="flex flex-1 overflow-hidden relative z-10 pointer-events-auto">
+            <div class="w-72 bg-[#080808] border-r border-white/5 flex flex-col p-6 space-y-2 overflow-y-auto scrollbar-hide shrink-0" id="settings-nav"></div>
+            <div class="flex-1 bg-black overflow-y-auto scrollbar-hide relative p-10">
+                <div class="max-w-4xl mx-auto"><div class="mb-10"><h3 id="settings-cat-title" class="text-5xl font-display font-black text-white tracking-tighter mb-2">Category</h3></div><div id="settings-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20"></div></div>
             </div>
         </div>
     </div>
@@ -1120,9 +764,6 @@
                 app.applySettings();
                 app.renderLibrary();
 
-                // Initialize profile and check for owner
-                profileSystem.initProfile(user);
-
                 document.getElementById('auth-modal').classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => document.getElementById('auth-modal').classList.add('hidden'), 500);
 
@@ -1223,7 +864,7 @@
                 this.settings = { ...this.defaultSettings };
                 this.activeCategory = 'All'; this.searchQuery = ''; this.currentGame = null;
                 this.favorites = new Set(JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'));
-                this.activeSettingsTab = 'Account'; this.previousLayer = 'menu';
+                this.activeSettingsTab = 'Design'; this.previousLayer = 'menu';
                 this.currentLibraryMode = 'games'; // 'games' or 'movies'
                 this.isChatOpen = false;
                 this.notifications = [];
@@ -1262,7 +903,7 @@
             renderMainMenu() {
                 const layer = document.getElementById('menu-layer');
                 const heroGame = GAMES.find(g => g.title === "Minecraft 1.12") || GAMES[0];
-                this.menuPreviewData = { games: { isGame: false }, featured: { isGame: true, title: heroGame.title, desc: "Play now.", img: heroGame.image, tag: "Featured" }, random: { isGame: true, title: "Random Game", desc: "Play something new.", img: GAMES[1].image, tag: "Random" }, partners: { isGame: false }, team: { isGame: false }, chat: { isGame: false }, settings: { isGame: false }, requests: {isGame: false}, help: {isGame: false}, shop: {isGame: false} };
+                this.menuPreviewData = { games: { isGame: false }, featured: { isGame: true, title: heroGame.title, desc: "Play now.", img: heroGame.image, tag: "Featured" }, random: { isGame: true, title: "Random Game", desc: "Play something new.", img: GAMES[1].image, tag: "Random" }, partners: { isGame: false }, team: { isGame: false }, chat: { isGame: false }, settings: { isGame: false }, requests: {isGame: false}, help: {isGame: false} };
                 
                 layer.innerHTML = `
                     <div id="menu-ambient-bg" class="absolute inset-0 bg-transparent"></div>
@@ -1274,7 +915,6 @@
                                 ${this.createMenuItem('LIBRARY', 'enterLibrary()', 'games', 'layout-grid')}
                                 ${this.createMenuItem('FEATURED', `openViewer('${heroGame.title.replace(/'/g, "\\'")}')`, 'featured', 'star')}
                                 ${this.createMenuItem('PARTNERS', 'openPartners()', 'partners', 'handshake')}
-                                ${this.createMenuItem('SHOP', 'shopSystem.showShop()', 'shop', 'shopping-bag')}
                                 ${this.createMenuItem('CHAT', 'openChat()', 'chat', 'message-square')}
                                 ${this.createMenuItem('REQUESTS', 'openRequests()', 'requests', 'plus-square')}
                                 ${this.createMenuItem('HELP', 'openHelp()', 'help', 'help-circle')}
@@ -1443,188 +1083,10 @@
             }
             closeChat() { this.isChatOpen = false; const layer = document.getElementById('chat-layer'); layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); layer.classList.remove('opacity-100', 'scale-100'); setTimeout(() => { layer.classList.add('hidden'); layer.classList.remove('flex'); if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); } }, 700); }
 
-            openSettings() { 
-                this.previousLayer = this.isChatOpen ? 'chat' : 'library'; 
-                document.body.classList.add('overflow-hidden'); 
-                if(this.isChatOpen) document.getElementById('chat-layer').classList.add('hidden'); 
-                if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); 
-                const settings = document.getElementById('settings-layer'); 
-                settings.classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none'); 
-                settings.classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); 
-                this.renderSettingsNav(); 
-                this.renderSettingsContent(); 
-                lucide.createIcons();
-            }
-            closeSettings() { 
-                const settings = document.getElementById('settings-layer'); 
-                settings.classList.remove('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); 
-                settings.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); 
-                setTimeout(() => { 
-                    settings.classList.add('hidden'); 
-                    if(this.previousLayer === 'chat' && this.isChatOpen) { 
-                        document.getElementById('chat-layer').classList.remove('hidden'); 
-                    } else if(this.previousLayer === 'library') { 
-                        document.getElementById('library-layer').classList.remove('hidden'); 
-                        document.body.classList.remove('overflow-hidden'); 
-                    } 
-                }, 700); 
-            }
+            openSettings() { document.body.classList.add('overflow-hidden'); document.getElementById('settings-layer').classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none'); document.getElementById('settings-layer').classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden'); if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); this.renderSettingsNav(); this.renderSettingsContent(); }
+            closeSettings() { const layer = document.getElementById('settings-layer'); layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); layer.classList.remove('opacity-100', 'scale-100'); setTimeout(() => { layer.classList.add('hidden'); layer.classList.remove('flex'); if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); } }, 700); }
 
-            switchSettingsTab(tabName) {
-                const tabs = ['account', 'design', 'profile', 'site', 'security', 'themes'];
-                if (!tabs.includes(tabName.toLowerCase())) return;
-                
-                // Hide all tabs
-                tabs.forEach(tab => {
-                    const el = document.getElementById(`tab-${tab}`);
-                    if (el) el.classList.add('hidden');
-                });
-                
-                // Show selected tab
-                const selectedTab = document.getElementById(`tab-${tabName.toLowerCase()}`);
-                if (selectedTab) selectedTab.classList.remove('hidden');
-                
-                // Update button states
-                document.querySelectorAll('.settings-nav .nav-btn').forEach((btn, idx) => {
-                    if (btn.textContent.toLowerCase().includes(tabName.toLowerCase())) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                // Load form values
-                this.loadSettingsForm(tabName.toLowerCase());
-            }
-
-            loadSettingsForm(tabName) {
-                const s = this.settings;
-                const u = accountSystem.username || 'Not Logged In';
-                
-                switch(tabName) {
-                    case 'account':
-                        document.getElementById('username-display').textContent = u;
-                        document.getElementById('settings-username').textContent = u;
-                        if (s.status) document.getElementById('status-input').value = s.status;
-                        if (s.profilePic) document.getElementById('pfp-preview').src = s.profilePic;
-                        break;
-                    case 'design':
-                        document.getElementById('border-radius').value = parseInt(s.borderRadius || '20');
-                        document.getElementById('border-radius-display').textContent = s.borderRadius || '20px';
-                        document.getElementById('text-size').value = parseInt(s.textSize || '16');
-                        document.getElementById('text-size-display').textContent = s.textSize || '16px';
-                        document.getElementById('font-base').value = s.fontBase || "'Outfit', sans-serif";
-                        if (document.getElementById('perf-mode-toggle')) document.getElementById('perf-mode-toggle').classList.toggle('active', s.perfMode);
-                        if (document.getElementById('no-anim-toggle')) document.getElementById('no-anim-toggle').classList.toggle('active', s.noAnimations);
-                        if (document.getElementById('no-particles-toggle')) document.getElementById('no-particles-toggle').classList.toggle('active', s.noParticles);
-                        break;
-                    case 'profile':
-                        const prof = this.profileSettings || {};
-                        if (document.getElementById('bio-input')) document.getElementById('bio-input').value = prof.bio || '';
-                        if (document.getElementById('profile-status')) document.getElementById('profile-status').value = prof.statusText || '';
-                        if (document.getElementById('layout-select')) document.getElementById('layout-select').value = prof.layout || 'vertical';
-                        if (document.getElementById('pfp-style')) document.getElementById('pfp-style').value = prof.pfpStyle || 'rounded-full';
-                        if (document.getElementById('bg-color')) document.getElementById('bg-color').value = prof.bgColor || '#000000';
-                        if (document.getElementById('accent-color')) document.getElementById('accent-color').value = prof.accentColor || '#a78bfa';
-                        if (document.getElementById('name-color')) document.getElementById('name-color').value = prof.nameColor || '#ffffff';
-                        if (document.getElementById('theme-preset')) document.getElementById('theme-preset').value = prof.theme || 'default';
-                        break;
-                    case 'site':
-                        if (document.getElementById('tab-title')) document.getElementById('tab-title').value = s.tabTitle || '';
-                        if (document.getElementById('tab-icon')) document.getElementById('tab-icon').value = s.tabIcon || '';
-                        break;
-                    case 'security':
-                        if (document.getElementById('panic-key')) document.getElementById('panic-key').value = s.panicKey || '`';
-                        if (document.getElementById('panic-url')) document.getElementById('panic-url').value = s.panicUrl || '';
-                        break;
-                    case 'themes':
-                        document.querySelectorAll('.color-swatch').forEach((swatch, idx) => {
-                            swatch.classList.toggle('active', swatch.style.backgroundColor === (s.accentColor || '#a78bfa'));
-                        });
-                        break;
-                }
-            }
-
-            updateProfileSetting(key, val) {
-                if (!this.profileSettings) this.profileSettings = {};
-                this.profileSettings[key] = val;
-                localStorage.setItem('nm4r-profile-settings', JSON.stringify(this.profileSettings));
-            }
-
-            setCloak(title, icon) {
-                this.updateSetting('tabTitle', title);
-                this.updateSetting('tabIcon', icon);
-                document.getElementById('tab-title').value = title;
-                document.getElementById('tab-icon').value = icon;
-            }
-
-            setPanicPreset(url) {
-                this.updateSetting('panicUrl', url);
-                document.getElementById('panic-url').value = url;
-            }
-
-            setTheme(themeName) {
-                this.updateSetting('theme', themeName);
-                document.body.classList.remove('nord', 'neon', 'vaporwave');
-                if (themeName !== 'default') document.body.classList.add(themeName);
-            }
-
-            setAccentColor(color) {
-                this.updateSetting('accentColor', color);
-                document.documentElement.style.setProperty('--accent', color);
-                document.querySelectorAll('.color-swatch').forEach(swatch => {
-                    swatch.classList.toggle('active', swatch.style.backgroundColor === color);
-                });
-            }
-
-            setCustomColor() {
-                const color = prompt('Enter hex color code (e.g. #ff0000):');
-                if (color && /^#[0-9A-F]{6}$/i.test(color)) {
-                    this.setAccentColor(color);
-                }
-            }
-
-            cloak() {
-                window.location.href = 'about:blank';
-            }
-
-            togglePerf() {
-                this.settings.perfMode = !this.settings.perfMode;
-                this.updateSetting('perfMode', this.settings.perfMode);
-                document.getElementById('perf-mode-toggle')?.classList.toggle('active');
-            }
-
-            toggleAnimations() {
-                this.settings.noAnimations = !this.settings.noAnimations;
-                this.updateSetting('noAnimations', this.settings.noAnimations);
-                document.getElementById('no-anim-toggle')?.classList.toggle('active');
-            }
-
-            toggleParticles() {
-                this.settings.noParticles = !this.settings.noParticles;
-                this.updateSetting('noParticles', this.settings.noParticles);
-                document.getElementById('no-particles-toggle')?.classList.toggle('active');
-            }
-
-            toggleProfileFeature(feature) {
-                if (!this.profileSettings) this.profileSettings = {};
-                this.profileSettings[feature] = !this.profileSettings[feature];
-                this.updateProfileSetting(feature, this.profileSettings[feature]);
-            }
-
-            handlePfpUpload(event) {
-                const file = event.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const dataUrl = e.target.result;
-                    this.updateSetting('profilePic', dataUrl);
-                    document.getElementById('pfp-preview').src = dataUrl;
-                };
-                reader.readAsDataURL(file);
-            }
-
-            renderSettingsNav() { const nav = document.getElementById('settings-nav'); const cats = ['Account', 'Design', 'Profile', 'Site', 'Security', 'Themes']; nav.innerHTML = cats.map(c => `<button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>`).join('') + `<div class="mt-auto pt-6 border-t border-white/5"><button onclick="adminSystem.openLogin()" class="w-full px-5 py-3 text-red-900/50 hover:text-red-500 hover:bg-red-900/10 text-xs font-bold font-mono tracking-widest text-center rounded-xl transition-colors">ADMIN</button></div>`; }
+            renderSettingsNav() { const nav = document.getElementById('settings-nav'); const cats = ['Account', 'Design', 'Site', 'Security', 'Themes']; nav.innerHTML = cats.map(c => `<button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>`).join('') + `<div class="mt-auto pt-6 border-t border-white/5"><button onclick="adminSystem.openLogin()" class="w-full px-5 py-3 text-red-900/50 hover:text-red-500 hover:bg-red-900/10 text-xs font-bold font-mono tracking-widest text-center rounded-xl transition-colors">ADMIN</button></div>`; }
             renderSettingsContent() { 
                 this.renderSettingsNav(); 
                 document.getElementById('settings-cat-title').textContent = this.activeSettingsTab; 
@@ -1673,28 +1135,6 @@
                     <div class="col-span-full">${createRow("Update Status", "input", "status", {ph: "Set your status..."})}</div>
                     <div class="col-span-full flex items-center justify-end"><button onclick="accountSystem.updateStatus()" class="px-4 py-2 rounded-lg text-sm font-bold bg-accent text-white">Save Status</button></div>`;
                     setTimeout(() => lucide.createIcons(), 10);
-                }
-                else if(this.activeSettingsTab === 'Profile') {
-                    optionsHtml = '<div class="col-span-full mb-6"><h4 class="text-xl font-bold text-white">Profile Customizations (20+ Options)</h4><p class="text-sm text-zinc-400 mt-2">Customize how your profile looks to other players.</p></div>';
-                    
-                    profileSystem.profileCustomizations.forEach(opt => {
-                        let control = '';
-                        if(opt.type === 'input') {
-                            control = `<input type="text" maxlength="${opt.max || 100}" placeholder="${opt.placeholder || ''}" value="${app.settings[opt.key] || ''}" onchange="app.updateSetting('${opt.key}', this.value); profileSystem.setProfileCustomization('${accountSystem.username}', '${opt.key}', this.value);" class="w-full bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500">`;
-                        } else if(opt.type === 'color') {
-                            control = `<input type="color" value="${app.settings[opt.key] || opt.default}" onchange="app.updateSetting('${opt.key}', this.value); profileSystem.setProfileCustomization('${accountSystem.username}', '${opt.key}', this.value);" class="w-16 h-10 rounded cursor-pointer border border-zinc-700">`;
-                        } else if(opt.type === 'toggle') {
-                            const isChecked = app.settings[opt.key] !== false;
-                            control = `<button onclick="app.updateSetting('${opt.key}', ${!isChecked}); profileSystem.setProfileCustomization('${accountSystem.username}', '${opt.key}', ${!isChecked});" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${isChecked ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none"><div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isChecked ? 'translate-x-7' : 'translate-x-1'}"></div></button>`;
-                        } else if(opt.type === 'select') {
-                            control = `<select onchange="app.updateSetting('${opt.key}', this.value); profileSystem.setProfileCustomization('${accountSystem.username}', '${opt.key}', this.value);" class="bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500">${opt.options.map(o => `<option value="${o.value}" ${app.settings[opt.key] === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}</select>`;
-                        } else if(opt.type === 'slider') {
-                            control = `<div class="flex items-center gap-4 w-full"><input type="range" min="${opt.min}" max="${opt.max}" value="${app.settings[opt.key] !== undefined ? parseInt(app.settings[opt.key]) : opt.default}" oninput="app.updateSetting('${opt.key}', this.value); profileSystem.setProfileCustomization('${accountSystem.username}', '${opt.key}', this.value);" class="w-full"><span class="text-xs font-mono text-zinc-500 w-12 text-right">${app.settings[opt.key] !== undefined ? app.settings[opt.key] : opt.default}</span></div>`;
-                        }
-                        optionsHtml += `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-lg p-4 flex items-center justify-between col-span-1"><span class="text-sm font-medium text-zinc-200">${opt.label}</span><div>${control}</div></div>`;
-                    });
-                    
-                    optionsHtml += '<div class="col-span-full mt-6 p-4 bg-accent/10 border border-accent/30 rounded-lg"><button onclick="profileSystem.showProfileModal(accountSystem.username)" class="w-full py-3 bg-accent text-white font-bold rounded-lg hover:bg-accent/80 transition-colors">Preview Profile</button></div>';
                 }
                 else if(this.activeSettingsTab === 'Design') {
                     const fontOptions = [{value: "'Outfit', sans-serif", label: "Outfit (Default)"}, {value: "'Inter', sans-serif", label: "Inter"}, {value: "'Roboto Mono', monospace", label: "Roboto Mono"}];
@@ -2422,14 +1862,7 @@
                     return;
                 }
                 const msg = { user: this.username, text: text, pfp: app.settings.profilePic || null, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}), replyTo: this.replyingTo || null }; 
-                
-                // Add user rank to message if available
-                (async () => {
-                    const profile = await profileSystem.getProfile(this.username);
-                    msg.userRank = profile.rank || 'Member';
-                    this.db.ref(`messages/${this.currentChannel}`).push(msg);
-                    this.input.value = ''; this.cancelReply(); this.input.focus();
-                })();
+                this.db.ref(`messages/${this.currentChannel}`).push(msg); this.input.value = ''; this.cancelReply(); this.input.focus(); 
             }
             
             receiveMessage(msg, channelId) {
@@ -2466,21 +1899,12 @@
                     safeText = encodeURIComponent(msg.text); 
                 }
                 
-                // Fetch user rank for badge
-                let rankBadgeHtml = '';
-                if(msg.userRank) {
-                    const rankColors = { 'Member': '#a1a1aa', 'Premium': '#3b82f6', 'Elite': '#8b5cf6', 'Legendary': '#f59e0b', 'Admin': '#ef4444', 'Owner': '#fbbf24' };
-                    const rankEmoji = { 'Member': '👤', 'Premium': '⭐', 'Elite': '✨', 'Legendary': '👑', 'Admin': '🛡️', 'Owner': '👑🔥' };
-                    rankBadgeHtml = `<span class="px-2 py-1 rounded text-[10px] font-bold ml-2" style="background-color: ${rankColors[msg.userRank] || '#a1a1aa'}; color: white;">${rankEmoji[msg.userRank]} ${msg.userRank}</span>`;
-                }
-                
                 let html = `
                     <div class="flex items-start gap-3 group animate-reveal-up ${isMe ? 'flex-row-reverse' : ''}" style="animation-duration: 0.3s">
-                        <div class="shrink-0 mt-1 cursor-pointer hover:opacity-80" onclick="profileSystem.showProfileModal('${msg.user}')">${pfpHtml}</div>
+                        <div class="shrink-0 mt-1">${pfpHtml}</div>
                         <div class="flex flex-col gap-1 ${isMe ? 'items-end' : 'items-start'}">
                             <div class="flex items-center gap-2">
-                                <span class="text-sm font-bold tracking-wide text-zinc-300 cursor-pointer hover:text-accent" onclick="profileSystem.showProfileModal('${msg.user}')">${msg.user}</span>
-                                ${rankBadgeHtml}
+                                <span class="text-sm font-bold tracking-wide text-zinc-300">${msg.user}</span>
                                 <span class="text-[10px] font-mono text-zinc-600">${msg.time}</span>
                             </div>
                             <div class="relative group/bubble">
@@ -2661,241 +2085,6 @@
             window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
             resize(); animateParticles();
         });
-
-        // --- PROFILE SYSTEM ---
-        class ProfileSystem {
-            constructor() {
-                this.profileCustomizations = [
-                    { key: 'bio', label: 'Bio', type: 'input', placeholder: 'Write something about you...', max: 100 },
-                    { key: 'bgColor', label: 'Profile Background Color', type: 'color', default: '#0a0a0a' },
-                    { key: 'accentColor', label: 'Profile Accent Color', type: 'color', default: '#a78bfa' },
-                    { key: 'cardColor', label: 'Card Background', type: 'color', default: '#121212' },
-                    { key: 'nameColor', label: 'Name Text Color', type: 'color', default: '#ffffff' },
-                    { key: 'nameFont', label: 'Name Font Style', type: 'select', options: [
-                        { value: 'font-display', label: 'Bold Display' },
-                        { value: 'font-bold', label: 'Extra Bold' },
-                        { value: 'font-black', label: 'Ultra Black' }
-                    ]},
-                    { key: 'layout', label: 'Profile Layout', type: 'select', options: [
-                        { value: 'vertical', label: 'Vertical (Classic)' },
-                        { value: 'horizontal', label: 'Horizontal (Modern)' },
-                        { value: 'compact', label: 'Compact (Minimal)' }
-                    ]},
-                    { key: 'pfpBorder', label: 'PFP Border Width', type: 'slider', min: 0, max: 10, default: 2 },
-                    { key: 'pfpStyle', label: 'PFP Style', type: 'select', options: [
-                        { value: 'rounded-full', label: 'Circle' },
-                        { value: 'rounded-2xl', label: 'Rounded Square' },
-                        { value: 'rounded-lg', label: 'Square' }
-                    ]},
-                    { key: 'showStatus', label: 'Show Online Status', type: 'toggle', default: true },
-                    { key: 'statusText', label: 'Status Message', type: 'input', placeholder: 'e.g. Playing games...', max: 50 },
-                    { key: 'badgeBgColor', label: 'Badge Background Color', type: 'color', default: '#1f2937' },
-                    { key: 'badgeTextColor', label: 'Badge Text Color', type: 'color', default: '#ffffff' },
-                    { key: 'headerGradient', label: 'Header Gradient', type: 'toggle', default: true },
-                    { key: 'borderRadius', label: 'Border Radius', type: 'slider', min: 0, max: 30, default: 16 },
-                    { key: 'theme', label: 'Theme Preset', type: 'select', options: [
-                        { value: 'default', label: 'Default Dark' },
-                        { value: 'nord', label: 'Nord Blue' },
-                        { value: 'neon', label: 'Neon' },
-                        { value: 'vaporwave', label: 'Vaporwave' }
-                    ]},
-                    { key: 'fontSize', label: 'Bio Font Size', type: 'slider', min: 12, max: 18, default: 14 },
-                    { key: 'profileGlowEffect', label: 'Glow Effect', type: 'toggle', default: true },
-                    { key: 'displayRank', label: 'Show Rank Badge', type: 'toggle', default: true },
-                    { key: 'displayPlayTime', label: 'Show Play Time', type: 'toggle', default: false },
-                ];
-            }
-
-            async getProfile(username) {
-                const snap = await db.ref(`profiles/${username}`).once('value');
-                return snap.val() || this.getDefaultProfile(username);
-            }
-
-            getDefaultProfile(username) {
-                return { username, createdAt: Date.now(), rank: 'Member', customizations: {}, stats: { friends: 0, playtime: 0 }, achievements: [] };
-            }
-
-            async setProfileCustomization(username, key, value) {
-                await db.ref(`profiles/${username}/customizations/${key}`).set(value);
-            }
-
-            async setUserRank(username, rank) {
-                await db.ref(`profiles/${username}/rank`).set(rank);
-            }
-
-            async initProfile(username) {
-                const exists = await db.ref(`profiles/${username}`).once('value');
-                if(!exists.val()) {
-                    const newProfile = this.getDefaultProfile(username);
-                    // Check if username is "Owner"
-                    if(username.toLowerCase() === 'owner') {
-                        newProfile.rank = 'Owner';
-                    }
-                    await db.ref(`profiles/${username}`).set(newProfile);
-                }
-            }
-
-            showProfileModal(username) {
-                const modal = document.getElementById('profile-view-modal');
-                if(!modal) return;
-                modal.classList.remove('hidden', 'opacity-0');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
-                this.renderProfile(username);
-            }
-
-            closeProfileModal() {
-                const modal = document.getElementById('profile-view-modal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-
-            async renderProfile(username) {
-                const profile = await this.getProfile(username);
-                const customizations = profile.customizations || {};
-                const rankColors = { 'Member': '#a1a1aa', 'Premium': '#3b82f6', 'Elite': '#8b5cf6', 'Legendary': '#f59e0b', 'Admin': '#ef4444', 'Owner': '#fbbf24' };
-                const rankEmoji = { 'Member': '👤', 'Premium': '⭐', 'Elite': '✨', 'Legendary': '👑', 'Admin': '🛡️', 'Owner': '👑🔥' };
-                
-                const layout = customizations.layout || 'vertical';
-                const bgColor = customizations.bgColor || '#0a0a0a';
-                const accentColor = customizations.accentColor || '#a78bfa';
-                const nameColor = customizations.nameColor || '#ffffff';
-                const cardColor = customizations.cardColor || '#121212';
-                const pfpStyle = customizations.pfpStyle || 'rounded-full';
-                const bio = customizations.bio || '';
-                const statusText = customizations.statusText || 'No status set.';
-
-                const profileContent = document.getElementById('profile-content');
-                let html = '';
-
-                if(layout === 'vertical') {
-                    html = `
-                    <div class="flex flex-col items-center text-center gap-6">
-                        <div class="relative">
-                            <img src="${app.settings.profilePic || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + username}" class="${pfpStyle} w-24 h-24 border-4 object-cover" style="border-color: ${accentColor};">
-                            ${profile.rank !== 'Member' ? `<div class="absolute -bottom-2 -right-2 px-3 py-1 rounded-full text-xs font-bold" style="background-color: ${rankColors[profile.rank]}; color: white;">${rankEmoji[profile.rank]} ${profile.rank}</div>` : ''}
-                        </div>
-                        <div>
-                            <h2 class="text-3xl font-black" style="color: ${nameColor};">${username}</h2>
-                            ${customizations.showStatus ? `<p class="text-sm text-zinc-400 mt-2">${statusText}</p>` : ''}
-                        </div>
-                        ${bio ? `<p class="max-w-xs text-zinc-300 text-sm leading-relaxed">${bio}</p>` : ''}
-                        <div class="flex gap-4 flex-wrap justify-center">
-                            <div class="px-4 py-2 rounded-lg" style="background-color: ${cardColor}; color: ${nameColor};">
-                                <p class="text-2xl font-bold">${profile.stats.friends || 0}</p>
-                                <p class="text-xs text-zinc-400">Friends</p>
-                            </div>
-                            ${customizations.displayPlayTime ? `<div class="px-4 py-2 rounded-lg" style="background-color: ${cardColor}; color: ${nameColor};">
-                                <p class="text-2xl font-bold">${Math.floor((profile.stats.playtime || 0) / 3600)}h</p>
-                                <p class="text-xs text-zinc-400">Play Time</p>
-                            </div>` : ''}
-                        </div>
-                    </div>`;
-                } else if(layout === 'horizontal') {
-                    html = `
-                    <div class="flex gap-6 items-start">
-                        <div class="relative">
-                            <img src="${app.settings.profilePic || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + username}" class="${pfpStyle} w-20 h-20 border-4 object-cover" style="border-color: ${accentColor};">
-                            ${profile.rank !== 'Member' ? `<div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full text-xs font-bold flex items-center justify-center" style="background-color: ${rankColors[profile.rank]};">${rankEmoji[profile.rank]}</div>` : ''}
-                        </div>
-                        <div class="flex-1">
-                            <h2 class="text-2xl font-black" style="color: ${nameColor};">${username}</h2>
-                            ${customizations.showStatus ? `<p class="text-xs text-zinc-400 mt-1">${statusText}</p>` : ''}
-                            ${bio ? `<p class="text-sm text-zinc-300 mt-2">${bio}</p>` : ''}
-                            <div class="flex gap-3 mt-4">
-                                <div class="px-3 py-1 rounded text-xs font-bold" style="background-color: ${cardColor};">
-                                    <span>${profile.stats.friends || 0}</span> Friends
-                                </div>
-                                ${customizations.displayPlayTime ? `<div class="px-3 py-1 rounded text-xs font-bold" style="background-color: ${cardColor};">
-                                    <span>${Math.floor((profile.stats.playtime || 0) / 3600)}h</span> Played
-                                </div>` : ''}
-                            </div>
-                        </div>
-                    </div>`;
-                } else {
-                    html = `
-                    <div class="flex items-center gap-4">
-                        <img src="${app.settings.profilePic || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + username}" class="${pfpStyle} w-16 h-16 border-2 object-cover" style="border-color: ${accentColor};">
-                        <div>
-                            <h2 class="text-lg font-bold" style="color: ${nameColor};">${username}</h2>
-                            <p class="text-xs text-zinc-500">${profile.rank}</p>
-                        </div>
-                    </div>`;
-                }
-
-                profileContent.innerHTML = html;
-            }
-        }
-        const profileSystem = new ProfileSystem();
-
-        // --- SHOP SYSTEM ---
-        class ShopSystem {
-            constructor() {
-                this.ranks = [
-                    { name: 'Premium', price: 999, color: '#3b82f6', perks: ['Blue badge', 'Custom status'] },
-                    { name: 'Elite', price: 1999, color: '#8b5cf6', perks: ['Purple badge', 'Custom colors', 'Priority chat'] },
-                    { name: 'Legendary', price: 4999, color: '#f59e0b', perks: ['Gold badge', 'Custom effects', 'VIP status'] },
-                ];
-                this.userCoins = 0;
-            }
-
-            async getUserCoins(username) {
-                const snap = await db.ref(`profiles/${username}/coins`).once('value');
-                return snap.val() || 0;
-            }
-
-            async purchaseRank(username, rankName) {
-                const rank = this.ranks.find(r => r.name === rankName);
-                if(!rank) return false;
-                const coins = await this.getUserCoins(username);
-                if(coins < rank.price) {
-                    alert(`Not enough coins! You need ${rank.price - coins} more coins.`);
-                    return false;
-                }
-                await profileSystem.setUserRank(username, rankName);
-                await db.ref(`profiles/${username}/coins`).set(coins - rank.price);
-                alert(`Congratulations! You are now ${rankName}!`);
-                return true;
-            }
-
-            showShop() {
-                const modal = document.getElementById('shop-modal');
-                if(!modal) return;
-                modal.classList.remove('hidden', 'opacity-0');
-                setTimeout(() => modal.classList.remove('opacity-0'), 10);
-                this.renderShop();
-            }
-
-            closeShop() {
-                const modal = document.getElementById('shop-modal');
-                modal.classList.add('opacity-0');
-                setTimeout(() => modal.classList.add('hidden'), 300);
-            }
-
-            renderShop() {
-                const shopContent = document.getElementById('shop-content');
-                const userCoins = app.settings.shopCoins || 0;
-                shopContent.innerHTML = `
-                <div class="mb-6 flex justify-between items-center">
-                    <h3 class="text-3xl font-black text-white">Shop</h3>
-                    <div class="px-4 py-2 bg-accent rounded-lg font-bold text-white">${userCoins} coins</div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                ${this.ranks.map(rank => `
-                    <div class="bg-zinc-900/50 border-2 rounded-2xl p-6 flex flex-col gap-4" style="border-color: ${rank.color};">
-                        <div>
-                            <h4 class="text-2xl font-bold text-white">${rank.name}</h4>
-                            <p class="text-sm text-zinc-400 mt-1">${rank.perks.join(', ')}</p>
-                        </div>
-                        <div class="mt-auto">
-                            <p class="text-3xl font-black text-accent mb-4">${rank.price}</p>
-                            <button onclick="shopSystem.purchaseRank('${accountSystem.username}', '${rank.name}')" class="w-full py-3 bg-white text-black font-bold rounded-lg hover:bg-zinc-200 transition-colors">Purchase</button>
-                        </div>
-                    </div>
-                `).join('')}
-                </div>`;
-            }
-        }
-        const shopSystem = new ShopSystem();
     </script>
 </body>
 </html>
