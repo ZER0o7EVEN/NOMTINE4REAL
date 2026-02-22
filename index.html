@@ -4,12 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NOTMINE4REAL</title>
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L21 7V17L12 22L3 17V7L12 2Z' /><path d='M12 6L17 9V15L12 18L7 15V9L12 6' /></svg>" id="app-favicon" />
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Playfair+Display:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet" />
+    
+    <!-- Tailwind CSS & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -78,11 +85,11 @@
         <div class="bg-[#0a0a0a] border border-white/10 p-10 rounded-[2rem] shadow-2xl max-w-md w-full text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
             <h3 class="font-display text-4xl font-black text-white mb-2">Cloud Account</h3>
-            <p class="text-zinc-400 font-sans text-sm mb-8">One-time setup to access Global Chat & Sync.</p>
+            <p class="text-zinc-400 font-sans text-sm mb-8">Create an account or login to access Chat and Cloud features.</p>
             <form onsubmit="accountSystem.authenticate(event)" class="flex flex-col gap-4">
                 <input type="text" id="auth-user" required maxlength="20" placeholder="Username" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold">
-                <input type="password" id="auth-pass" required placeholder="Create Password" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold mb-2">
-                <button type="submit" id="auth-btn" class="w-full py-4 bg-accent text-white font-black uppercase tracking-widest rounded-xl hover:bg-accent/80 transition-colors shadow-[0_0_20px_var(--accent)]">Login / Register</button>
+                <input type="password" id="auth-pass" required placeholder="Password / PIN" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold mb-2">
+                <button type="submit" id="auth-btn" class="w-full py-4 bg-accent text-white font-black uppercase tracking-widest rounded-xl hover:bg-accent/80 transition-colors shadow-[0_0_20px_var(--accent)]">Login / Create</button>
                 <button type="button" onclick="document.getElementById('auth-modal').classList.add('opacity-0', 'pointer-events-none'); setTimeout(()=>document.getElementById('auth-modal').classList.add('hidden'), 500);" class="text-zinc-500 hover:text-white text-xs underline mt-2">Cancel</button>
             </form>
         </div>
@@ -227,6 +234,7 @@
             <div class="w-20"></div>
         </div>
         
+        <!-- Add Friend/Group Modal -->
         <div id="add-modal" class="absolute inset-0 z-[60] bg-black/80 backdrop-blur-sm hidden items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-auto">
             <div class="bg-zinc-900 border border-zinc-700 p-6 rounded-2xl w-full max-w-md shadow-2xl relative">
                 <button onclick="globalChat.closeAddModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -352,7 +360,7 @@
     </div>
 
     <script>
-        // --- GLOBAL DATABASE INIT (CRITICAL) ---
+        // --- GLOBAL DATABASE INIT ---
         let db = null;
         try {
             const firebaseConfig = {
@@ -366,13 +374,8 @@
             };
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
-            console.log("Firebase Connected Successfully");
-        } catch(e) {
-            console.error("Critical Firebase Error: ", e);
-            alert("Database Connection Failed. Chat & Admin features disabled.");
-        }
+        } catch(e) { console.error("Firebase Error: ", e); }
 
-        // --- DATA ---
         var _GAMES = [
             ["Web Proxy", "https://d1ks901xvjj2p6.cloudfront.net/index.html#/search", "https://th.bing.com/th?q=Proxy+Adobe+PNG+Logo&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.1&pid=InlineBlock&rm=3&defcache=1&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1&mw=247", "Utility"],
             ["School boy runaway", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_32c0c8b002c4cb975a08f1c4e11993e2.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/605.png", "Action"],
@@ -418,7 +421,7 @@
                         if (data.password === pass) {
                             this.completeLogin(user, pass, data);
                         } else {
-                            alert("Incorrect Password or Username taken!");
+                            alert("Incorrect Password!");
                             btn.textContent = "Login / Create";
                         }
                     } else {
@@ -432,8 +435,8 @@
                         this.completeLogin(user, pass, newData);
                     }
                 } catch(err) {
-                    console.error(err);
-                    alert("Database Error: " + err.message + "\n\nPlease check your Firebase Console -> Realtime Database -> Rules. They must be set to 'true'.");
+                    console.log(err);
+                    alert("Network error.");
                     btn.textContent = "Login / Create";
                 }
             }
@@ -441,6 +444,9 @@
             completeLogin(user, pass, data) {
                 localStorage.setItem('nm4r-user', user);
                 localStorage.setItem('nm4r-pass', pass);
+                // Also set custom user for chat system legacy compatibility
+                localStorage.setItem('nm4r-custom-user', user); 
+
                 if(data.favorites) localStorage.setItem('nm4r-favorites', JSON.stringify(data.favorites));
                 if(data.settings) localStorage.setItem('nm4r-settings', JSON.stringify(data.settings));
 
@@ -457,6 +463,13 @@
                 // RE-INITIALIZE CHAT with user
                 if(globalChat) {
                     globalChat.username = user;
+                    // FORCE SIDEBAR UPDATE
+                    document.getElementById('sidebar-username').textContent = user;
+                    document.getElementById('sidebar-user-initial').textContent = user.charAt(0).toUpperCase();
+                    // FORCE INPUT UNLOCK
+                    globalChat.input.disabled = false;
+                    globalChat.submitBtn.disabled = false;
+
                     globalChat.db.ref(`users/${user}`).set(Date.now());
                     globalChat.renderSidebar();
                     globalChat.listenForCalls();
@@ -675,7 +688,11 @@
                 document.getElementById('chat-layer').classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); 
                 if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden'); 
                 if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); 
-                if (globalChat) { globalChat.scrollToBottom(); } 
+                if (globalChat) { 
+                    // CRITICAL FIX: Ensure user is recognized as logged in instantly
+                    globalChat.checkUsername(); 
+                    globalChat.scrollToBottom(); 
+                } 
             }
             closeChat() { this.isChatOpen = false; const layer = document.getElementById('chat-layer'); layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); layer.classList.remove('opacity-100', 'scale-100'); setTimeout(() => { layer.classList.add('hidden'); layer.classList.remove('flex'); if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); } }, 700); }
 
