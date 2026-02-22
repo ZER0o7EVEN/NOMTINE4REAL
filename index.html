@@ -27,8 +27,8 @@
           extend: {
             fontFamily: { sans: ['var(--font-base)', 'sans-serif'], display: ['var(--font-head)', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'], },
             colors: { accent: 'var(--accent)', 'accent-dark': 'var(--accent-dark)', zinc: { 850: '#1f1f22', 900: '#18181b', 950: '#050505' }, black: '#000000', },
-            animation: { 'reveal-up': 'revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', 'fade-in': 'fadeIn 0.8s ease-out forwards', 'float': 'float 6s ease-in-out infinite', 'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'slide-up-out': 'slideUpOut 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards', 'border-beam': 'borderBeam 5s infinite linear', },
-            keyframes: { revealUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }, float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }, slideUpOut: { '0%': { transform: 'translateY(0)', opacity: '1' }, '100%': { transform: 'translateY(-100%)', opacity: '0' } }, borderBeam: { '0%': { 'transform': 'translateX(-100%)' }, '100%': { 'transform': 'translateX(100%)' } } }
+            animation: { 'reveal-up': 'revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards', 'fade-in': 'fadeIn 0.8s ease-out forwards', 'float': 'float 6s ease-in-out infinite', 'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite', 'slide-up-out': 'slideUpOut 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards', 'border-beam': 'borderBeam 5s infinite linear', 'spin-slow': 'spin 10s linear infinite', 'float-away': 'floatAway 5s ease-in forwards'},
+            keyframes: { revealUp: { '0%': { transform: 'translateY(30px)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } }, fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } }, float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } }, slideUpOut: { '0%': { transform: 'translateY(0)', opacity: '1' }, '100%': { transform: 'translateY(-100%)', opacity: '0' } }, borderBeam: { '0%': { 'transform': 'translateX(-100%)' }, '100%': { 'transform': 'translateX(100%)' } }, floatAway: { '0%': { transform: 'translateY(0)', opacity: 1 }, '100%': { transform: 'translateY(-200vh)', opacity: 0 } } }
           }
         }
       }
@@ -52,7 +52,7 @@
       
       /* GLOBAL MODES CSS */
       body.matrix-mode { background: #000 !important; color: #0f0 !important; font-family: 'JetBrains Mono', monospace !important; }
-      body.matrix-mode * { border-color: #0f0 !important; color: #0f0 !important; font-family: 'JetBrains Mono', monospace !important; }
+      body.matrix-mode *:not(i) { border-color: #0f0 !important; color: #0f0 !important; font-family: 'JetBrains Mono', monospace !important; }
       body.matrix-mode .bg-accent, body.matrix-mode .bg-zinc-900 { background-color: #001100 !important; }
       body.matrix-mode img, body.matrix-mode svg { filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(500%) !important; }
       
@@ -65,11 +65,13 @@
       @keyframes fall-anim { to { transform: translateY(120vh) rotate(360deg); } }
       .falling-brainrot { position: fixed; top: -50px; font-size: 3rem; user-select: none; pointer-events: none; z-index: 99999; animation: fall-anim linear forwards; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
       
-      @keyframes flash-red { 0%, 100% { background-color: rgba(255,0,0,0.8); } 50% { background-color: rgba(0,0,0,0.9); } }
-      .jumpscare-overlay { position: fixed; inset: 0; z-index: 999999; animation: flash-red 0.1s infinite; display: flex; align-items: center; justify-content: center; pointer-events: none; }
-      .jumpscare-img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; transform: scale(1.5); }
+      .jumpscare-overlay, .screaming-cowboy-overlay { position: fixed; inset: 0; z-index: 999999; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+      .jumpscare-overlay { animation: flash-red 0.1s infinite; }
+      .jumpscare-img, .screaming-cowboy-img { width: 100%; height: 100%; object-fit: cover; }
+      .jumpscare-img { mix-blend-mode: multiply; transform: scale(1.5); }
       
       body.rotate-mode { transform: rotate(180deg); transition: transform 0.5s ease; }
+      body.spin-mode { animation: spin 2s linear infinite; }
       body.invert-mode { filter: invert(1); }
       @keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-3px, 3px); } 40% { transform: translate(3px, -3px); } 60% { transform: translate(-3px, -3px); } 80% { transform: translate(3px, 3px); } 100% { transform: translate(0); } }
       body.glitch-mode::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: black; z-index: 9999; pointer-events: none; animation: glitch-anim .1s infinite linear alternate-reverse; opacity: .05; }
@@ -77,11 +79,18 @@
       
       body.cursor-troll * { cursor: none !important; }
       .fake-cursor { position: fixed; width: 20px; height: 20px; background: red; border-radius: 50%; pointer-events: none; z-index: 999999; transform: translate(-50%, -50%); transition: transform 0.1s ease-out; }
+
+      .float-away-mode > div:not(#admin-layer):not(#owner-layer) { animation: floatAway 10s ease-in forwards !important; }
+      body.hide-ui-mode #library-nav, body.hide-ui-mode #hero-section, body.hide-ui-mode #filter-container, body.hide-ui-mode #games-grid { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.5s !important;}
     </style>
 </head>
 <body class="antialiased min-h-screen bg-black text-white selection:bg-zinc-800 selection:text-white relative">
 
     <canvas id="bg-canvas"></canvas>
+
+    <!-- Global Audio Players for Admin Commands -->
+    <audio id="siren-audio" loop src="https://www.myinstants.com/media/sounds/air-raid-siren.mp3" preload="auto"></audio>
+    <audio id="cowboy-audio" src="https://www.myinstants.com/media/sounds/big-enough-meme-remix.mp3" preload="auto"></audio>
 
     <div id="blur-overlay" onclick="this.classList.add('hidden')" class="fixed inset-0 z-[9999] bg-black/95 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-300 cursor-pointer">
         <i data-lucide="lock" class="w-16 h-16 text-zinc-500 mb-6"></i>
@@ -318,49 +327,23 @@
             </div>
         </div>
         <div class="flex-1 flex overflow-hidden">
-            <div class="w-64 bg-black/50 border-r border-red-900/20 p-6 shrink-0 hidden md:block">
-                <div class="flex flex-col gap-2" id="admin-tabs">
-                    <button onclick="adminSystem.switchTab('commands')" class="admin-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm bg-red-900/20 text-white border border-red-900/30">Global Commands</button>
+            <div id="admin-nav" class="w-64 bg-black/50 border-r border-red-900/20 p-6 shrink-0 hidden md:block">
+                <div class="flex flex-col gap-2">
+                    <button onclick="adminSystem.switchTab('commands', 'admin')" class="admin-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm bg-red-900/20 text-white border border-red-900/30">Global Commands</button>
                 </div>
             </div>
             <div class="flex-1 p-10 overflow-y-auto">
                 <div id="admin-tab-content-commands" class="admin-tab-content">
                     <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- Toggles Section -->
                         <div class="col-span-full mb-4"><h3 class="text-zinc-500 text-sm font-mono uppercase tracking-widest border-b border-zinc-800 pb-2">Global Modes</h3></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">System Lock</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('system_lock')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('system_unlock')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Matrix Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('matrix_mode_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('matrix_mode_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Rainbow Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('rainbow_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('rainbow_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Brainrot Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('brainrot_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('brainrot_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Spin Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_spin_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_spin_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Float Away</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_float_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_float_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
                         
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between">
-                            <span class="font-bold text-white">System Lock</span>
-                            <div class="flex gap-2">
-                                <button onclick="adminSystem.sendCommand('system_lock')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button>
-                                <button onclick="adminSystem.sendCommand('system_unlock')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button>
-                            </div>
-                        </div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between">
-                            <span class="font-bold text-white">Matrix Mode</span>
-                            <div class="flex gap-2">
-                                <button onclick="adminSystem.sendCommand('matrix_mode_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button>
-                                <button onclick="adminSystem.sendCommand('matrix_mode_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button>
-                            </div>
-                        </div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between">
-                            <span class="font-bold text-white">Rainbow Mode</span>
-                            <div class="flex gap-2">
-                                <button onclick="adminSystem.sendCommand('rainbow_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button>
-                                <button onclick="adminSystem.sendCommand('rainbow_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button>
-                            </div>
-                        </div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between">
-                            <span class="font-bold text-white">Brainrot Mode</span>
-                            <div class="flex gap-2">
-                                <button onclick="adminSystem.sendCommand('brainrot_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button>
-                                <button onclick="adminSystem.sendCommand('brainrot_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button>
-                            </div>
-                        </div>
-
-                        <!-- Actions Section -->
                         <div class="col-span-full mt-4 mb-4"><h3 class="text-zinc-500 text-sm font-mono uppercase tracking-widest border-b border-zinc-800 pb-2">Instant Actions</h3></div>
-
                         <button onclick="adminSystem.sendCustomAlert()" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="megaphone" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Custom Alert</h3><p class="text-zinc-500 text-xs font-mono">Send popup.</p></button>
                         <button onclick="adminSystem.sendCommand('force_reload')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="refresh-cw" class="w-8 h-8 text-blue-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Force Refresh</h3><p class="text-zinc-500 text-xs font-mono">Reload browsers.</p></button>
                         <button onclick="adminSystem.sendCommand('rickroll')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="music" class="w-8 h-8 text-purple-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Protocol 42</h3><p class="text-zinc-500 text-xs font-mono">Execute Rickroll.</p></button>
@@ -381,34 +364,56 @@
                 <button onclick="adminSystem.closePanel('owner-layer')" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded text-xs font-mono uppercase">Exit</button>
             </div>
         </div>
-        <div class="flex-1 p-10 overflow-y-auto">
-            <div class="max-w-6xl mx-auto space-y-12">
-                <!-- Modes Section -->
-                <div>
-                    <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">Global Effect Modes</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="activity" class="w-5 h-5 text-orange-500"></i>Earthquake</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_earthquake_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_earthquake_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="rotate-cw" class="w-5 h-5 text-cyan-500"></i>Rotate Screen</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_rotate_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_rotate_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="sun" class="w-5 h-5 text-white"></i>Invert Colors</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_invert_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_invert_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="bug" class="w-5 h-5 text-green-500"></i>Glitch Effect</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_glitch_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_glitch_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="mouse-pointer-2" class="w-5 h-5 text-purple-500"></i>Fake Cursor</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_fake_cursor_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_fake_cursor_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+        <div class="flex-1 flex overflow-hidden">
+            <div id="owner-nav" class="w-64 bg-black/50 border-r border-yellow-900/20 p-6 shrink-0 hidden md:block">
+                <div class="flex flex-col gap-2">
+                    <button onclick="adminSystem.switchTab('commands', 'owner')" class="owner-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm bg-yellow-900/20 text-white border border-yellow-900/30">Commands</button>
+                    <!-- Game Requests tab will be added here by JS if user is 'Owner' -->
+                </div>
+            </div>
+            <div class="flex-1 p-10 overflow-y-auto">
+                <div id="owner-tab-content-commands" class="owner-tab-content">
+                    <div class="max-w-6xl mx-auto space-y-12">
+                        <div>
+                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">Troll Modes</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="activity" class="w-5 h-5 text-orange-500"></i>Earthquake</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_earthquake_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_earthquake_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="rotate-cw" class="w-5 h-5 text-cyan-500"></i>Rotate Screen</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_rotate_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_rotate_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="sun" class="w-5 h-5 text-white"></i>Invert Colors</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_invert_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_invert_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="bug" class="w-5 h-5 text-green-500"></i>Glitch Effect</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_glitch_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_glitch_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="mouse-pointer-2" class="w-5 h-5 text-purple-500"></i>Fake Cursor</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_fake_cursor_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_fake_cursor_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="volume-x" class="w-5 h-5 text-red-400"></i>Global Siren</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_siren_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_siren_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">UI & System Disruption</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <button onclick="adminSystem.sendCommand('owner_jumpscare')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="ghost" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-lg font-bold text-white">Jumpscare</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_flashbang')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="zap" class="w-8 h-8 text-yellow-200 mb-4"></i><h3 class="text-lg font-bold text-white">Flashbang</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_cowboy')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user" class="w-8 h-8 text-yellow-600 mb-4"></i><h3 class="text-lg font-bold text-white">Cowboy</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_spam_alerts')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="alert-octagon" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-lg font-bold text-white">Spam Alerts</h3></button>
+                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between col-span-1"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="eye-off" class="w-5 h-5 text-blue-400"></i>Hide UI</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_hide_ui_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_hide_ui_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+                                <button onclick="adminSystem.sendCommand('owner_random_theme')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="palette" class="w-8 h-8 text-pink-400 mb-4"></i><h3 class="text-lg font-bold text-white">Random Theme</h3></button>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">Destructive Actions</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                <button onclick="adminSystem.sendCommand('owner_kick')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-lg font-bold text-white">Kick User</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_disable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic-off" class="w-8 h-8 text-red-400 mb-4"></i><h3 class="text-lg font-bold text-white">Lock Chat</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_enable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic" class="w-8 h-8 text-green-400 mb-4"></i><h3 class="text-lg font-bold text-white">Unlock Chat</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_nuke_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="bomb" class="w-8 h-8 text-red-600 mb-4"></i><h3 class="text-lg font-bold text-white">Nuke Chat DB</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_wipe_pfp')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="image-off" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-lg font-bold text-white">Wipe PFP</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_shutdown')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="power-off" class="w-8 h-8 text-zinc-500 mb-4"></i><h3 class="text-lg font-bold text-white">Client Shutdown</h3></button>
+                                <button onclick="adminSystem.sendCommand('owner_wipe_db')" class="p-6 border-2 border-red-600 bg-red-900/20 hover:bg-red-600 hover:text-white rounded-xl text-left transition-all group"><i data-lucide="skull" class="w-8 h-8 text-red-500 group-hover:text-white mb-4"></i><h3 class="text-lg font-black">NUCLEAR WIPE</h3></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Actions Section -->
-                <div>
-                    <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">Instant & Destructive Actions</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <button onclick="adminSystem.sendCommand('owner_jumpscare')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="ghost" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-lg font-bold text-white">Global Jumpscare</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_spam_alerts')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="alert-octagon" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-lg font-bold text-white">Spam Alerts</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_flashbang')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="zap" class="w-8 h-8 text-yellow-200 mb-4"></i><h3 class="text-lg font-bold text-white">Flashbang</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_force_cloak')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="eye-off" class="w-8 h-8 text-blue-500 mb-4"></i><h3 class="text-lg font-bold text-white">Force Disguise</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_kick')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-lg font-bold text-white">Kick User</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_disable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic-off" class="w-8 h-8 text-red-400 mb-4"></i><h3 class="text-lg font-bold text-white">Lock Chat</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_enable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic" class="w-8 h-8 text-green-400 mb-4"></i><h3 class="text-lg font-bold text-white">Unlock Chat</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_nuke_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="bomb" class="w-8 h-8 text-red-600 mb-4"></i><h3 class="text-lg font-bold text-white">Nuke Chat DB</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_shutdown')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="power-off" class="w-8 h-8 text-zinc-500 mb-4"></i><h3 class="text-lg font-bold text-white">Client Shutdown</h3></button>
-                        <button onclick="adminSystem.sendCommand('owner_wipe_db')" class="p-6 border-2 border-red-600 bg-red-900/20 hover:bg-red-600 hover:text-white rounded-xl text-left transition-all group"><i data-lucide="skull" class="w-8 h-8 text-red-500 group-hover:text-white mb-4"></i><h3 class="text-lg font-black">NUCLEAR WIPE</h3></button>
+                <div id="owner-tab-content-requests" class="hidden owner-tab-content">
+                    <h3 class="text-3xl font-bold mb-6 text-yellow-300">Game Requests</h3>
+                    <div id="game-requests-list" class="space-y-4">
+                        <p class="text-zinc-500">Loading requests...</p>
                     </div>
                 </div>
             </div>
@@ -752,6 +757,7 @@
 
         const GAMES = _GAMES.map(g => ({ title: g[0], url: g[1], image: g[2], category: g[3] }));
         const CATEGORIES = ['All', 'Action', 'Horror', 'Racing', 'Arcade', 'Simulation', 'Retro', 'Strategy', 'Favorites'];
+        const THEME_COLORS = ['#a78bfa', '#4ade80', '#f87171', '#60a5fa', '#fb923c', '#facc15', '#f472b6', '#22d3ee', '#ffffff'];
 
         class AccountSystem {
             constructor() {
@@ -1089,7 +1095,7 @@
                 else if(this.activeSettingsTab === 'Design') optionsHtml = [createRow("Performance Mode", "toggle", "perfMode"), createRow("Compact UI Grid", "toggle", "compactUI"), createRow("Corners: Pill", "action", "borderRadius", {match: '2rem', label: 'Select'}), createRow("Card Hover Lift", "toggle", "hoverFx")].join('');
                 else if(this.activeSettingsTab === 'Site') { optionsHtml = [createRow("Tab Title", "input", "tabTitle", {ph: 'e.g. Google Classroom'}), createRow("Tab Icon URL", "input", "tabIcon", {ph: 'e.g. https://www.google.com/favicon.ico'})].join('') + `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center col-span-full"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">Open in about:blank</span><button onclick="app.cloak()" class="px-4 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-zinc-200 hover:bg-white hover:text-black transition-colors">Execute</button></div></div>`; }
                 else if(this.activeSettingsTab === 'Security') optionsHtml = [createRow("Panic Keybind", "input", "panicKey", {ph: 'e.g. ` or Esc'}), createRow("Panic Redirect URL", "input", "panicUrl", {ph: 'https://...'})].join('');
-                else if(this.activeSettingsTab === 'Themes') { const hexes = ['#a78bfa', '#4ade80', '#f87171', '#60a5fa', '#fb923c', '#facc15', '#f472b6', '#22d3ee', '#ffffff']; optionsHtml = hexes.map((hex, i) => `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex items-center justify-between"><div class="flex items-center gap-4"><div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div><span class="text-base font-medium text-zinc-200">Color Variant 0${i+1}</span></div><button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button></div>`).join(''); }
+                else if(this.activeSettingsTab === 'Themes') { optionsHtml = THEME_COLORS.map((hex, i) => `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex items-center justify-between"><div class="flex items-center gap-4"><div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div><span class="text-base font-medium text-zinc-200">Color Variant 0${i+1}</span></div><button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button></div>`).join(''); }
                 grid.innerHTML = optionsHtml;
             }
 
@@ -1210,11 +1216,15 @@
                             if(cmd.target.toLowerCase() !== (accountSystem.username || "").toLowerCase()) return;
                         }
 
+                        // --- Audio Commands ---
+                        const siren = document.getElementById('siren-audio');
+                        const cowboy = document.getElementById('cowboy-audio');
+
                         switch(cmd.type) {
                             case 'global_alert': this.showAdminAlertGUI(cmd.payload || "Alert"); this.addNotification('admin', 'System Alert', cmd.payload); break;
                             case 'force_reload': location.reload(); break;
-                            case 'system_lock': const bo = document.getElementById('blur-overlay'); bo.classList.remove('hidden'); setTimeout(() => bo.classList.remove('opacity-0'), 10); document.body.classList.add('blur-locked'); break;
-                            case 'system_unlock': const bo2 = document.getElementById('blur-overlay'); bo2.classList.add('opacity-0'); setTimeout(() => bo2.classList.add('hidden'), 300); document.body.classList.remove('blur-locked'); break;
+                            case 'system_lock': document.getElementById('blur-overlay').classList.remove('hidden'); setTimeout(() => document.getElementById('blur-overlay').classList.remove('opacity-0'), 10); document.body.classList.add('blur-locked'); break;
+                            case 'system_unlock': document.getElementById('blur-overlay').classList.add('opacity-0'); setTimeout(() => document.getElementById('blur-overlay').classList.add('hidden'), 300); document.body.classList.remove('blur-locked'); break;
                             case 'rickroll': window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; break;
                             case 'matrix_mode_on': document.body.classList.add('matrix-mode'); break;
                             case 'matrix_mode_off': document.body.classList.remove('matrix-mode'); break;
@@ -1235,6 +1245,19 @@
                             case 'owner_glitch_off': document.body.classList.remove('glitch-mode'); break;
                             case 'owner_fake_cursor_on': this.toggleFakeCursor(true); break;
                             case 'owner_fake_cursor_off': this.toggleFakeCursor(false); break;
+                            case 'owner_spin_on': document.body.classList.add('spin-mode'); break;
+                            case 'owner_spin_off': document.body.classList.remove('spin-mode'); break;
+                            case 'owner_float_on': document.body.classList.add('float-away-mode'); break;
+                            case 'owner_float_off': document.body.classList.remove('float-away-mode'); break;
+                            case 'owner_hide_ui_on': document.body.classList.add('hide-ui-mode'); break;
+                            case 'owner_hide_ui_off': document.body.classList.remove('hide-ui-mode'); break;
+                            case 'owner_siren_on': siren.play().catch(e=>{}); break;
+                            case 'owner_siren_off': siren.pause(); siren.currentTime = 0; break;
+                            case 'owner_cowboy': 
+                                cowboy.play().catch(e=>{});
+                                const cOverlay = document.createElement('div'); cOverlay.className = 'screaming-cowboy-overlay'; cOverlay.innerHTML = `<img src="https://media1.tenor.com/m/5-2h23aO0s0AAAAC/sky-screaming.gif" class="screaming-cowboy-img">`; document.body.appendChild(cOverlay);
+                                setTimeout(() => cOverlay.remove(), 4000);
+                                break;
                             case 'owner_spam_alerts': 
                                 let i = 0; 
                                 const spam = setInterval(() => { this.addNotification('admin', 'SYSTEM WARNING', 'CRITICAL ERROR DETECTED'); if(i++ > 15) clearInterval(spam); }, 200);
@@ -1252,6 +1275,7 @@
                             case 'owner_kick': window.location.href = "https://www.google.com"; break;
                             case 'owner_nuke_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = '<p class="text-red-500 font-bold text-center">ALL CHAT HISTORY HAS BEEN INCINERATED.</p>'; break;
                             case 'owner_wipe_db': alert("YOUR ACCOUNT HAS BEEN DELETED."); localStorage.clear(); location.reload(); break;
+                            case 'owner_wipe_pfp': case 'owner_random_theme': location.reload(); break; // Reload to apply server-side settings change
                             case 'owner_flashbang': 
                                 const f = document.createElement('div');
                                 f.style.cssText = 'position:fixed;inset:0;background:white;z-index:999999;transition:opacity 2s;';
@@ -1291,9 +1315,59 @@
                 panel.classList.add('flex');
                 
                 await this.populateUserList();
+                if (accountSystem.username.toLowerCase() === 'owner') {
+                    this.addGameRequestTab();
+                    this.loadGameRequests();
+                }
                 lucide.createIcons();
             }
 
+            addGameRequestTab() {
+                const nav = document.getElementById('owner-nav');
+                if (nav && !document.getElementById('requests-tab-btn')) {
+                    nav.querySelector('.flex-col').innerHTML += `<button id="requests-tab-btn" onclick="adminSystem.switchTab('requests', 'owner')" class="owner-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm">Game Requests</button>`;
+                }
+            }
+
+            async loadGameRequests() {
+                const listEl = document.getElementById('game-requests-list');
+                if (!listEl) return;
+                try {
+                    const snapshot = await db.ref('game_requests').once('value');
+                    const requests = snapshot.val();
+                    if (!requests) {
+                        listEl.innerHTML = '<p class="text-zinc-500">No pending game requests.</p>';
+                        return;
+                    }
+                    const sortedKeys = Object.keys(requests).sort((a,b) => requests[b].timestamp - requests[a].timestamp);
+                    listEl.innerHTML = sortedKeys.map(key => {
+                        const req = requests[key];
+                        return `
+                        <div class="bg-zinc-900/50 border border-yellow-900/30 rounded-lg p-4 flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-white">${req.title}</h4>
+                                <p class="text-xs text-zinc-400 mt-1">
+                                    Requested by <span class="text-yellow-400">${req.user}</span> on ${new Date(req.timestamp).toLocaleDateString()}
+                                </p>
+                                ${req.url ? `<a href="${req.url}" target="_blank" class="text-xs text-cyan-400 hover:underline">Game Link</a>` : ''}
+                            </div>
+                            <button onclick="adminSystem.deleteGameRequest('${key}')" class="p-2 text-red-500 hover:bg-red-500/10 rounded-full"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        </div>`;
+                    }).join('');
+                    lucide.createIcons();
+                } catch(e) {
+                    listEl.innerHTML = '<p class="text-red-500">Error loading requests.</p>';
+                    console.error("Failed to load game requests:", e);
+                }
+            }
+
+            async deleteGameRequest(key) {
+                if (confirm('Are you sure you want to delete this request?')) {
+                    await db.ref(`game_requests/${key}`).remove();
+                    this.loadGameRequests();
+                }
+            }
+            
             async populateUserList() {
                 try {
                     const snapshot = await db.ref('accounts').once('value');
@@ -1325,12 +1399,25 @@
                 }
                 const target = targetInput ? targetInput.value.trim() : "";
                 
-                db.ref('global_commands').push({ 
+                const commandData = { 
                     type: type, 
                     payload: payload, 
                     target: target || "ALL",
                     timestamp: firebase.database.ServerValue.TIMESTAMP 
-                }); 
+                };
+
+                // For commands that directly manipulate user data
+                if (['owner_wipe_pfp', 'owner_random_theme'].includes(type)) {
+                    if (target && target !== "ALL") {
+                        if(type === 'owner_wipe_pfp') db.ref(`accounts/${target}/settings/profilePic`).set("");
+                        if(type === 'owner_random_theme') db.ref(`accounts/${target}/settings/accentColor`).set(THEME_COLORS[Math.floor(Math.random() * THEME_COLORS.length)]);
+                    } else {
+                        alert("These commands require a specific target user.");
+                        return;
+                    }
+                }
+                
+                db.ref('global_commands').push(commandData); 
                 
                 if(type === 'clear_chat' || type === 'owner_nuke_chat') { db.ref('messages/global').remove(); } 
                 if(type === 'owner_wipe_db') { db.ref('accounts').remove(); } 
@@ -1343,21 +1430,23 @@
             }
             sendCustomAlert() { const msg = prompt("Enter the message to send to all users:"); if (msg) { this.sendCommand('global_alert', msg); } }
             
-            switchTab(tabName) {
+            switchTab(tabName, panelType) {
                 this.activeTab = tabName;
-                document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-                    btn.classList.remove('bg-red-900/20', 'text-white');
-                    btn.classList.add('text-zinc-400', 'hover:bg-zinc-800');
+                document.querySelectorAll(`.${panelType}-tab-btn`).forEach(btn => {
+                    btn.classList.remove('bg-yellow-900/20', 'text-white', 'bg-red-900/20');
+                    btn.style.borderColor = ''; // Reset border
                 });
-                document.querySelectorAll('.admin-tab-content').forEach(content => {
+                document.querySelectorAll(`.${panelType}-tab-content`).forEach(content => {
                     content.classList.add('hidden');
                 });
-                const activeBtn = document.querySelector(`.admin-tab-btn[onclick="adminSystem.switchTab('${tabName}')"]`);
+                
+                const activeBtn = event.currentTarget;
                 if(activeBtn) {
-                    activeBtn.classList.add('bg-red-900/20', 'text-white');
-                    activeBtn.classList.remove('text-zinc-400', 'hover:bg-zinc-800');
+                    const color = panelType === 'owner' ? 'yellow' : 'red';
+                    activeBtn.classList.add(`bg-${color}-900/20`, 'text-white');
+                    activeBtn.style.borderColor = `${color}-900/30`;
                 }
-                document.getElementById(`admin-tab-content-${tabName}`).classList.remove('hidden');
+                document.getElementById(`${panelType}-tab-content-${tabName}`).classList.remove('hidden');
             }
         }
         const adminSystem = new AdminSystem();
@@ -1573,7 +1662,3 @@
     </script>
 </body>
 </html>
-
-
-
-
