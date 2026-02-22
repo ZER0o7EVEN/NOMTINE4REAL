@@ -48,10 +48,26 @@
       body.cursor-override * { cursor: var(--custom-cursor, default) !important; }
       .perspective-1000 { perspective: 1000px; transform-style: preserve-3d; }
       #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+      
+      /* GLOBAL MODES CSS */
       body.matrix-mode { background-color: #000 !important; color: #0f0 !important; font-family: 'Courier New', Courier, monospace !important; }
       body.matrix-mode * { border-color: #0f0 !important; color: #0f0 !important; font-family: 'Courier New', Courier, monospace !important; }
       body.matrix-mode .bg-accent, body.matrix-mode .bg-zinc-900 { background-color: #001100 !important; }
       body.matrix-mode img { filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(500%) !important; }
+      
+      @keyframes hue-rotate-anim { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+      body.rainbow-mode { animation: hue-rotate-anim 3s linear infinite !important; }
+      
+      @keyframes shake-anim { 0% {transform: translate(1px, 1px) rotate(0deg);} 10% {transform: translate(-1px, -2px) rotate(-1deg);} 20% {transform: translate(-3px, 0px) rotate(1deg);} 30% {transform: translate(3px, 2px) rotate(0deg);} 40% {transform: translate(1px, -1px) rotate(1deg);} 50% {transform: translate(-1px, 2px) rotate(-1deg);} 60% {transform: translate(-3px, 1px) rotate(0deg);} 70% {transform: translate(3px, 1px) rotate(-1deg);} 80% {transform: translate(-1px, -1px) rotate(1deg);} 90% {transform: translate(1px, 2px) rotate(0deg);} 100% {transform: translate(1px, -2px) rotate(-1deg);} }
+      body.earthquake-mode { animation: shake-anim 0.2s infinite !important; }
+
+      @keyframes fall-anim { to { transform: translateY(120vh) rotate(360deg); } }
+      .falling-brainrot { position: fixed; top: -50px; font-size: 3rem; user-select: none; pointer-events: none; z-index: 99999; animation: fall-anim linear forwards; text-shadow: 0 0 10px rgba(0,0,0,0.5); }
+      
+      @keyframes flash-red { 0%, 100% { background-color: rgba(255,0,0,0.8); } 50% { background-color: rgba(0,0,0,0.9); } }
+      .jumpscare-overlay { position: fixed; inset: 0; z-index: 999999; animation: flash-red 0.1s infinite; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+      .jumpscare-img { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: multiply; transform: scale(1.5); }
+      
       .owner-card-glow { box-shadow: 0 0 60px var(--accent); border-color: var(--accent); }
     </style>
 </head>
@@ -268,7 +284,7 @@
         </main>
     </div>
 
-    <!-- ADMIN MODALS -->
+    <!-- ADMIN LOGIN MODAL -->
     <div id="admin-login-modal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-xl hidden flex-col items-center justify-center pointer-events-auto">
         <div class="text-center w-full max-w-sm">
             <div class="w-20 h-20 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(220,38,38,0.6)]"><i data-lucide="shield-alert" class="w-10 h-10 text-white"></i></div>
@@ -284,13 +300,12 @@
     <div id="admin-layer" class="fixed bottom-20 left-4 z-[250] bg-[#0c0c0c] border border-red-900/50 rounded-2xl shadow-2xl w-full max-w-4xl h-[70vh] hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto" style="resize: both;">
         <div id="admin-drag-handle" class="h-14 border-b border-red-900/30 flex items-center justify-between px-6 bg-black/50 shrink-0 cursor-move">
             <div class="flex items-center gap-4"><div class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></div><h2 class="font-mono font-bold text-red-600 text-lg tracking-widest uppercase">Command Center</h2></div>
-            <button onclick="adminSystem.closePanel()" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded-lg text-xs font-mono uppercase">Exit</button>
+            <button onclick="adminSystem.closePanel('admin-layer')" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded-lg text-xs font-mono uppercase">Exit</button>
         </div>
         <div class="flex-1 flex overflow-hidden">
             <div class="w-56 bg-black/20 border-r border-red-900/20 p-4 shrink-0">
                 <div class="flex flex-col gap-2" id="admin-tabs">
                     <button onclick="adminSystem.switchTab('commands')" class="admin-tab-btn text-left px-4 py-2 rounded-lg font-bold text-sm bg-red-900/20 text-white">Global Commands</button>
-                    <!-- <button onclick="adminSystem.switchTab('users')" class="admin-tab-btn text-left px-4 py-2 rounded-lg font-bold text-sm text-zinc-400 hover:bg-zinc-800">User Management</button> -->
                 </div>
             </div>
             <div class="flex-1 p-8 overflow-y-auto">
@@ -302,13 +317,35 @@
                         <button onclick="adminSystem.sendCommand('system_unlock')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="unlock" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">System Lock Off</h3><p class="text-zinc-500 text-xs font-mono">Unlock the system.</p></button>
                         <button onclick="adminSystem.sendCommand('matrix_mode')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="terminal" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Matrix Mode On</h3><p class="text-zinc-500 text-xs font-mono">Enable hacker theme.</p></button>
                         <button onclick="adminSystem.sendCommand('matrix_mode_off')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="terminal-square" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Matrix Mode Off</h3><p class="text-zinc-500 text-xs font-mono">Disable hacker theme.</p></button>
-                        <button onclick="adminSystem.sendCommand('rickroll')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="music" class="w-8 h-8 text-purple-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Protocol 42</h3><p class="text-zinc-500 text-xs font-mono">Execute Rickroll.</p></button>
-                        <button onclick="adminSystem.sendCommand('clear_chat')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="trash-2" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Wipe Chat</h3><p class="text-zinc-500 text-xs font-mono">Delete global chat.</p></button>
+                        <button onclick="adminSystem.sendCommand('rainbow_on')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="palette" class="w-8 h-8 text-purple-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Rainbow Mode</h3><p class="text-zinc-500 text-xs font-mono">Trippy colors globally.</p></button>
+                        <button onclick="adminSystem.sendCommand('rainbow_off')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="x-circle" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Rainbow Off</h3><p class="text-zinc-500 text-xs font-mono">Restore normal colors.</p></button>
+                        <button onclick="adminSystem.sendCommand('brainrot_on')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="dizzy" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Brainrot Mode</h3><p class="text-zinc-500 text-xs font-mono">Raining emojis globally.</p></button>
+                        <button onclick="adminSystem.sendCommand('brainrot_off')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="ban" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Brainrot Off</h3><p class="text-zinc-500 text-xs font-mono">Stop raining emojis.</p></button>
                     </div>
                 </div>
-                <div id="admin-tab-content-users" class="admin-tab-content hidden">
-                    <p class="text-zinc-500">User management interface coming soon.</p>
-                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DRAGGABLE OWNER PANEL (INSANELY OVERPOWERED) -->
+    <div id="owner-layer" class="fixed bottom-20 left-4 z-[260] bg-[#0c0900] border border-yellow-500/50 rounded-2xl shadow-[0_0_50px_rgba(234,179,8,0.2)] w-full max-w-4xl h-[70vh] hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto" style="resize: both;">
+        <div id="owner-drag-handle" class="h-14 border-b border-yellow-500/30 flex items-center justify-between px-6 bg-black/80 shrink-0 cursor-move">
+            <div class="flex items-center gap-4"><i data-lucide="crown" class="w-5 h-5 text-yellow-500 animate-pulse"></i><h2 class="font-mono font-black text-yellow-500 text-lg tracking-[0.3em] uppercase drop-shadow-md">Owner Override</h2></div>
+            <button onclick="adminSystem.closePanel('owner-layer')" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded-lg text-xs font-mono uppercase">Exit</button>
+        </div>
+        <div class="flex-1 p-8 overflow-y-auto">
+            <p class="text-yellow-500/50 text-sm font-mono mb-6 text-center tracking-widest border-b border-yellow-500/20 pb-4">WARNING: THESE COMMANDS BYPASS ALL SECURITY PROTOCOLS GLOBALLY.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <button onclick="adminSystem.sendCommand('owner_jumpscare')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="ghost" class="w-8 h-8 text-red-500 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Global Jumpscare</h3><p class="text-zinc-500 text-xs font-mono">Scare everyone online.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_earthquake')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="activity" class="w-8 h-8 text-orange-500 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Earthquake</h3><p class="text-zinc-500 text-xs font-mono">Violently shake all screens.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_spam_alerts')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="alert-octagon" class="w-8 h-8 text-yellow-500 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Spam Alerts</h3><p class="text-zinc-500 text-xs font-mono">Annoy everyone immensely.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_force_cloak')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="eye-off" class="w-8 h-8 text-blue-500 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Force Disguise</h3><p class="text-zinc-500 text-xs font-mono">Force open about:blank.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_shutdown')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="power-off" class="w-8 h-8 text-zinc-500 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">System Shutdown</h3><p class="text-zinc-500 text-xs font-mono">Black screen of death.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_disable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic-off" class="w-8 h-8 text-red-400 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Lock Global Chat</h3><p class="text-zinc-500 text-xs font-mono">Disable chat inputs.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_enable_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="mic" class="w-8 h-8 text-green-400 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Unlock Global Chat</h3><p class="text-zinc-500 text-xs font-mono">Re-enable chat inputs.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_kick')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-pink-500 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Global Kick</h3><p class="text-zinc-500 text-xs font-mono">Send everyone to Google.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_nuke_chat')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="bomb" class="w-8 h-8 text-red-600 mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-bold text-white mb-1">Nuke Chat DB</h3><p class="text-zinc-500 text-xs font-mono">Erase all chat history.</p></button>
+                <button onclick="adminSystem.sendCommand('owner_wipe_db')" class="p-6 border-2 border-red-600 bg-red-900/20 hover:bg-red-600 hover:text-white rounded-xl text-left transition-all group"><i data-lucide="skull" class="w-8 h-8 text-red-500 group-hover:text-white mb-4 group-hover:scale-110 transition-transform"></i><h3 class="text-xl font-black text-red-500 group-hover:text-white mb-1">NUCLEAR WIPE</h3><p class="text-red-400 group-hover:text-red-200 text-xs font-mono">Delete ALL user accounts.</p></button>
             </div>
         </div>
     </div>
@@ -359,7 +396,10 @@
         </div>
         <div id="active-call-bar" class="absolute top-16 left-0 right-0 z-30 bg-green-600/90 backdrop-blur-sm hidden items-center justify-between px-6 py-2 border-b border-green-500 shadow-lg pointer-events-auto">
             <div class="flex items-center gap-3"><i data-lucide="phone-call" class="w-5 h-5 text-white animate-pulse"></i><span class="text-white font-bold text-sm">Voice Call Active <span id="active-call-name" class="opacity-80 ml-1"></span></span></div>
-            <button onclick="globalChat.endCall()" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full transition-colors">Hang Up</button>
+            <div class="flex items-center gap-3">
+                <button onclick="globalChat.toggleAudio()" class="p-1.5 bg-black/20 hover:bg-black/40 rounded-full text-white transition-colors"><i data-lucide="mic" class="w-4 h-4 call-mic-icon"></i></button>
+                <button onclick="globalChat.endCall()" class="px-4 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-full transition-colors shadow-lg">Hang Up</button>
+            </div>
         </div>
         <audio id="remote-audio" autoplay hidden></audio>
         <audio id="ringtone-audio" loop preload="auto" hidden src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3"></audio>
@@ -388,7 +428,11 @@
                 <div id="video-call-ui" class="absolute inset-0 z-[40] bg-black hidden flex-col border-l border-white/5 pointer-events-auto">
                     <video id="remote-video" class="w-full h-full object-cover" autoplay playsinline></video>
                     <video id="local-video" class="absolute bottom-6 right-6 w-48 h-auto bg-zinc-900 border-2 border-white/10 rounded-xl shadow-2xl object-cover transform scale-x-[-1]" autoplay muted playsinline></video>
-                    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center gap-6 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl"><button onclick="globalChat.endCall()" class="w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"><i data-lucide="phone-off" class="w-6 h-6"></i></button></div>
+                    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center gap-6 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl">
+                        <button onclick="globalChat.toggleAudio()" class="w-12 h-12 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"><i data-lucide="mic" class="w-5 h-5 call-mic-icon"></i></button>
+                        <button onclick="globalChat.toggleVideo()" class="w-12 h-12 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"><i data-lucide="video" class="w-5 h-5 call-vid-icon"></i></button>
+                        <button onclick="globalChat.endCall()" class="w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg ml-2"><i data-lucide="phone-off" class="w-6 h-6"></i></button>
+                    </div>
                 </div>
                 
                 <div id="chat-messages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide relative z-10"></div>
@@ -451,7 +495,7 @@
     </div>
     
     <!-- Admin Trigger Button -->
-    <button id="admin-trigger-btn" onclick="adminSystem.openLogin()" class="fixed bottom-4 left-4 z-[200] w-12 h-12 bg-zinc-900 border border-zinc-700 rounded-full flex items-center justify-center text-zinc-500 hover:text-red-500 hover:border-red-500 transition-all shadow-2xl group">
+    <button id="admin-trigger-btn" onclick="adminSystem.openLogin()" class="fixed bottom-4 left-4 z-[200] w-12 h-12 bg-zinc-900 border border-zinc-700 rounded-full flex items-center justify-center text-zinc-500 hover:text-red-500 hover:border-red-500 transition-all shadow-2xl group pointer-events-auto focus:outline-none">
         <i data-lucide="shield" class="w-6 h-6 group-hover:animate-pulse"></i>
     </button>
 
@@ -643,7 +687,6 @@
     ["Class of 09","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_832effc1899f7a12522ca28d4f3bbb61.html","https://th.bing.com/th/id/OIP.3_x6Uj56uFhhr4cn_5dWbQAAAA?w=115&h=180&c=7&r=0&o=7&pid=1.7","Simulation"],
     ["Crazy plane landing","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5693c6ca5a5a524934f89e61e2a2441e.html","https://th.bing.com/th/id/OIP.4U20-dNtlNsK4V6Ni3xI_QHaEK?w=267&h=183&c=7&r=0&o=7&pid=1.7","Simulation"]
 ];
-
         const GAMES = _GAMES.map(g => ({ title: g[0], url: g[1], image: g[2], category: g[3] }));
         const CATEGORIES = ['All', 'Action', 'Horror', 'Racing', 'Arcade', 'Simulation', 'Retro', 'Strategy', 'Favorites'];
 
@@ -707,13 +750,10 @@
 
                 if(globalChat) {
                     globalChat.username = user;
-                    // FORCE SIDEBAR UPDATE
                     document.getElementById('sidebar-username').textContent = user;
                     document.getElementById('sidebar-user-initial').textContent = user.charAt(0).toUpperCase();
-                    // FORCE INPUT UNLOCK
                     globalChat.input.disabled = false;
                     globalChat.submitBtn.disabled = false;
-
                     globalChat.db.ref(`users/${user}`).set(Date.now());
                     globalChat.renderSidebar();
                     globalChat.listenForCalls();
@@ -721,7 +761,6 @@
                 } else {
                     globalChat = new ChatSystem();
                 }
-                
                 app.openChat();
             }
 
@@ -734,13 +773,10 @@
                     alert("Username already taken!");
                     return;
                 }
-
                 const dataSnap = await db.ref(`accounts/${this.username}`).once('value');
                 const oldData = dataSnap.val();
-
                 await db.ref(`accounts/${newName}`).set(oldData);
                 await db.ref(`accounts/${this.username}`).remove();
-
                 localStorage.setItem('nm4r-user', newName);
                 alert("Username changed! Reloading system...");
                 location.reload();
@@ -757,21 +793,12 @@
                 alert("Cloud Sync Complete!");
             }
             
-            async nuclearReset() {
-                if(confirm("WARNING: This will delete ALL user accounts from the database. Are you sure?")) {
-                    await db.ref('accounts').remove();
-                    alert("All accounts wiped.");
-                    location.reload();
-                }
-            }
-            
             logout() {
                 localStorage.removeItem('nm4r-user');
                 localStorage.removeItem('nm4r-pass');
                 location.reload();
             }
         }
-
         const accountSystem = new AccountSystem();
 
         class App {
@@ -781,6 +808,7 @@
                 this.activeSettingsTab = 'Design'; this.previousLayer = 'menu';
                 this.isChatOpen = false;
                 this.notifications = [];
+                this.brainrotInterval = null;
                 this.settings = { 
                     perfMode: false, oledMode: false, compactUI: false, glassmorphism: true, 
                     borderRadius: '1rem', gridGap: '1.5rem', ambientBg: true, hoverFx: true, 
@@ -973,7 +1001,6 @@
                             <div><h4 class="text-md font-bold text-white">Cloud Sync</h4><p class="text-xs text-zinc-500 mt-1">Force save settings, favorites, and PFP.</p></div>
                             <button onclick="accountSystem.syncData()" class="px-4 py-2 bg-accent hover:bg-accent/80 text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-accent/20">Sync Now</button>
                         </div>
-                        ${window.isAdmin ? `<hr class="border-zinc-800 my-2"><div class="flex items-center justify-between"><div><h4 class="text-md font-bold text-red-500">NUCLEAR RESET</h4><p class="text-xs text-zinc-500 mt-1">Delete ALL user accounts permanently.</p></div><button onclick="accountSystem.nuclearReset()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-red-600/20">EXECUTE</button></div>` : ''}
                         ${!accountSystem.username ? `<hr class="border-zinc-800 my-2"><div class="w-full"><button onclick="document.getElementById('auth-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('auth-modal').classList.remove('opacity-0'),10)" class="w-full px-4 py-3 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-colors">Login / Create Account</button></div>` : ''}
                     </div>`;
                     setTimeout(() => lucide.createIcons(), 10);
@@ -1034,12 +1061,47 @@
             showAdminAlertGUI(message) { document.getElementById('admin-alert-message').textContent = message; const modal = document.getElementById('admin-alert-modal'); modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10); lucide.createIcons(); }
             hideAdminAlertGUI() { const modal = document.getElementById('admin-alert-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); }
 
+            // --- BRAINROT SYSTEM ---
+            startBrainrot() {
+                if(this.brainrotInterval) return;
+                const emojis = ['🌮', '💀', '🚽', '🗿', '🧢', '🔥', '🤓', '🤡', '👽', '🌮'];
+                this.brainrotInterval = setInterval(() => {
+                    const el = document.createElement('div');
+                    el.className = 'falling-brainrot';
+                    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                    el.style.left = Math.random() * 100 + 'vw';
+                    el.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(el);
+                    setTimeout(() => el.remove(), 5000);
+                }, 150);
+            }
+            stopBrainrot() {
+                clearInterval(this.brainrotInterval);
+                this.brainrotInterval = null;
+                document.querySelectorAll('.falling-brainrot').forEach(el => el.remove());
+            }
+
+            // --- JUMPSCARE SYSTEM ---
+            executeJumpscare() {
+                const audio = new Audio('https://www.myinstants.com/media/sounds/fnaf-scream.mp3');
+                audio.volume = 1.0;
+                audio.play().catch(e=>{});
+                const overlay = document.createElement('div');
+                overlay.className = 'jumpscare-overlay';
+                overlay.innerHTML = `<img src="https://i.imgflip.com/6hzzn0.png" class="jumpscare-img">`;
+                document.body.appendChild(overlay);
+                setTimeout(() => overlay.remove(), 2000);
+            }
+
             listenForAdminCommands() {
                 try {
                     db.ref('global_commands').limitToLast(1).on('child_added', (snapshot) => {
                         const cmd = snapshot.val();
                         if (Date.now() - cmd.timestamp > 60000) return; 
-                        if(window.isAdmin) return;
+                        
+                        // Immunities for admins
+                        if(window.isAdmin && !['rainbow_on', 'rainbow_off', 'brainrot_on', 'brainrot_off'].includes(cmd.type)) return;
+
                         switch(cmd.type) {
                             case 'global_alert': this.showAdminAlertGUI(cmd.payload || "Alert"); this.addNotification('admin', 'System Alert', cmd.payload); break;
                             case 'force_reload': location.reload(); break;
@@ -1048,7 +1110,34 @@
                             case 'rickroll': window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; break;
                             case 'matrix_mode': document.body.classList.add('matrix-mode'); break;
                             case 'matrix_mode_off': document.body.classList.remove('matrix-mode'); break;
-                            case 'clear_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = ''; break;
+                            case 'rainbow_on': document.body.classList.add('rainbow-mode'); break;
+                            case 'rainbow_off': document.body.classList.remove('rainbow-mode'); break;
+                            case 'brainrot_on': this.startBrainrot(); break;
+                            case 'brainrot_off': this.stopBrainrot(); break;
+                            
+                            // OVERPOWERED OWNER COMMANDS
+                            case 'owner_jumpscare': this.executeJumpscare(); break;
+                            case 'owner_earthquake': 
+                                document.body.classList.add('earthquake-mode'); 
+                                setTimeout(() => document.body.classList.remove('earthquake-mode'), 5000);
+                                break;
+                            case 'owner_spam_alerts': 
+                                let i = 0; 
+                                const spam = setInterval(() => { this.addNotification('admin', 'SYSTEM WARNING', 'CRITICAL ERROR DETECTED'); if(i++ > 15) clearInterval(spam); }, 200);
+                                break;
+                            case 'owner_force_cloak': this.cloak(); break;
+                            case 'owner_shutdown':
+                                document.body.innerHTML = '<div style="background:black;color:red;height:100vh;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:2rem;font-weight:bold;">SYSTEM TERMINATED.</div>';
+                                break;
+                            case 'owner_disable_chat':
+                                if(globalChat) { globalChat.input.disabled = true; globalChat.submitBtn.disabled = true; globalChat.input.placeholder = "CHAT LOCKED BY OWNER."; }
+                                break;
+                            case 'owner_enable_chat':
+                                if(globalChat) { globalChat.input.disabled = false; globalChat.submitBtn.disabled = false; globalChat.input.placeholder = "Type a message..."; }
+                                break;
+                            case 'owner_kick': window.location.href = "https://www.google.com"; break;
+                            case 'owner_nuke_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = '<p class="text-red-500 font-bold text-center">ALL CHAT HISTORY HAS BEEN INCINERATED.</p>'; break;
+                            case 'owner_wipe_db': alert("YOUR ACCOUNT HAS BEEN DELETED."); localStorage.clear(); location.reload(); break;
                         }
                     });
                 } catch(e) {}
@@ -1059,39 +1148,54 @@
         class AdminSystem {
             constructor() {
                 this.activeTab = 'commands';
-                this.initDraggablePanel();
+                this.initDraggablePanel('admin-layer', 'admin-drag-handle');
+                this.initDraggablePanel('owner-layer', 'owner-drag-handle');
             }
             openLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-login-modal').classList.add('flex'); }
             closeLogin() { document.getElementById('admin-login-modal').classList.add('hidden'); document.getElementById('admin-login-modal').classList.remove('flex'); }
             verify() { 
                 const pass = document.getElementById('admin-password-input').value; 
+                this.closeLogin(); 
+                document.getElementById('admin-password-input').value = "";
                 if(pass === "0924") { 
-                    this.closeLogin(); 
                     const adminPanel = document.getElementById('admin-layer'); 
                     adminPanel.classList.remove('hidden'); adminPanel.classList.add('flex'); 
                     window.isAdmin = true;
-                } else { alert("ACCESS DENIED"); } 
+                } else if (pass === "ZER0") {
+                    const ownerPanel = document.getElementById('owner-layer'); 
+                    ownerPanel.classList.remove('hidden'); ownerPanel.classList.add('flex'); 
+                    window.isAdmin = true;
+                } else { 
+                    alert("ACCESS DENIED"); 
+                } 
             }
-            closePanel() {
-                const panel = document.getElementById('admin-layer');
+            closePanel(panelId) {
+                const panel = document.getElementById(panelId);
                 panel.classList.add('hidden');
                 panel.classList.remove('flex');
-                // Reset position for next open, letting CSS classes take over
-                panel.style.top = '';
-                panel.style.left = '';
-                panel.style.bottom = '';
             }
-            sendCommand(type, payload = null) { if(!db) { alert("Admin Error: DB not connected."); return; } db.ref('global_commands').push({ type: type, payload: payload, timestamp: firebase.database.ServerValue.TIMESTAMP }); if(type === 'clear_chat') { db.ref('messages/global').remove(); } const btn = event.currentTarget; const originalText = btn.innerHTML; btn.innerHTML = `<span class="text-green-500 font-bold">SENT ✔</span>`; setTimeout(() => { btn.innerHTML = originalText; lucide.createIcons(); }, 1500); }
+            sendCommand(type, payload = null) { 
+                if(!db) { alert("Error: DB not connected."); return; } 
+                db.ref('global_commands').push({ type: type, payload: payload, timestamp: firebase.database.ServerValue.TIMESTAMP }); 
+                if(type === 'clear_chat' || type === 'owner_nuke_chat') { db.ref('messages/global').remove(); } 
+                if(type === 'owner_wipe_db') { db.ref('accounts').remove(); } 
+                const btn = event.currentTarget; 
+                const originalText = btn.innerHTML; 
+                btn.innerHTML = `<span class="text-green-500 font-bold">SENT ✔</span>`; 
+                setTimeout(() => { btn.innerHTML = originalText; lucide.createIcons(); }, 1500); 
+            }
             sendCustomAlert() { const msg = prompt("Enter the message to send to all users:"); if (msg) { this.sendCommand('global_alert', msg); } }
             
-            initDraggablePanel() {
-                const panel = document.getElementById('admin-layer');
-                const dragHandle = document.getElementById('admin-drag-handle');
+            initDraggablePanel(panelId, handleId) {
+                const panel = document.getElementById(panelId);
+                const dragHandle = document.getElementById(handleId);
+                if(!panel || !dragHandle) return;
+                
                 let isDragging = false, offsetX, offsetY;
 
                 dragHandle.addEventListener('mousedown', (e) => {
                     isDragging = true;
-                    panel.style.bottom = 'unset'; // Let `top` take over
+                    panel.style.bottom = 'unset'; 
                     offsetX = e.clientX - panel.offsetLeft;
                     offsetY = e.clientY - panel.offsetTop;
                     document.body.style.userSelect = 'none';
@@ -1120,8 +1224,10 @@
                     content.classList.add('hidden');
                 });
                 const activeBtn = document.querySelector(`.admin-tab-btn[onclick="adminSystem.switchTab('${tabName}')"]`);
-                activeBtn.classList.add('bg-red-900/20', 'text-white');
-                activeBtn.classList.remove('text-zinc-400', 'hover:bg-zinc-800');
+                if(activeBtn) {
+                    activeBtn.classList.add('bg-red-900/20', 'text-white');
+                    activeBtn.classList.remove('text-zinc-400', 'hover:bg-zinc-800');
+                }
                 document.getElementById(`admin-tab-content-${tabName}`).classList.remove('hidden');
             }
         }
@@ -1152,7 +1258,7 @@
             
             handleAutocomplete(e) { const query = e.target.value.toLowerCase(); const dropdown = document.getElementById('autocomplete-dropdown'); if(!query || this.addType !== 'friend') { dropdown.classList.add('hidden'); return; } const matches = this.allUsers.filter(u => u.toLowerCase().includes(query) && u !== this.username && !this.friends.includes(u)).slice(0, 5); if(matches.length === 0) { dropdown.classList.add('hidden'); return; } dropdown.innerHTML = matches.map(m => `<div class="px-4 py-3 hover:bg-zinc-700 cursor-pointer text-white border-b border-zinc-700/50 last:border-0 transition-colors" onclick="globalChat.selectSuggestion('${m}')">${m}</div>`).join(''); dropdown.classList.remove('hidden'); }
             selectSuggestion(user) { document.getElementById('add-modal-input').value = user; document.getElementById('autocomplete-dropdown').classList.add('hidden'); document.getElementById('add-modal-input').focus(); }
-            listenForFriendRequests() { this.db.ref(`requests/${this.username}`).on('child_added', snapshot => { this.showFriendRequest(snapshot.key); app.addNotification('friend', 'Friend Request', `${snapshot.key()} wants to be your friend.`) }); this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => { const target = snapshot.key; if(!this.friends.includes(target)) { this.friends.push(target); localStorage.setItem('nm4r-friends', JSON.stringify(this.friends)); this.renderSidebar(); } this.db.ref(`accepts/${this.username}/${target}`).remove(); }); }
+            listenForFriendRequests() { this.db.ref(`requests/${this.username}`).on('child_added', snapshot => { this.showFriendRequest(snapshot.key); app.addNotification('friend', 'Friend Request', `${snapshot.key} wants to be your friend.`) }); this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => { const target = snapshot.key; if(!this.friends.includes(target)) { this.friends.push(target); localStorage.setItem('nm4r-friends', JSON.stringify(this.friends)); this.renderSidebar(); } this.db.ref(`accepts/${this.username}/${target}`).remove(); }); }
             renderSidebar() { const fList = document.getElementById('friends-list'); fList.innerHTML = this.friends.map(f => `<button onclick="globalChat.switchChannel('dm_${[this.username, f].sort().join('_')}', '${f}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="dm_${[this.username, f].sort().join('_')}"><div class="w-6 h-6 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold group-hover:text-white">${f.charAt(0).toUpperCase()}</div><span class="font-medium text-zinc-400 group-hover:text-white truncate">${f}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No friends added.</p>'; const gList = document.getElementById('groups-list'); gList.innerHTML = this.groups.map(g => `<button onclick="globalChat.switchChannel('group_${g}', '${g}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="group_${g}"><div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center group-hover:text-white"><i data-lucide="users" class="w-3 h-3 text-zinc-400 group-hover:text-white"></i></div><span class="font-medium text-zinc-400 group-hover:text-white truncate">${g}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>'; lucide.createIcons(); this.listenForCalls(); }
             openAddModal(type) { this.addType = type; const modal = document.getElementById('add-modal'); document.getElementById('add-modal-title').textContent = type === 'friend' ? 'Add a Friend' : 'Create Group'; document.getElementById('add-modal-input').placeholder = type === 'friend' ? 'Search Username...' : 'Enter Group Name...'; document.getElementById('add-modal-input').value = ''; document.getElementById('add-modal-error').classList.add('hidden'); document.getElementById('autocomplete-dropdown').classList.add('hidden'); modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10); document.getElementById('add-modal-input').focus(); }
             closeAddModal() { const modal = document.getElementById('add-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); }
@@ -1239,6 +1345,8 @@
             
             scrollToBottom() { setTimeout(() => { this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight; }, 50); }
             escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])); }
+            
+            // --- CALL LOGIC ---
             listenForCalls() { const channelsToListen = []; this.friends.forEach(f => channelsToListen.push(`dm_${[this.username, f].sort().join('_')}`)); this.groups.forEach(g => channelsToListen.push(`group_${g}`)); channelsToListen.forEach(channelId => { this.db.ref(`calls/${channelId}`).on('value', snapshot => { const callData = snapshot.val(); if (callData && callData.offer && callData.caller !== this.username && !this.isCalling) { this.showIncomingCall(callData.caller, channelId, callData.isVideo); } if (callData && callData.answer && callData.caller === this.username && this.isCalling) { if (!this.peerConnection.currentRemoteDescription) { this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.answer)); } } if (callData && callData.candidates) { Object.values(callData.candidates).forEach(c => { if (c.user !== this.username && this.peerConnection) { this.peerConnection.addIceCandidate(new RTCIceCandidate(c.candidate)).catch(e=>console.error(e)); } }); } if (!callData && this.isCalling) this.endCall(false); }); }); }
             async setupWebRTC(channelId, isVideo = false) { const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]}; this.peerConnection = new RTCPeerConnection(configuration); this.callRef = this.db.ref(`calls/${channelId}`); this.isVideoCall = isVideo; try { this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo }); if (isVideo) { document.getElementById('local-video').srcObject = this.localStream; } this.localStream.getTracks().forEach(track => { this.peerConnection.addTrack(track, this.localStream); }); } catch (e) { alert("Hardware access blocked. Ensure you are on HTTPS."); return false; } this.peerConnection.ontrack = event => { if(isVideo) { document.getElementById('remote-video').srcObject = event.streams[0]; } else { document.getElementById('remote-audio').srcObject = event.streams[0]; } }; this.peerConnection.onicecandidate = event => { if (event.candidate) { this.callRef.child('candidates').push({ user: this.username, candidate: event.candidate.toJSON() }); } }; this.isCalling = true; let cleanName = channelId.replace('dm_', '').replace('group_', '').replace(this.username, '').replace('_', ''); this.showActiveCallUI(cleanName, isVideo); return true; }
             async initiateCall(isVideo) { if (this.currentChannel === 'global') return; const success = await this.setupWebRTC(this.currentChannel, isVideo); if (!success) return; const offer = await this.peerConnection.createOffer(); await this.peerConnection.setLocalDescription(offer); this.callRef.set({ caller: this.username, isVideo: isVideo, offer: { type: offer.type, sdp: offer.sdp } }); }
@@ -1246,6 +1354,37 @@
             async acceptCall() { this.ringtone.pause(); const modal = document.getElementById('incoming-call-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); if (!this.pendingCallChannel) return; const snapshot = await this.db.ref(`calls/${this.pendingCallChannel}`).once('value'); const callData = snapshot.val(); if(!callData || callData.answer) { this.endCall(false); return; } const success = await this.setupWebRTC(this.pendingCallChannel, callData.isVideo); if (!success) return; await this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.offer)); const answer = await this.peerConnection.createAnswer(); await this.peerConnection.setLocalDescription(answer); this.callRef.update({ answer: { type: answer.type, sdp: answer.sdp } }); }
             declineCall() { this.ringtone.pause(); const modal = document.getElementById('incoming-call-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); if (this.pendingCallChannel) { this.db.ref(`calls/${this.pendingCallChannel}`).remove(); this.pendingCallChannel = null; } }
             showActiveCallUI(name, isVideo) { if (isVideo) { const vidUI = document.getElementById('video-call-ui'); vidUI.classList.remove('hidden'); vidUI.classList.add('flex'); } else { document.getElementById('active-call-name').textContent = name; const bar = document.getElementById('active-call-bar'); bar.classList.remove('hidden'); bar.classList.add('flex'); } }
+            
+            toggleAudio() {
+                if(this.localStream) {
+                    const audioTrack = this.localStream.getAudioTracks()[0];
+                    if(audioTrack) {
+                        audioTrack.enabled = !audioTrack.enabled;
+                        document.querySelectorAll('.call-mic-icon').forEach(i => {
+                            i.setAttribute('data-lucide', audioTrack.enabled ? 'mic' : 'mic-off');
+                            if(!audioTrack.enabled) i.classList.add('text-red-500');
+                            else i.classList.remove('text-red-500');
+                        });
+                        lucide.createIcons();
+                    }
+                }
+            }
+            
+            toggleVideo() {
+                if(this.localStream) {
+                    const videoTrack = this.localStream.getVideoTracks()[0];
+                    if(videoTrack) {
+                        videoTrack.enabled = !videoTrack.enabled;
+                        document.querySelectorAll('.call-vid-icon').forEach(i => {
+                            i.setAttribute('data-lucide', videoTrack.enabled ? 'video' : 'video-off');
+                            if(!videoTrack.enabled) i.classList.add('text-red-500');
+                            else i.classList.remove('text-red-500');
+                        });
+                        lucide.createIcons();
+                    }
+                }
+            }
+            
             endCall(clearDb = true) { this.isCalling = false; this.isVideoCall = false; this.ringtone.pause(); const bar = document.getElementById('active-call-bar'); bar.classList.add('hidden'); bar.classList.remove('flex'); const vidUI = document.getElementById('video-call-ui'); vidUI.classList.add('hidden'); vidUI.classList.remove('flex'); document.getElementById('remote-audio').srcObject = null; document.getElementById('remote-video').srcObject = null; document.getElementById('local-video').srcObject = null; document.getElementById('incoming-call-modal').classList.add('opacity-0', 'hidden'); if (this.localStream) { this.localStream.getTracks().forEach(track => track.stop()); this.localStream = null; } if (this.peerConnection) { this.peerConnection.close(); this.peerConnection = null; } if (this.callRef && clearDb) { this.callRef.remove(); } }
         }
         let globalChat; window.addEventListener('DOMContentLoaded', () => { setTimeout(() => { globalChat = new ChatSystem(); }, 500); });
