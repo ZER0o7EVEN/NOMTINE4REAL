@@ -12,6 +12,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -51,6 +52,7 @@
 
     <canvas id="bg-canvas"></canvas>
 
+    <!-- Blur Security Overlay -->
     <div id="blur-overlay" onclick="this.classList.add('hidden')" class="fixed inset-0 z-[9999] bg-black/95 flex flex-col items-center justify-center hidden opacity-0 transition-opacity duration-300 cursor-pointer">
         <i data-lucide="lock" class="w-16 h-16 text-zinc-500 mb-6"></i>
         <h1 class="text-4xl font-display font-bold tracking-widest text-white mb-2">SYSTEM LOCKED</h1>
@@ -58,6 +60,7 @@
         <p class="font-mono text-zinc-600 text-[10px] mt-4">Click to attempt unlock</p>
     </div>
 
+    <!-- Intro Launcher -->
     <div id="launcher-layer" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md hidden animate-fade-in pointer-events-auto">
         <div class="text-center animate-reveal-up max-w-md px-6">
              <div class="mb-10 relative group cursor-pointer" onclick="app.launchApp()">
@@ -75,16 +78,17 @@
         <div class="bg-[#0a0a0a] border border-white/10 p-10 rounded-[2rem] shadow-2xl max-w-md w-full text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-accent"></div>
             <h3 class="font-display text-4xl font-black text-white mb-2">Cloud Account</h3>
-            <p class="text-zinc-400 font-sans text-sm mb-8">Login or Create account to access Chat.</p>
+            <p class="text-zinc-400 font-sans text-sm mb-8">One-time setup to access Global Chat & Sync.</p>
             <form onsubmit="accountSystem.authenticate(event)" class="flex flex-col gap-4">
                 <input type="text" id="auth-user" required maxlength="20" placeholder="Username" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold">
-                <input type="password" id="auth-pass" required placeholder="Password / PIN" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold mb-2">
-                <button type="submit" id="auth-btn" class="w-full py-4 bg-accent text-white font-black uppercase tracking-widest rounded-xl hover:bg-accent/80 transition-colors shadow-[0_0_20px_var(--accent)]">Login / Create</button>
+                <input type="password" id="auth-pass" required placeholder="Create Password" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold mb-2">
+                <button type="submit" id="auth-btn" class="w-full py-4 bg-accent text-white font-black uppercase tracking-widest rounded-xl hover:bg-accent/80 transition-colors shadow-[0_0_20px_var(--accent)]">Login / Register</button>
                 <button type="button" onclick="document.getElementById('auth-modal').classList.add('opacity-0', 'pointer-events-none'); setTimeout(()=>document.getElementById('auth-modal').classList.add('hidden'), 500);" class="text-zinc-500 hover:text-white text-xs underline mt-2">Cancel</button>
             </form>
         </div>
     </div>
 
+    <!-- Cutscene Layer -->
     <div id="cutscene-layer" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center overflow-hidden hidden pointer-events-none">
         <div id="cs-logo" class="relative z-10 text-center hidden">
             <div class="inline-flex items-center justify-center w-24 h-24 bg-zinc-900 rounded-3xl mb-10 shadow-2xl border border-zinc-800 animate-pop-in">
@@ -96,6 +100,7 @@
 
     <div id="menu-layer" class="fixed inset-0 z-40 bg-transparent hidden flex-col transition-all duration-1000 overflow-hidden pointer-events-auto"></div>
 
+    <!-- TEAM / OWNERS LAYER -->
     <div id="team-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
         <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0 pointer-events-auto">
             <button onclick="app.closeTeam()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i> Back</button>
@@ -116,11 +121,14 @@
                 <span class="text-zinc-500 font-mono text-sm tracking-[0.3em] font-bold uppercase mb-8 block">Administrators</span>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 opacity-50">
                     <div class="bg-[#0a0a0a] border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed"><div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-zinc-600"><i data-lucide="user" class="w-8 h-8"></i></div><h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4><p class="text-xs font-mono text-zinc-600">No admin assigned</p></div>
+                    <div class="bg-[#0a0a0a] border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed"><div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-zinc-600"><i data-lucide="user" class="w-8 h-8"></i></div><h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4><p class="text-xs font-mono text-zinc-600">No admin assigned</p></div>
+                    <div class="bg-[#0a0a0a] border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed hidden md:flex"><div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-zinc-600"><i data-lucide="user" class="w-8 h-8"></i></div><h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4><p class="text-xs font-mono text-zinc-600">No admin assigned</p></div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- PARTNERS LAYER -->
     <div id="partners-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-orange-900/20 via-black to-black pointer-events-none"></div>
         <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-orange-500/20 shrink-0 pointer-events-auto">
@@ -146,6 +154,7 @@
         </div>
     </div>
 
+    <!-- GAMES HUB LAYER -->
     <div id="library-layer" class="min-h-screen bg-transparent transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 pointer-events-none h-0 overflow-hidden blur-xl transform origin-top">
         <nav class="sticky top-0 z-40 w-full pt-6 px-6 pb-4 transition-transform duration-500 bg-transparent" id="library-nav">
             <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 pointer-events-auto">
@@ -343,7 +352,7 @@
     </div>
 
     <script>
-        // --- GLOBAL DATABASE INIT ---
+        // --- GLOBAL DATABASE INIT (CRITICAL) ---
         let db = null;
         try {
             const firebaseConfig = {
@@ -357,8 +366,13 @@
             };
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
-        } catch(e) { console.error("Firebase Error: ", e); }
+            console.log("Firebase Connected Successfully");
+        } catch(e) {
+            console.error("Critical Firebase Error: ", e);
+            alert("Database Connection Failed. Chat & Admin features disabled.");
+        }
 
+        // --- DATA ---
         var _GAMES = [
             ["Web Proxy", "https://d1ks901xvjj2p6.cloudfront.net/index.html#/search", "https://th.bing.com/th?q=Proxy+Adobe+PNG+Logo&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.1&pid=InlineBlock&rm=3&defcache=1&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1&mw=247", "Utility"],
             ["School boy runaway", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_32c0c8b002c4cb975a08f1c4e11993e2.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/605.png", "Action"],
@@ -404,7 +418,7 @@
                         if (data.password === pass) {
                             this.completeLogin(user, pass, data);
                         } else {
-                            alert("Incorrect Password!");
+                            alert("Incorrect Password or Username taken!");
                             btn.textContent = "Login / Create";
                         }
                     } else {
@@ -418,8 +432,8 @@
                         this.completeLogin(user, pass, newData);
                     }
                 } catch(err) {
-                    console.log(err);
-                    alert("Network error.");
+                    console.error(err);
+                    alert("Database Error: " + err.message + "\n\nPlease check your Firebase Console -> Realtime Database -> Rules. They must be set to 'true'.");
                     btn.textContent = "Login / Create";
                 }
             }
@@ -436,17 +450,22 @@
                 app.applySettings();
                 app.renderLibrary();
 
+                // HIDE AUTH MODAL
                 document.getElementById('auth-modal').classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => document.getElementById('auth-modal').classList.add('hidden'), 500);
 
+                // RE-INITIALIZE CHAT with user
                 if(globalChat) {
                     globalChat.username = user;
                     globalChat.db.ref(`users/${user}`).set(Date.now());
                     globalChat.renderSidebar();
                     globalChat.listenForCalls();
                     globalChat.listenForFriendRequests();
+                } else {
+                    globalChat = new ChatSystem();
                 }
                 
+                // Immediately update UI to logged in state
                 app.openChat();
             }
 
@@ -470,11 +489,16 @@
                 alert("Username changed! Reloading system...");
                 location.reload();
             }
-            
-            logout() {
-                localStorage.removeItem('nm4r-user');
-                localStorage.removeItem('nm4r-pass');
-                location.reload();
+
+            async syncData() {
+                if(!this.username) return;
+                const data = {
+                    password: this.password,
+                    favorites: JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'),
+                    settings: JSON.parse(localStorage.getItem('nm4r-settings') || '{}')
+                };
+                await db.ref(`accounts/${this.username}`).set(data);
+                alert("Cloud Sync Complete!");
             }
             
             async nuclearReset() {
@@ -483,6 +507,12 @@
                     alert("All accounts wiped.");
                     location.reload();
                 }
+            }
+            
+            logout() {
+                localStorage.removeItem('nm4r-user');
+                localStorage.removeItem('nm4r-pass');
+                location.reload();
             }
         }
 
@@ -645,7 +675,7 @@
                 document.getElementById('chat-layer').classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); 
                 if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden'); 
                 if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); 
-                if (globalChat) { globalChat.checkUsername(); globalChat.scrollToBottom(); } 
+                if (globalChat) { globalChat.scrollToBottom(); } 
             }
             closeChat() { this.isChatOpen = false; const layer = document.getElementById('chat-layer'); layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); layer.classList.remove('opacity-100', 'scale-100'); setTimeout(() => { layer.classList.add('hidden'); layer.classList.remove('flex'); if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); } }, 700); }
 
