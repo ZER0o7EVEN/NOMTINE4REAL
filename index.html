@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
@@ -44,7 +45,7 @@
       body.oled-mode { background-color: #000000 !important; } body.hide-scroll ::-webkit-scrollbar { display: none !important; }
       body.no-hover-fx .group:hover .hover-trigger { transform: none !important; box-shadow: none !important; border-color: rgba(255,255,255,0.05) !important; background-color: #0a0a0a !important; }
       body.compact-ui #games-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)) !important; }
-      body.blur-locked > *:not(#blur-overlay) { filter: blur(20px); pointer-events: none; user-select: none; }
+      body.blur-locked > *:not(#blur-overlay):not(#admin-alert-modal) { filter: blur(20px); pointer-events: none; user-select: none; }
       body.cursor-override * { cursor: var(--custom-cursor, default) !important; }
       .perspective-1000 { perspective: 1000px; transform-style: preserve-3d; }
       #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
@@ -64,6 +65,18 @@
         <h1 class="text-4xl font-display font-bold tracking-widest text-white mb-2">SYSTEM LOCKED</h1>
         <p class="font-mono text-zinc-500 text-sm">Administrator has locked your terminal.</p>
         <p class="font-mono text-zinc-600 text-[10px] mt-4">Click to attempt unlock</p>
+    </div>
+
+    <!-- CUSTOM ADMIN ALERT MODAL -->
+    <div id="admin-alert-modal" class="fixed inset-0 z-[10000] bg-black/80 backdrop-blur-xl hidden items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-auto">
+        <div class="bg-[#0a0a0a] border border-accent/30 p-10 rounded-[2rem] shadow-2xl max-w-lg w-full text-center relative overflow-hidden animate-reveal-up">
+            <div class="w-20 h-20 bg-accent/10 border-2 border-accent/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_var(--accent)]">
+                <i data-lucide="megaphone" class="w-10 h-10 text-accent"></i>
+            </div>
+            <h2 class="text-3xl font-display font-black text-white mb-2 uppercase tracking-widest">System Message</h2>
+            <p id="admin-alert-message" class="text-zinc-300 font-sans text-lg mb-8 px-4">Admin message content goes here.</p>
+            <button onclick="app.hideAdminAlertGUI()" class="w-full max-w-xs mx-auto py-3 bg-white text-black font-bold uppercase tracking-wider rounded-xl hover:bg-zinc-300 transition-colors">Acknowledge</button>
+        </div>
     </div>
 
     <div id="launcher-layer" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md hidden animate-fade-in pointer-events-auto">
@@ -210,7 +223,7 @@
 
 
     <div id="library-layer" class="min-h-screen bg-transparent transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 pointer-events-none h-0 overflow-hidden blur-xl transform origin-top">
-        <nav class="sticky top-0 z-40 w-full pt-6 px-6 pb-4 transition-transform duration-500 bg-transparent" id="library-nav">
+        <nav class="sticky top-0 z-50 w-full pt-6 px-6 pb-4 transition-transform duration-500 bg-transparent" id="library-nav">
             <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 pointer-events-auto">
                 <div class="flex items-center gap-4 cursor-pointer group shrink-0" onclick="location.reload()">
                     <div class="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-dynamic flex items-center justify-center transform group-hover:rotate-[15deg] group-hover:scale-110 transition-all duration-300 relative overflow-hidden">
@@ -219,13 +232,25 @@
                     <div class="flex flex-col leading-none"><h1 class="font-display font-extrabold text-2xl tracking-tight text-white">NOTMINE</h1><span class="text-[10px] font-mono font-bold text-zinc-500 tracking-[0.3em] group-hover:text-white transition-colors mt-1">4REAL</span></div>
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0 bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 p-1.5 rounded-full shadow-xl">
-                    <button onclick="app.playRandom()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all"><i data-lucide="shuffle" class="w-5 h-5"></i></button>
-                    <button onclick="app.openChat()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all relative group"><i data-lucide="message-square" class="w-5 h-5"></i><span id="nav-chat-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-accent rounded-full hidden border border-[#0a0a0a]"></span></button>
-                    <button onclick="app.cloak()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all"><i data-lucide="eye-off" class="w-5 h-5"></i></button>
-                    <button onclick="app.openSettings()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all"><i data-lucide="settings" class="w-5 h-5"></i></button>
+                    <button onclick="app.playRandom()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all" title="Random Game"><i data-lucide="shuffle" class="w-5 h-5"></i></button>
+                    <button onclick="app.openChat()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all relative group" title="Chat"><i data-lucide="message-square" class="w-5 h-5"></i><span id="nav-chat-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-accent rounded-full hidden border border-[#0a0a0a]"></span></button>
+                    <button onclick="app.toggleNotifications()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all relative group" title="Notifications"><i data-lucide="bell" class="w-5 h-5"></i><span id="notif-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full hidden border border-[#0a0a0a]"></span></button>
+                    <button onclick="app.cloak()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all" title="Cloak Tab"><i data-lucide="eye-off" class="w-5 h-5"></i></button>
+                    <button onclick="app.openSettings()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all" title="Settings"><i data-lucide="settings" class="w-5 h-5"></i></button>
                 </div>
             </div>
         </nav>
+        <!-- NOTIFICATION PANEL -->
+        <div id="notification-panel" class="fixed top-24 right-6 z-40 w-full max-w-sm bg-zinc-900/80 backdrop-blur-2xl border border-zinc-800 rounded-2xl shadow-2xl hidden opacity-0 transition-all duration-300 transform origin-top-right scale-95 pointer-events-auto">
+            <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
+                <h3 class="font-bold text-white">Notifications</h3>
+                <button onclick="app.clearNotifications()" class="text-xs text-zinc-500 hover:text-white transition-colors">Clear All</button>
+            </div>
+            <div id="notification-list" class="p-2 max-h-96 overflow-y-auto scrollbar-hide">
+                <!-- Notifications will be injected here -->
+            </div>
+        </div>
+
         <main class="max-w-7xl mx-auto px-6 py-6 min-h-screen pointer-events-auto relative z-10">
             <div id="hero-section" class="flex flex-col items-center justify-center py-20 text-center animate-reveal-up">
                 <h1 class="font-display font-black text-6xl md:text-7xl text-white tracking-tighter mb-4 drop-shadow-2xl">Games Library</h1>
@@ -255,25 +280,40 @@
             <button onclick="adminSystem.closeLogin()" class="mt-6 text-zinc-600 hover:text-white text-xs underline">Cancel</button>
         </div>
     </div>
-
-    <div id="admin-layer" class="fixed inset-0 z-[250] bg-black hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto">
-        <div class="h-20 border-b border-red-900/30 flex items-center justify-between px-8 bg-black shrink-0">
-            <div class="flex items-center gap-4"><div class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></div><h2 class="font-mono font-bold text-red-600 text-xl tracking-widest uppercase">Command Center</h2></div>
-            <button onclick="adminSystem.closePanel()" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded text-xs font-mono uppercase">Exit Console</button>
+    
+    <!-- DRAGGABLE ADMIN PANEL -->
+    <div id="admin-layer" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[250] bg-[#0c0c0c] border border-red-900/50 rounded-2xl shadow-2xl w-full max-w-4xl h-[70vh] hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto" style="resize: both;">
+        <div id="admin-drag-handle" class="h-14 border-b border-red-900/30 flex items-center justify-between px-6 bg-black/50 shrink-0 cursor-move">
+            <div class="flex items-center gap-4"><div class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></div><h2 class="font-mono font-bold text-red-600 text-lg tracking-widest uppercase">Command Center</h2></div>
+            <button onclick="adminSystem.closePanel()" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded-lg text-xs font-mono uppercase">Exit</button>
         </div>
-        <div class="flex-1 p-10 overflow-y-auto">
-            <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <button onclick="adminSystem.sendCustomAlert()" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="megaphone" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">Custom Alert</h3><p class="text-zinc-500 text-xs font-mono">Send custom popup to all users.</p></button>
-                <button onclick="adminSystem.sendCommand('force_reload')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="refresh-cw" class="w-8 h-8 text-blue-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">Force Refresh</h3><p class="text-zinc-500 text-xs font-mono">Reload everyone's browser.</p></button>
-                <button onclick="adminSystem.sendCommand('system_lock')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="lock" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">System Lock On</h3><p class="text-zinc-500 text-xs font-mono">Trigger lock overlay globally.</p></button>
-                <button onclick="adminSystem.sendCommand('system_unlock')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="unlock" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">System Lock Off</h3><p class="text-zinc-500 text-xs font-mono">Remove lock overlay globally.</p></button>
-                <button onclick="adminSystem.sendCommand('matrix_mode')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="terminal" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">Matrix Mode On</h3><p class="text-zinc-500 text-xs font-mono">Inject CSS hacker theme.</p></button>
-                <button onclick="adminSystem.sendCommand('matrix_mode_off')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="terminal-square" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">Matrix Mode Off</h3><p class="text-zinc-500 text-xs font-mono">Disable CSS hacker theme.</p></button>
-                <button onclick="adminSystem.sendCommand('rickroll')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="music" class="w-8 h-8 text-purple-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">Protocol 42</h3><p class="text-zinc-500 text-xs font-mono">Redirect everyone to Rickroll.</p></button>
-                <button onclick="adminSystem.sendCommand('clear_chat')" class="p-8 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="trash-2" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-2">Wipe Chat</h3><p class="text-zinc-500 text-xs font-mono">Delete global chat history.</p></button>
+        <div class="flex-1 flex overflow-hidden">
+            <div class="w-56 bg-black/20 border-r border-red-900/20 p-4 shrink-0">
+                <div class="flex flex-col gap-2" id="admin-tabs">
+                    <button onclick="adminSystem.switchTab('commands')" class="admin-tab-btn text-left px-4 py-2 rounded-lg font-bold text-sm bg-red-900/20 text-white">Global Commands</button>
+                    <!-- <button onclick="adminSystem.switchTab('users')" class="admin-tab-btn text-left px-4 py-2 rounded-lg font-bold text-sm text-zinc-400 hover:bg-zinc-800">User Management</button> -->
+                </div>
+            </div>
+            <div class="flex-1 p-8 overflow-y-auto">
+                <div id="admin-tab-content-commands" class="admin-tab-content">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <button onclick="adminSystem.sendCustomAlert()" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="megaphone" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Custom Alert</h3><p class="text-zinc-500 text-xs font-mono">Send custom popup.</p></button>
+                        <button onclick="adminSystem.sendCommand('force_reload')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="refresh-cw" class="w-8 h-8 text-blue-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Force Refresh</h3><p class="text-zinc-500 text-xs font-mono">Reload all browsers.</p></button>
+                        <button onclick="adminSystem.sendCommand('system_lock')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="lock" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">System Lock On</h3><p class="text-zinc-500 text-xs font-mono">Lock the system.</p></button>
+                        <button onclick="adminSystem.sendCommand('system_unlock')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="unlock" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">System Lock Off</h3><p class="text-zinc-500 text-xs font-mono">Unlock the system.</p></button>
+                        <button onclick="adminSystem.sendCommand('matrix_mode')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="terminal" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Matrix Mode On</h3><p class="text-zinc-500 text-xs font-mono">Enable hacker theme.</p></button>
+                        <button onclick="adminSystem.sendCommand('matrix_mode_off')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="terminal-square" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Matrix Mode Off</h3><p class="text-zinc-500 text-xs font-mono">Disable hacker theme.</p></button>
+                        <button onclick="adminSystem.sendCommand('rickroll')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="music" class="w-8 h-8 text-purple-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Protocol 42</h3><p class="text-zinc-500 text-xs font-mono">Execute Rickroll.</p></button>
+                        <button onclick="adminSystem.sendCommand('clear_chat')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="trash-2" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Wipe Chat</h3><p class="text-zinc-500 text-xs font-mono">Delete global chat.</p></button>
+                    </div>
+                </div>
+                <div id="admin-tab-content-users" class="admin-tab-content hidden">
+                    <p class="text-zinc-500">User management interface coming soon.</p>
+                </div>
             </div>
         </div>
     </div>
+
 
     <!-- CHAT UI -->
     <div id="chat-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
@@ -430,8 +470,8 @@
 
         var _GAMES = [
             ["Proxy", "https://d1ks901xvjj2p6.cloudfront.net/index.html#/search", "https://th.bing.com/th?q=Proxy+Adobe+PNG+Logo&w=120&h=120&c=1&rs=1&qlt=70&o=7&cb=1&dpr=1.1&pid=InlineBlock&rm=3&defcache=1&mkt=en-US&cc=US&setlang=en&adlt=moderate&t=1&mw=247", "Utility"],
-            ["Cloud Gaming", "https://web.cloudmoonapp.com/", "https://static.vecteezy.com/system/resources/previews/010/872/495/original/3d-cloud-gaming-free-png.png", "Utility"],
-           ["Five nights at Epstein's", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d7b5efdff8c12e973faa40020d911b3e.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/710.png", "Horror"],
+            ["Cloud Gaming", "https://web.cloudmoonapp.com/", "https://th.bing.com/th/id/OIP.kOFzpwfkS0fVQh8cKaiHbQHaHa?w=108&h=108&c=1&bgcl=331305&r=0&o=7&dpr=1.1&pid=ImgRC&rm=3", "Utility"],
+            ["Five nights at Epstein's", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d7b5efdff8c12e973faa40020d911b3e.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/710.png", "Horror"],
     ["Midnight shift", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f7629dd04a219c53bdf6d0f2421fcfd7.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/658.png", "Horror"],
     ["Iron Lung", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_e09fd370d40766ca1ffcc5bdb591d229.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/705.png", "Horror"],
     ["School boy runaway", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_32c0c8b002c4cb975a08f1c4e11993e2.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/605.png", "Action"],
@@ -736,6 +776,7 @@
                 this.favorites = new Set(JSON.parse(localStorage.getItem('nm4r-favorites') || '[]'));
                 this.activeSettingsTab = 'Design'; this.previousLayer = 'menu';
                 this.isChatOpen = false;
+                this.notifications = [];
                 this.settings = { 
                     perfMode: false, oledMode: false, compactUI: false, glassmorphism: true, 
                     borderRadius: '1rem', gridGap: '1.5rem', ambientBg: true, hoverFx: true, 
@@ -748,6 +789,7 @@
 
             init() {
                 try { const s = JSON.parse(localStorage.getItem('nm4r-settings')); if (s) this.settings = { ...this.settings, ...s }; } catch(e){}
+                this.loadNotifications();
                 this.applySettings(); this.setupSecurity(); this.setupFullscreenListener(); lucide.createIcons();
                 document.getElementById('search-input')?.addEventListener('input', e => { this.searchQuery = e.target.value; this.renderLibrary(); });
                 if (window.self !== window.top) this.showLauncher(); else this.runIntro();
@@ -975,6 +1017,19 @@
             setupFullscreenListener() { document.addEventListener('fullscreenchange', () => { const icon = document.getElementById('fullscreen-icon'); if (icon) { if (document.fullscreenElement) { icon.setAttribute('data-lucide', 'minimize'); } else { icon.setAttribute('data-lucide', 'maximize'); } lucide.createIcons(); } }); }
             toggleFullscreen() { const elem = document.getElementById('game-container'); if (!document.fullscreenElement) { elem.requestFullscreen().catch(err => { alert(`Error: ${err.message}`); }); } else { document.exitFullscreen(); } }
 
+            // --- NOTIFICATION SYSTEM ---
+            loadNotifications() { this.notifications = JSON.parse(localStorage.getItem('nm4r-notifications') || '[]'); this.renderNotifications(); }
+            saveNotifications() { localStorage.setItem('nm4r-notifications', JSON.stringify(this.notifications)); }
+            addNotification(type, title, message) { const newNotif = { id: Date.now(), type, title, message, read: false, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }; this.notifications.unshift(newNotif); if (this.notifications.length > 20) this.notifications.pop(); this.saveNotifications(); this.renderNotifications(); }
+            renderNotifications() { const list = document.getElementById('notification-list'); const badge = document.getElementById('notif-badge'); const unreadCount = this.notifications.filter(n => !n.read).length; if (list) { if(this.notifications.length === 0) { list.innerHTML = `<p class="p-4 text-center text-xs text-zinc-500">No notifications.</p>`; } else { list.innerHTML = this.notifications.map(n => this.createNotificationHTML(n)).join(''); } lucide.createIcons(); } if (badge) { if (unreadCount > 0) badge.classList.remove('hidden'); else badge.classList.add('hidden'); } }
+            createNotificationHTML(n) { const icons = { admin: 'megaphone', friend: 'user-plus' }; const colors = { admin: 'text-yellow-500', friend: 'text-blue-400'}; return `<div class="p-3 flex items-start gap-3 border-b border-zinc-800/50 last:border-0 hover:bg-zinc-800/50 rounded-lg relative"><div class="w-1.5 h-1.5 rounded-full bg-red-500 absolute top-3 left-1.5 ${n.read ? 'hidden' : ''}"></div><i data-lucide="${icons[n.type] || 'bell'}" class="w-5 h-5 ${colors[n.type] || 'text-zinc-400'} mt-1 shrink-0 ml-2"></i><div class="flex-1"><div class="flex items-center justify-between"><h4 class="text-sm font-bold text-white">${n.title}</h4><span class="text-[10px] text-zinc-500 font-mono">${n.time}</span></div><p class="text-xs text-zinc-400 mt-1">${n.message}</p></div></div>`; }
+            toggleNotifications() { const panel = document.getElementById('notification-panel'); const isOpen = !panel.classList.contains('hidden'); if(isOpen) { panel.classList.add('opacity-0', 'scale-95'); setTimeout(() => panel.classList.add('hidden'), 300); } else { panel.classList.remove('hidden'); setTimeout(() => panel.classList.remove('opacity-0', 'scale-95'), 10); this.notifications.forEach(n => n.read = true); this.saveNotifications(); this.renderNotifications(); } }
+            clearNotifications() { this.notifications = []; this.saveNotifications(); this.renderNotifications(); }
+
+            // --- ADMIN ALERT GUI ---
+            showAdminAlertGUI(message) { document.getElementById('admin-alert-message').textContent = message; const modal = document.getElementById('admin-alert-modal'); modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10); lucide.createIcons(); }
+            hideAdminAlertGUI() { const modal = document.getElementById('admin-alert-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); }
+
             listenForAdminCommands() {
                 try {
                     db.ref('global_commands').limitToLast(1).on('child_added', (snapshot) => {
@@ -982,7 +1037,7 @@
                         if (Date.now() - cmd.timestamp > 60000) return; 
                         if(window.isAdmin) return;
                         switch(cmd.type) {
-                            case 'global_alert': alert("SYSTEM MESSAGE:\n\n" + (cmd.payload || "Alert")); break;
+                            case 'global_alert': this.showAdminAlertGUI(cmd.payload || "Alert"); this.addNotification('admin', 'System Alert', cmd.payload); break;
                             case 'force_reload': location.reload(); break;
                             case 'system_lock': const bo = document.getElementById('blur-overlay'); bo.classList.remove('hidden'); setTimeout(() => bo.classList.remove('opacity-0'), 10); document.body.classList.add('blur-locked'); break;
                             case 'system_unlock': const bo2 = document.getElementById('blur-overlay'); bo2.classList.add('opacity-0'); setTimeout(() => bo2.classList.add('hidden'), 300); document.body.classList.remove('blur-locked'); break;
@@ -998,6 +1053,10 @@
         const app = new App();
 
         class AdminSystem {
+            constructor() {
+                this.activeTab = 'commands';
+                this.initDraggablePanel();
+            }
             openLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-login-modal').classList.add('flex'); }
             closeLogin() { document.getElementById('admin-login-modal').classList.add('hidden'); document.getElementById('admin-login-modal').classList.remove('flex'); }
             verify() { 
@@ -1011,8 +1070,50 @@
                 } else { alert("ACCESS DENIED"); } 
             }
             closePanel() { document.getElementById('admin-layer').classList.add('hidden'); document.getElementById('admin-layer').classList.remove('flex'); if(app.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } else { document.getElementById('library-layer').classList.remove('hidden'); } }
-            sendCommand(type, payload = null) { if(!db) { alert("Admin Error: DB not connected."); return; } db.ref('global_commands').push({ type: type, payload: payload, timestamp: firebase.database.ServerValue.TIMESTAMP }); if(type === 'clear_chat') { db.ref('messages/global').remove(); } const btn = event.currentTarget; const originalText = btn.innerHTML; btn.innerHTML = `<span class="text-green-500 font-bold">COMMAND SENT ✔</span>`; setTimeout(() => { btn.innerHTML = originalText; lucide.createIcons(); }, 1500); }
+            sendCommand(type, payload = null) { if(!db) { alert("Admin Error: DB not connected."); return; } db.ref('global_commands').push({ type: type, payload: payload, timestamp: firebase.database.ServerValue.TIMESTAMP }); if(type === 'clear_chat') { db.ref('messages/global').remove(); } const btn = event.currentTarget; const originalText = btn.innerHTML; btn.innerHTML = `<span class="text-green-500 font-bold">SENT ✔</span>`; setTimeout(() => { btn.innerHTML = originalText; lucide.createIcons(); }, 1500); }
             sendCustomAlert() { const msg = prompt("Enter the message to send to all users:"); if (msg) { this.sendCommand('global_alert', msg); } }
+            
+            initDraggablePanel() {
+                const panel = document.getElementById('admin-layer');
+                const dragHandle = document.getElementById('admin-drag-handle');
+                let isDragging = false, offsetX, offsetY;
+
+                dragHandle.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    offsetX = e.clientX - panel.offsetLeft;
+                    offsetY = e.clientY - panel.offsetTop;
+                    panel.style.transition = 'none'; // Disable transition for smooth dragging
+                    document.body.style.userSelect = 'none';
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        panel.style.left = `${e.clientX - offsetX}px`;
+                        panel.style.top = `${e.clientY - offsetY}px`;
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    panel.style.transition = ''; // Re-enable transition
+                    document.body.style.userSelect = '';
+                });
+            }
+
+            switchTab(tabName) {
+                this.activeTab = tabName;
+                document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                    btn.classList.remove('bg-red-900/20', 'text-white');
+                    btn.classList.add('text-zinc-400', 'hover:bg-zinc-800');
+                });
+                document.querySelectorAll('.admin-tab-content').forEach(content => {
+                    content.classList.add('hidden');
+                });
+                const activeBtn = document.querySelector(`.admin-tab-btn[onclick="adminSystem.switchTab('${tabName}')"]`);
+                activeBtn.classList.add('bg-red-900/20', 'text-white');
+                activeBtn.classList.remove('text-zinc-400', 'hover:bg-zinc-800');
+                document.getElementById(`admin-tab-content-${tabName}`).classList.remove('hidden');
+            }
         }
         const adminSystem = new AdminSystem();
 
@@ -1041,7 +1142,7 @@
             
             handleAutocomplete(e) { const query = e.target.value.toLowerCase(); const dropdown = document.getElementById('autocomplete-dropdown'); if(!query || this.addType !== 'friend') { dropdown.classList.add('hidden'); return; } const matches = this.allUsers.filter(u => u.toLowerCase().includes(query) && u !== this.username && !this.friends.includes(u)).slice(0, 5); if(matches.length === 0) { dropdown.classList.add('hidden'); return; } dropdown.innerHTML = matches.map(m => `<div class="px-4 py-3 hover:bg-zinc-700 cursor-pointer text-white border-b border-zinc-700/50 last:border-0 transition-colors" onclick="globalChat.selectSuggestion('${m}')">${m}</div>`).join(''); dropdown.classList.remove('hidden'); }
             selectSuggestion(user) { document.getElementById('add-modal-input').value = user; document.getElementById('autocomplete-dropdown').classList.add('hidden'); document.getElementById('add-modal-input').focus(); }
-            listenForFriendRequests() { this.db.ref(`requests/${this.username}`).on('child_added', snapshot => { this.showFriendRequest(snapshot.key); }); this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => { const target = snapshot.key; if(!this.friends.includes(target)) { this.friends.push(target); localStorage.setItem('nm4r-friends', JSON.stringify(this.friends)); this.renderSidebar(); } this.db.ref(`accepts/${this.username}/${target}`).remove(); }); }
+            listenForFriendRequests() { this.db.ref(`requests/${this.username}`).on('child_added', snapshot => { this.showFriendRequest(snapshot.key); app.addNotification('friend', 'Friend Request', `${snapshot.key()} wants to be your friend.`) }); this.db.ref(`accepts/${this.username}`).on('child_added', snapshot => { const target = snapshot.key; if(!this.friends.includes(target)) { this.friends.push(target); localStorage.setItem('nm4r-friends', JSON.stringify(this.friends)); this.renderSidebar(); } this.db.ref(`accepts/${this.username}/${target}`).remove(); }); }
             renderSidebar() { const fList = document.getElementById('friends-list'); fList.innerHTML = this.friends.map(f => `<button onclick="globalChat.switchChannel('dm_${[this.username, f].sort().join('_')}', '${f}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="dm_${[this.username, f].sort().join('_')}"><div class="w-6 h-6 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center text-xs font-bold group-hover:text-white">${f.charAt(0).toUpperCase()}</div><span class="font-medium text-zinc-400 group-hover:text-white truncate">${f}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No friends added.</p>'; const gList = document.getElementById('groups-list'); gList.innerHTML = this.groups.map(g => `<button onclick="globalChat.switchChannel('group_${g}', '${g}', true)" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn" data-id="group_${g}"><div class="w-6 h-6 rounded-lg bg-zinc-800 flex items-center justify-center group-hover:text-white"><i data-lucide="users" class="w-3 h-3 text-zinc-400 group-hover:text-white"></i></div><span class="font-medium text-zinc-400 group-hover:text-white truncate">${g}</span></button>`).join('') || '<p class="text-xs text-zinc-600 px-3 py-1">No groups created.</p>'; lucide.createIcons(); this.listenForCalls(); }
             openAddModal(type) { this.addType = type; const modal = document.getElementById('add-modal'); document.getElementById('add-modal-title').textContent = type === 'friend' ? 'Add a Friend' : 'Create Group'; document.getElementById('add-modal-input').placeholder = type === 'friend' ? 'Search Username...' : 'Enter Group Name...'; document.getElementById('add-modal-input').value = ''; document.getElementById('add-modal-error').classList.add('hidden'); document.getElementById('autocomplete-dropdown').classList.add('hidden'); modal.classList.remove('hidden'); setTimeout(() => modal.classList.remove('opacity-0'), 10); document.getElementById('add-modal-input').focus(); }
             closeAddModal() { const modal = document.getElementById('add-modal'); modal.classList.add('opacity-0'); setTimeout(() => modal.classList.add('hidden'), 300); }
