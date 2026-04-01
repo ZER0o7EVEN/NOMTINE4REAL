@@ -1242,7 +1242,7 @@
             openSettings() { document.body.classList.add('overflow-hidden'); document.getElementById('settings-layer').classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none'); document.getElementById('settings-layer').classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden'); if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); this.renderSettingsNav(); this.renderSettingsContent(); }
             closeSettings() { const layer = document.getElementById('settings-layer'); layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); layer.classList.remove('opacity-100', 'scale-100'); setTimeout(() => { layer.classList.add('hidden'); layer.classList.remove('flex'); if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); } }, 700); }
 
-            renderSettingsNav() { const nav = document.getElementById('settings-nav'); const cats = ['Account', 'Design', 'Site', 'Security', 'Themes']; nav.innerHTML = cats.map(c => `<button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>`).join('') + `<div class="mt-auto pt-6 border-t border-white/5"><button onclick="adminSystem.openLogin()" class="w-full px-5 py-3 text-red-900/50 hover:text-red-500 hover:bg-red-900/10 text-xs font-bold font-mono tracking-widest text-center rounded-xl transition-colors">ADMIN</button></div>`; }
+            renderSettingsNav() { const nav = document.getElementById('settings-nav'); const cats = ['Account', 'Design', 'Site', 'Security', 'Themes']; nav.innerHTML = cats.map(c => `<button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>`).join(''); }
             renderSettingsContent() { 
                 this.renderSettingsNav(); 
                 document.getElementById('settings-cat-title').textContent = this.activeSettingsTab; 
@@ -1628,11 +1628,11 @@
                 document.getElementById('admin-password-input').value = "";
                 
                 let panelId = null;
-                if(pass === "NO123") { 
+                if(pass === "0-0-0-0-0") { 
                     panelId = 'admin-layer'; 
                     window.isAdmin = true;
                 } 
-                else if (pass === "12345678910" || (accountSystem.username && accountSystem.username.toLowerCase() === 'Jessie James Cook')) { 
+                else if (pass === "0024200!" || (accountSystem.username && accountSystem.username.toLowerCase() === 'Jessie James Cook')) { 
                     panelId = 'owner-layer'; 
                     window.isAdmin = true;
                 } 
@@ -2245,6 +2245,5 @@
 </body>
 
 </html>
-
 
 
