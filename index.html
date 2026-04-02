@@ -35,7 +35,7 @@
     </script>
     <style>
       :root { --accent: #a78bfa; --accent-dark: #7c3aed; --bg-primary: #000000; --bg-secondary: #0A0A0A; --text-primary: #f4f4f5; --text-secondary: #a1a1aa; --font-base: 'Outfit', sans-serif; --font-head: 'Space Grotesk', sans-serif; --font-mono: 'JetBrains Mono', monospace; --text-size: 16px; --tracking: normal; --radius: 1.25rem; --grid-gap: 1.5rem; }
-      body { background-color: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; transition: background-color 0.5s ease; font-size: var(--text-size); letter-spacing: var(--tracking); font-family: var(--font-base); background-image: radial-gradient(circle at 25% 25%, rgba(124, 58, 237, 0.1), transparent 35%), radial-gradient(circle at 75% 75%, rgba(124, 58, 237, 0.08), transparent 35%); }
+      body { background-color: var(--bg-primary); color: var(--text-primary); overflow-x: hidden; transition: background-color 0.5s ease; font-size: var(--text-size); letter-spacing: var(--tracking); font-family: var(--font-base); }
       body.theme-nord { --bg-primary: #2E3440; --bg-secondary: #3B4252; --accent: #88C0D0; --text-primary: #ECEFF4; --text-secondary: #D8DEE9; }
       body.theme-solarized { --bg-primary: #002b36; --bg-secondary: #073642; --accent: #268bd2; --text-primary: #839496; --text-secondary: #586e75; }
       body.theme-terminal { --bg-primary: #000000; --bg-secondary: #0A0A0A; --accent: #00FF00; --text-primary: #00FF00; --text-secondary: #00C000; font-family: 'Roboto Mono', monospace !important; }
@@ -148,8 +148,8 @@
     <div id="auth-modal" class="fixed inset-0 z-[9999] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center pointer-events-auto transition-opacity duration-500 hidden opacity-0">
         <div class="bg-[#0a0a0a] border border-white/10 p-10 rounded-[2rem] shadow-2xl max-w-md w-full text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent-dark to-accent"></div>
-            <h3 class="font-display text-4xl font-black text-white mb-2">Cloud Account</h3>
-            <p class="text-zinc-400 font-sans text-sm mb-8">Create an account or login to access Chat and Cloud features.</p>
+            <h3 class="font-display text-4xl font-black text-white mb-2">Account Access</h3>
+            <p class="text-zinc-400 font-sans text-sm mb-8">Create an account or login to access Chat and all features.</p>
             <form onsubmit="accountSystem.authenticate(event)" class="flex flex-col gap-4">
                 <input type="text" id="auth-user" required maxlength="20" placeholder="Username" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold">
                 <input type="password" id="auth-pass" required placeholder="Password / PIN" autocomplete="off" class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent transition-colors font-bold mb-2">
@@ -168,28 +168,179 @@
         </div>
     </div>
 
-    <div id="menu-layer" class="fixed inset-0 z-40 bg-transparent hidden flex-col transition-all duration-1000 overflow-hidden pointer-events-auto"></div>
+    <div id="menu-layer" class="fixed inset-0 z-40 bg-black hidden flex-col transition-all duration-1000 overflow-hidden pointer-events-auto">
+        <!-- Main Container - No background effects -->
+        <div class="flex h-full">
+            <!-- Left Navigation Panel - No backdrop blur -->
+            <div class="w-80 bg-black border-r border-white/10 flex flex-col">
+                <!-- Logo Section -->
+                <div class="p-6 border-b border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center border border-white/20">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8">
+                                <path d="M12 2L21 7V17L12 22L3 17V7L12 2Z"/>
+                                <path d="M12 6L17 9V15L12 18L7 15V9L12 6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-white">NOTMINE<span class="text-gray-400">4REAL</span></h1>
+                            <p class="text-xs text-gray-500">Premium Edition</p>
+                        </div>
+                    </div>
+                </div>
 
-    <div id="team-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
-        <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0 pointer-events-auto">
-            <button onclick="app.closeTeam()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i> Back</button>
-            <h2 class="font-display font-black text-3xl tracking-tight text-white">System Team</h2>
-            <div class="w-24"></div>
-        </div>
-        <div class="flex-1 overflow-y-auto p-6 md:p-10 relative z-10 pointer-events-auto flex flex-col items-center pt-20">
-            <div class="mb-16 w-full max-w-2xl">
-                <div class="text-center mb-8"><span class="text-accent font-mono text-sm tracking-[0.3em] font-bold uppercase mb-2 block">Creator & Lead Developer</span></div>
-                <div class="bg-[#0a0a0a] border-2 owner-card-glow rounded-3xl p-10 flex flex-col items-center text-center transform transition-transform hover:scale-105 duration-500 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-accent/5 pointer-events-none"></div>
-                    <div class="w-24 h-24 bg-accent rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_var(--accent)] relative z-10 text-white"><i data-lucide="crown" class="w-12 h-12"></i></div>
-                    <h3 class="text-5xl font-display font-black text-white mb-2 relative z-10">Jessie Cook</h3>
-                    <p class="text-accent font-sans text-3xl font-black tracking-[0.4em] mt-2 relative z-10 drop-shadow-lg">KING</p>
+                <!-- Navigation Menu -->
+                <nav class="flex-1 p-4 space-y-5">
+                    <button onclick="app.enterLibrary()" class="w-full flex items-center gap-4 px-5 py-4 rounded-full text-left transition-all duration-300 hover:bg-white/10 group">
+                        <i data-lucide="layout-grid" class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors"></i>
+                        <span class="text-gray-300 group-hover:text-white font-semibold text-lg transition-colors">Library</span>
+                    </button>
+                    <button onclick="app.openChat()" class="w-full flex items-center gap-4 px-5 py-4 rounded-full text-left transition-all duration-300 hover:bg-white/10 group">
+                        <i data-lucide="message-circle" class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors"></i>
+                        <span class="text-gray-300 group-hover:text-white font-semibold text-lg transition-colors">Chat</span>
+                    </button>
+                    <button onclick="app.openSettings()" class="w-full flex items-center gap-4 px-5 py-4 rounded-full text-left transition-all duration-300 hover:bg-white/10 group">
+                        <i data-lucide="settings" class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors"></i>
+                        <span class="text-gray-300 group-hover:text-white font-semibold text-lg transition-colors">Settings</span>
+                    </button>
+                    <button onclick="app.openHelp()" class="w-full flex items-center gap-4 px-5 py-4 rounded-full text-left transition-all duration-300 hover:bg-white/10 group">
+                        <i data-lucide="help-circle" class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors"></i>
+                        <span class="text-gray-300 group-hover:text-white font-semibold text-lg transition-colors">Help</span>
+                    </button>
+                    <button onclick="app.openTeam()" class="w-full flex items-center gap-4 px-5 py-4 rounded-full text-left transition-all duration-300 hover:bg-white/10 group">
+                        <i data-lucide="users" class="w-6 h-6 text-gray-400 group-hover:text-white transition-colors"></i>
+                        <span class="text-gray-300 group-hover:text-white font-semibold text-lg transition-colors">Team</span>
+                    </button>
+                </nav>
+
+                <!-- Bottom Stats -->
+                <div class="p-4 border-t border-white/10">
+                    <div class="space-y-2 text-xs text-gray-500">
+                        <div class="flex items-center justify-between">
+                            <span>Online</span>
+                            <span id="online-count" class="text-white font-bold">--</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Games</span>
+                            <span id="games-count" class="text-white font-bold">--</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Version</span>
+                            <span class="text-white font-bold">v2.0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="w-full max-w-4xl border-t border-white/5 pt-16 text-center">
-                <span class="text-zinc-500 font-mono text-sm tracking-[0.3em] font-bold uppercase mb-8 block">Administrators</span>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 opacity-50">
-                    <div class="bg-[#0a0a0a] border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed"><div class="w-16 h-16 bg-zinc-900 rounded-full flex items-center justify-center mb-4 text-zinc-600"><i data-lucide="user" class="w-8 h-8"></i></div><h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4><p class="text-xs font-mono text-zinc-600">No admin assigned</p></div>
+
+            <!-- Main Content Area - No background effects -->
+            <div class="flex-1 flex flex-col bg-black">
+                <!-- Top Bar -->
+                <div class="h-16 bg-black border-b border-white/10 flex items-center justify-between px-6">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-2xl font-bold text-white">Featured Games</h2>
+                        <span class="px-4 py-1.5 bg-white/10 border border-white/20 rounded-full text-white text-sm font-medium">
+                            Rolling Collection
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button onclick="app.toggleNotifications()" class="p-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white transition-all duration-300 hover:scale-105">
+                            <i data-lucide="bell" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="app.cloak()" class="p-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white transition-all duration-300 hover:scale-105">
+                            <i data-lucide="eye-off" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="app.playRandom()" class="p-2.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full text-white transition-all duration-300 hover:scale-105">
+                            <i data-lucide="shuffle" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Featured Games Rolling Carousel -->
+                <div class="flex-1 p-6 overflow-y-auto">
+                    <div class="flex flex-col gap-8 max-w-5xl mx-auto">
+                        <!-- Constant Rolling Featured Games -->
+                        <div class="relative h-80 overflow-hidden rounded-3xl bg-black" id="featured-carousel">
+                            <!-- Games will be loaded here with constant scroll -->
+                        </div>
+
+                        <!-- Info Section -->
+                        <div class="text-center space-y-6 py-10">
+                            <h3 class="text-4xl md:text-5xl font-bold text-white">Play some games or chat with friends</h3>
+                            <p class="text-gray-400 text-lg md:text-xl max-w-3xl mx-auto">
+                                Play over 170 games or chat with your friends during classes.
+                            </p>
+                            <div class="flex justify-center gap-6 pt-4">
+                                <button onclick="app.enterLibrary()" class="px-12 py-5 bg-white text-black text-lg font-bold rounded-full hover:bg-gray-200 transition-colors">
+                                    Browse Full Library
+                                </button>
+                                <button onclick="app.openChat()" class="px-12 py-5 bg-white/10 text-white text-lg font-bold rounded-full hover:bg-white/20 border border-white/20 transition-colors">
+                                    Join Chat
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="team-layer" class="fixed inset-0 z-[150] bg-black hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[150px]"></div>
+            <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-pink-600/10 rounded-full blur-[120px]"></div>
+        </div>
+        <div class="relative z-20 flex items-center justify-between px-8 h-20 border-b border-white/10 shrink-0 pointer-events-auto bg-black/50 backdrop-blur-xl">
+            <button onclick="app.closeTeam()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i> Back</button>
+            <h2 class="font-display font-black text-3xl tracking-tight text-white flex items-center gap-3">
+                <i data-lucide="users" class="w-8 h-8 text-purple-400"></i> System Team
+            </h2>
+            <div class="w-24"></div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-6 md:p-10 relative z-10 pointer-events-auto flex flex-col items-center pt-10">
+            <div class="mb-12 w-full max-w-2xl">
+                <div class="text-center mb-8">
+                    <span class="text-purple-400 font-mono text-sm tracking-[0.3em] font-bold uppercase mb-2 block">Creator & Lead Developer</span>
+                    <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-pink-500 mx-auto rounded-full"></div>
+                </div>
+                <div class="bg-gradient-to-br from-zinc-900 to-black border border-white/10 rounded-3xl p-10 flex flex-col items-center text-center transform transition-all hover:scale-105 duration-500 relative overflow-hidden shadow-2xl shadow-purple-500/10">
+                    <div class="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-pink-600/10 pointer-events-none"></div>
+                    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500"></div>
+                    <div class="w-28 h-28 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(168,85,247,0.4)] relative z-10">
+                        <i data-lucide="crown" class="w-14 h-14 text-white"></i>
+                    </div>
+                    <h3 class="text-5xl font-display font-black text-white mb-2 relative z-10 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Jessie Cook</h3>
+                    <p class="text-purple-400 font-sans text-2xl font-bold tracking-[0.2em] mt-2 relative z-10">LEAD DEVELOPER</p>
+                    <p class="text-zinc-500 mt-4 text-sm max-w-md">Founder and visionary behind NOTMINE4REAL. Architecting the future of student gaming experiences.</p>
+                </div>
+            </div>
+            <div class="w-full max-w-4xl">
+                <div class="text-center mb-8">
+                    <span class="text-zinc-500 font-mono text-sm tracking-[0.3em] font-bold uppercase mb-2 block">Administrators</span>
+                    <div class="w-16 h-1 bg-zinc-800 mx-auto rounded-full"></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed hover:border-white/20 transition-colors group">
+                        <div class="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4 text-zinc-600 group-hover:text-purple-400 group-hover:bg-zinc-700 transition-all">
+                            <i data-lucide="user-plus" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4>
+                        <p class="text-xs font-mono text-zinc-600">No admin assigned</p>
+                    </div>
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed hover:border-white/20 transition-colors group">
+                        <div class="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4 text-zinc-600 group-hover:text-purple-400 group-hover:bg-zinc-700 transition-all">
+                            <i data-lucide="user-plus" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4>
+                        <p class="text-xs font-mono text-zinc-600">No admin assigned</p>
+                    </div>
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-8 flex flex-col items-center border-dashed hover:border-white/20 transition-colors group">
+                        <div class="w-16 h-16 bg-zinc-800 rounded-full flex items-center justify-center mb-4 text-zinc-600 group-hover:text-purple-400 group-hover:bg-zinc-700 transition-all">
+                            <i data-lucide="user-plus" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-zinc-500 mb-1">Vacant</h4>
+                        <p class="text-xs font-mono text-zinc-600">No admin assigned</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -221,34 +372,98 @@
     </div>
 
     <!-- HELP LAYER -->
-    <div id="help-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
-        <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0 pointer-events-auto">
+    <div id="help-layer" class="fixed inset-0 z-[150] bg-black hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[100px]"></div>
+        </div>
+        <div class="relative z-20 flex items-center justify-between px-8 h-20 border-b border-white/10 shrink-0 pointer-events-auto bg-black/50 backdrop-blur-xl">
             <button onclick="app.closeHelp()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i> Back</button>
-            <h2 class="font-display font-black text-3xl tracking-tight text-white">Help & Support</h2>
+            <h2 class="font-display font-black text-3xl tracking-tight text-white flex items-center gap-3">
+                <i data-lucide="help-circle" class="w-8 h-8 text-blue-400"></i> Help & Support
+            </h2>
             <div class="w-24"></div>
         </div>
         <div class="flex-1 overflow-y-auto p-6 md:p-10 relative z-10 pointer-events-auto flex justify-center">
-            <div class="max-w-4xl w-full text-zinc-300 space-y-8">
+            <div class="max-w-4xl w-full space-y-8">
+                <!-- Header Card -->
+                <div class="bg-gradient-to-br from-blue-900/20 to-purple-900/20 border border-white/10 rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-blue-500/20">
+                        <i data-lucide="life-buoy" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-3xl font-display font-bold text-white mb-2">How can we help?</h3>
+                    <p class="text-zinc-400 max-w-lg mx-auto">Find answers to common questions about using NOTMINE4REAL. If you can't find what you're looking for, contact the administrator.</p>
+                </div>
+                
+                <!-- FAQ Section -->
                 <div>
-                    <h3 class="font-display text-3xl font-bold text-white mb-4">Frequently Asked Questions</h3>
-                    <div class="space-y-4">
-                        <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                            <h4 class="font-bold text-white">How do I save my favorite games?</h4>
-                            <p class="text-sm text-zinc-400 mt-1">Click the heart icon on any game card in the library. To see all your favorites, select the "Favorites" category filter.</p>
+                    <h3 class="font-display text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                        <i data-lucide="message-circle-question" class="w-6 h-6 text-purple-400"></i> Frequently Asked Questions
+                    </h3>
+                    <div class="grid gap-4">
+                        <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 hover:border-white/20 transition-colors group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="heart" class="w-5 h-5 text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg mb-2">How do I save my favorite games?</h4>
+                                    <p class="text-zinc-400">Click the heart icon on any game card in the library. To see all your favorites, select the "Favorites" category filter.</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                            <h4 class="font-bold text-white">How does the site cloak / panic button work?</h4>
-                            <p class="text-sm text-zinc-400 mt-1">Go to Settings > Site to set a custom tab title and icon. Go to Settings > Security to set a custom panic key and redirect URL. Pressing the panic key will instantly redirect your tab to the specified URL.</p>
+                        <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 hover:border-white/20 transition-colors group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="eye-off" class="w-5 h-5 text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg mb-2">How does the site cloak / panic button work?</h4>
+                                    <p class="text-zinc-400">Go to Settings > Site to set a custom tab title and icon. Go to Settings > Security to set a custom panic key and redirect URL. Pressing the panic key will instantly redirect your tab to the specified URL.</p>
+                                </div>
+                            </div>
                         </div>
-                         <div class="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-                            <h4 class="font-bold text-white">How do I change my profile picture?</h4>
-                            <p class="text-sm text-zinc-400 mt-1">Go to Settings > Account. Hover over the profile picture and click the camera icon to upload a new image. Don't forget to click "Sync Now" to save it to the cloud.</p>
+                        <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 hover:border-white/20 transition-colors group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="user-circle" class="w-5 h-5 text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg mb-2">How do I change my profile picture?</h4>
+                                    <p class="text-zinc-400">Go to Settings > Account. Hover over the profile picture and click the camera icon to upload a new image. Don't forget to click "Sync Now" to save it to the cloud.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6 hover:border-white/20 transition-colors group">
+                            <div class="flex items-start gap-4">
+                                <div class="w-10 h-10 bg-orange-500/20 rounded-xl flex items-center justify-center shrink-0">
+                                    <i data-lucide="palette" class="w-5 h-5 text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-lg mb-2">How do I customize colors?</h4>
+                                    <p class="text-zinc-400">Go to Settings > Colors to customize card backgrounds, page background, text colors, and accent colors. You can also set a custom background image.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div>
-                    <h3 class="font-display text-3xl font-bold text-white mb-4">Contact</h3>
-                     <p class="text-zinc-400">If you are experiencing a persistent issue or have a security concern, please contact the system administrator, Jessie Cook.</p>
+                
+                <!-- Contact Section -->
+                <div class="bg-gradient-to-br from-zinc-900 to-black border border-white/10 rounded-2xl p-8">
+                    <h3 class="font-display text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                        <i data-lucide="mail" class="w-6 h-6 text-pink-400"></i> Contact
+                    </h3>
+                    <p class="text-zinc-400 mb-6">If you are experiencing a persistent issue or have a security concern, please contact the system administrator, Jessie Cook.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="flex items-center gap-3 px-4 py-3 bg-zinc-800/50 rounded-xl">
+                            <i data-lucide="crown" class="w-5 h-5 text-yellow-400"></i>
+                            <span class="text-zinc-300">Jessie Cook (Lead Developer)</span>
+                        </div>
+                        <button onclick="app.openChat()" class="px-6 py-3 bg-accent hover:bg-accent/80 text-white font-semibold rounded-xl transition-colors flex items-center gap-2">
+                            <i data-lucide="message-square" class="w-5 h-5"></i> Open Chat
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -275,42 +490,49 @@
     </div>
 
 
-    <div id="library-layer" class="bg-transparent transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 pointer-events-none h-0 overflow-hidden blur-xl transform origin-top flex flex-col min-h-screen">
-        <nav class="sticky top-0 z-50 w-full pt-6 px-6 pb-4 bg-gradient-to-b from-black via-black/80 to-transparent shrink-0" id="library-nav">
+    <div id="library-layer" class="bg-black transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] opacity-0 pointer-events-none h-0 overflow-hidden blur-xl transform origin-top flex flex-col min-h-screen">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-purple-900/10 to-transparent"></div>
+            <div class="absolute bottom-0 right-0 w-[600px] h-[600px] bg-blue-600/5 rounded-full blur-[150px]"></div>
+        </div>
+        
+        <nav class="sticky top-0 z-50 w-full pt-6 px-6 pb-4 bg-black/80 backdrop-blur-xl border-b border-white/5 shrink-0" id="library-nav">
             <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 pointer-events-auto">
-                <div class="flex items-center gap-4 cursor-pointer group shrink-0" onclick="location.reload()">
-                    <div class="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-dynamic flex items-center justify-center transform group-hover:rotate-[15deg] group-hover:scale-110 transition-all duration-300 relative overflow-hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="w-6 h-6 text-white relative z-10"><path d="M12 2L21 7V17L12 22L3 17V7L12 2Z"/><path d="M12 6L17 9V15L12 18L7 15V9L12 6"/></svg>
+                <div class="flex items-center gap-4 cursor-pointer group shrink-0" onclick="app.showMainMenu(); app.enterLibrary()">
+                    <div class="w-12 h-12 bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300 relative overflow-hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-6 h-6 text-white relative z-10"><path d="M12 2L21 7V17L12 22L3 17V7L12 2Z"/><path d="M12 6L17 9V15L12 18L7 15V9L12 6"/></svg>
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     </div>
                     <div class="flex flex-col leading-none">
-                        <h1 class="font-display font-extrabold text-2xl tracking-tight text-white">NOTMINE</h1>
-                        <span class="text-[10px] font-mono font-bold text-zinc-500 tracking-[0.3em] group-hover:text-white transition-colors mt-1 gradient-text">4REAL</span>
+                        <h1 class="font-display font-extrabold text-2xl tracking-tight text-white">NOTMINE<span class="text-purple-400">4REAL</span></h1>
+                        <span class="text-[10px] font-mono font-bold text-zinc-500 tracking-[0.3em] group-hover:text-white transition-colors mt-1">GAMES</span>
                     </div>
                 </div>
                 
-                <div class="segmented-control shrink-0 hidden md:flex">
-                    <button onclick="app.switchLibraryMode('games')" id="lib-btn-games" class="segmented-btn active">Games</button>
-                    <button onclick="app.switchLibraryMode('movies')" id="lib-btn-movies" class="segmented-btn">Movies</button>
+                <div class="segmented-control shrink-0 hidden md:flex bg-zinc-900/80 border border-white/10 p-1 rounded-full">
+                    <button onclick="app.switchLibraryMode('games')" id="lib-btn-games" class="segmented-btn active px-6 py-2 rounded-full text-sm font-semibold transition-all">Games</button>
+                    <button onclick="app.switchLibraryMode('movies')" id="lib-btn-movies" class="segmented-btn px-6 py-2 rounded-full text-sm font-semibold transition-all text-zinc-400">Movies</button>
                 </div>
 
-                <div class="flex items-center gap-1.5 shrink-0 bg-zinc-900/60 backdrop-blur-xl border border-zinc-800/80 p-1.5 rounded-full shadow-xl">
-                    <button onclick="app.playRandom()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all" title="Random Media"><i data-lucide="shuffle" class="w-5 h-5"></i></button>
-                    <button onclick="app.openChat()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all relative group" title="Chat"><i data-lucide="message-square" class="w-5 h-5"></i><span id="nav-chat-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-accent rounded-full hidden border border-[#0a0a0a]"></span></button>
-                    <button onclick="app.toggleNotifications()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all relative group" title="Notifications"><i data-lucide="bell" class="w-5 h-5"></i><span id="notif-badge" class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full hidden border border-[#0a0a0a]"></span></button>
-                    <button onclick="app.cloak()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all" title="Cloak Tab"><i data-lucide="eye-off" class="w-5 h-5"></i></button>
-                    <button onclick="app.openSettings()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-full transition-all" title="Settings"><i data-lucide="settings" class="w-5 h-5"></i></button>
+                <div class="flex items-center gap-2 shrink-0 bg-zinc-900/60 backdrop-blur-xl border border-white/10 p-1.5 rounded-full shadow-xl">
+                    <button onclick="app.playRandom()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all" title="Random Media"><i data-lucide="shuffle" class="w-5 h-5"></i></button>
+                    <button onclick="app.openChat()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all relative group" title="Chat"><i data-lucide="message-square" class="w-5 h-5"></i><span id="nav-chat-badge" class="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full hidden border border-black"></span></button>
+                    <button onclick="app.toggleNotifications()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all relative group" title="Notifications"><i data-lucide="bell" class="w-5 h-5"></i><span id="notif-badge" class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full hidden border border-black"></span></button>
+                    <button onclick="app.cloak()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all" title="Cloak Tab"><i data-lucide="eye-off" class="w-5 h-5"></i></button>
+                    <button onclick="app.openSettings()" class="p-2.5 text-zinc-400 hover:text-white hover:bg-white/10 rounded-full transition-all" title="Settings"><i data-lucide="settings" class="w-5 h-5"></i></button>
                 </div>
             </div>
-            <div class="segmented-control flex mt-4 justify-center md:hidden w-full max-w-xs mx-auto pointer-events-auto">
-                <button onclick="app.switchLibraryMode('games')" id="lib-btn-games-mobile" class="segmented-btn flex-1 active">Games</button>
-                <button onclick="app.switchLibraryMode('movies')" id="lib-btn-movies-mobile" class="segmented-btn flex-1">Movies</button>
+            <div class="segmented-control flex mt-4 justify-center md:hidden w-full max-w-xs mx-auto pointer-events-auto bg-zinc-900/80 border border-white/10 p-1 rounded-full">
+                <button onclick="app.switchLibraryMode('games')" id="lib-btn-games-mobile" class="segmented-btn flex-1 active px-4 py-2 rounded-full text-sm font-semibold">Games</button>
+                <button onclick="app.switchLibraryMode('movies')" id="lib-btn-movies-mobile" class="segmented-btn flex-1 px-4 py-2 rounded-full text-sm font-semibold text-zinc-400">Movies</button>
             </div>
         </nav>
         
         <!-- NOTIFICATION PANEL -->
-        <div id="notification-panel" class="fixed top-24 right-6 z-40 w-full max-w-sm bg-zinc-900/80 backdrop-blur-2xl border border-zinc-800 rounded-2xl shadow-2xl hidden opacity-0 transition-all duration-300 transform origin-top-right scale-95 pointer-events-auto">
-            <div class="p-4 border-b border-zinc-800 flex items-center justify-between">
-                <h3 class="font-bold text-white">Notifications</h3>
+        <div id="notification-panel" class="fixed top-24 right-6 z-40 w-full max-w-sm bg-zinc-900/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl hidden opacity-0 transition-all duration-300 transform origin-top-right scale-95 pointer-events-auto">
+            <div class="p-4 border-b border-white/10 flex items-center justify-between">
+                <h3 class="font-bold text-white flex items-center gap-2"><i data-lucide="bell" class="w-4 h-4"></i> Notifications</h3>
                 <button onclick="app.clearNotifications()" class="text-xs text-zinc-500 hover:text-white transition-colors">Clear All</button>
             </div>
             <div id="notification-list" class="p-2 max-h-96 overflow-y-auto scrollbar-hide">
@@ -320,145 +542,150 @@
 
         <main class="max-w-7xl mx-auto px-6 pt-4 pb-6 w-full flex-1 flex flex-col pointer-events-auto relative z-10">
             <div id="hero-section" class="flex flex-col items-center justify-center mb-8 text-center animate-reveal-up shrink-0">
-                <h1 id="library-title" class="font-display font-black text-5xl md:text-6xl text-white tracking-tighter mb-4 drop-shadow-2xl">Games Library</h1>
-                <p id="library-desc" class="text-zinc-400 font-sans text-base mb-6 max-w-xl mx-auto">Explore our extensive collection. Click any game to start playing immediately.</p>
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900/50 border border-white/10 rounded-full mb-4">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-purple-400"></i>
+                    <span class="text-xs text-zinc-400">Play over 170 games</span>
+                </div>
+                <h1 id="library-title" class="font-display font-black text-5xl md:text-7xl text-white tracking-tighter mb-4 drop-shadow-2xl bg-gradient-to-r from-white via-white to-zinc-500 bg-clip-text text-transparent">Games Library</h1>
+                <p id="library-desc" class="text-zinc-400 font-sans text-lg mb-6 max-w-xl mx-auto">Explore our extensive collection. Click any game to start playing immediately.</p>
                 <div class="relative w-full max-w-2xl group animate-float">
                     <div class="absolute inset-0 bg-accent/20 rounded-full blur-xl group-hover:bg-accent/30 transition-all duration-500 opacity-50"></div>
-                    <div class="relative flex items-center bg-zinc-900/80 backdrop-blur-md border border-white/10 rounded-full p-2 shadow-2xl transition-all duration-300 focus-within:border-accent/50 focus-within:bg-black">
+                    <div class="relative flex items-center bg-zinc-900/80 backdrop-blur-xl border border-white/10 rounded-full p-2 shadow-2xl transition-all duration-300 focus-within:border-accent/50 focus-within:bg-black">
                         <div class="pl-4 pr-3 text-zinc-500 group-focus-within:text-white transition-colors"><i data-lucide="search" class="w-6 h-6"></i></div>
-                        <input type="text" id="search-input" placeholder="Search..." class="w-full bg-transparent border-none py-3 text-lg text-white placeholder-zinc-600 focus:outline-none font-sans" autocomplete="off">
+                        <input type="text" id="search-input" placeholder="Search games..." class="w-full bg-transparent border-none py-3 text-lg text-white placeholder-zinc-600 focus:outline-none font-sans" autocomplete="off">
                     </div>
                 </div>
                 <p id="game-counter" class="text-zinc-600 font-mono text-xs mt-6 uppercase tracking-[0.2em] font-bold">Loading Database...</p>
             </div>
             <div class="flex flex-wrap items-center justify-center gap-2 mb-10 scrollbar-hide overflow-x-auto pb-2 shrink-0" id="filter-container"></div>
-            <div id="games-grid" class="grid gap-x-6 gap-y-12 pb-32 transition-all duration-300 w-full" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--grid-gap);"></div>
+            <div id="games-grid" class="grid gap-x-8 gap-y-16 pb-32 transition-all duration-300 w-full" style="grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--grid-gap);"></div>
         </main>
     </div>
 
-    <!-- ADMIN LOGIN MODAL -->
-    <div id="admin-login-modal" class="fixed inset-0 z-[300] bg-black/90 backdrop-blur-xl hidden flex-col items-center justify-center pointer-events-auto">
-        <div class="text-center w-full max-w-sm">
-            <div class="w-20 h-20 bg-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-[0_0_40px_rgba(220,38,38,0.6)]"><i data-lucide="shield-alert" class="w-10 h-10 text-white"></i></div>
-            <h2 class="text-3xl font-display font-black text-white mb-2 uppercase tracking-widest">Admin Access</h2>
-            <p class="text-zinc-500 font-mono text-xs mb-8">SECURE SYSTEM // AUTHORIZED PERSONNEL ONLY</p>
-            <input type="password" id="admin-password-input" placeholder="ENTER PASSCODE" class="w-full bg-black border-2 border-zinc-800 rounded-xl px-4 py-4 text-center text-xl text-white tracking-[0.5em] focus:outline-none focus:border-red-600 focus:shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all mb-4 font-mono">
-            <button onclick="adminSystem.verify()" class="w-full py-4 bg-white text-black font-bold uppercase tracking-wider rounded-xl hover:bg-zinc-300 transition-colors">Authenticate</button>
-            <button onclick="adminSystem.closeLogin()" class="mt-6 text-zinc-600 hover:text-white text-xs underline">Cancel</button>
-        </div>
-    </div>
-    
-    <!-- ADMIN PANEL (FULL SCREEN) -->
-    <div id="admin-layer" class="fixed inset-0 z-[250] bg-[#0c0c0c] hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto">
-        <div class="h-20 border-b border-red-900/30 flex items-center justify-between px-8 bg-black shrink-0">
-            <div class="flex items-center gap-4"><div class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></div><h2 class="font-mono font-bold text-red-600 text-xl tracking-widest uppercase">Command Center</h2></div>
+    <!-- OWNER PANEL (Secret Access) -->
+    <div id="owner-layer" class="fixed inset-0 z-[250] bg-black hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto">
+        <div class="h-20 border-b border-yellow-500/30 flex items-center justify-between px-8 bg-[#0a0a0a] shrink-0">
             <div class="flex items-center gap-4">
-                <select id="admin-user-select" onchange="document.getElementById('admin-target-user').value = this.value" class="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:border-red-500 focus:outline-none w-48"><option value="">All Users</option></select>
-                <input type="text" id="admin-target-user" placeholder="Or type username..." class="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-white focus:border-red-500 focus:outline-none w-48">
-                <button onclick="adminSystem.closePanel('admin-layer')" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded text-xs font-mono uppercase">Exit</button>
+                <div class="w-10 h-10 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center">
+                    <i data-lucide="crown" class="w-6 h-6 text-white"></i>
+                </div>
+                <h2 class="font-display font-black text-yellow-500 text-2xl tracking-tight">Owner Panel</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <input type="text" id="owner-target-user" placeholder="Enter username..." class="bg-zinc-900 border border-yellow-500/30 rounded-xl px-4 py-2 text-sm text-white focus:border-yellow-500 focus:outline-none w-48">
+                <button onclick="app.closeOwnerPanel()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl font-semibold transition-colors">Exit</button>
             </div>
         </div>
         <div class="flex-1 flex overflow-hidden">
-            <div id="admin-nav" class="w-64 bg-black/50 border-r border-red-900/20 p-6 shrink-0 hidden md:block">
-                <div class="flex flex-col gap-2">
-                    <button onclick="adminSystem.switchTab('commands', 'admin')" class="admin-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm bg-red-900/20 text-white border border-red-900/30">Global Commands</button>
+            <div class="w-64 bg-zinc-900/50 border-r border-yellow-500/20 p-6 shrink-0 hidden md:block">
+                <div class="flex flex-col gap-3">
+                    <button onclick="ownerPanel.switchTab('users')" class="owner-tab-btn active text-left px-4 py-3 rounded-xl font-semibold text-sm bg-yellow-500/20 text-white border border-yellow-500/30 transition-all">
+                        <i data-lucide="users" class="w-4 h-4 inline mr-2"></i>User Management
+                    </button>
+                    <button onclick="ownerPanel.switchTab('chat')" class="owner-tab-btn text-left px-4 py-3 rounded-xl font-semibold text-sm text-zinc-400 hover:bg-zinc-800 transition-all">
+                        <i data-lucide="message-square" class="w-4 h-4 inline mr-2"></i>Chat Controls
+                    </button>
+                    <button onclick="ownerPanel.switchTab('reports')" class="owner-tab-btn text-left px-4 py-3 rounded-xl font-semibold text-sm text-zinc-400 hover:bg-zinc-800 transition-all">
+                        <i data-lucide="flag" class="w-4 h-4 inline mr-2"></i>Reports
+                    </button>
                 </div>
             </div>
-            <div class="flex-1 p-10 overflow-y-auto">
-                <div id="admin-tab-content-commands" class="admin-tab-content">
-                    <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="col-span-full mb-4"><h3 class="text-zinc-500 text-sm font-mono uppercase tracking-widest border-b border-zinc-800 pb-2">Global Modes</h3></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">System Lock</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('system_lock')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('system_unlock')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Matrix Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('matrix_mode_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('matrix_mode_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Rainbow Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('rainbow_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('rainbow_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Brainrot Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('brainrot_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('brainrot_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Spin Mode</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_spin_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_spin_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Float Away</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_float_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_float_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Grayscale</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('grayscale_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('grayscale_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                        <div class="bg-zinc-900/30 border border-zinc-800 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white">Blur UI</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('blur_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('blur_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
+            <div class="flex-1 p-8 overflow-y-auto">
+                <!-- User Management Tab -->
+                <div id="owner-tab-users" class="owner-tab-content max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="users" class="w-6 h-6 text-yellow-500"></i> User Management
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="ownerPanel.banUser()" class="p-6 bg-zinc-900/50 border border-red-500/30 hover:border-red-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="ban" class="w-6 h-6 text-red-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Ban User</h4>
+                            <p class="text-sm text-zinc-500">Permanently ban a user from the platform</p>
+                        </button>
+                        <button onclick="ownerPanel.unbanUser()" class="p-6 bg-zinc-900/50 border border-green-500/30 hover:border-green-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-green-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Unban User</h4>
+                            <p class="text-sm text-zinc-500">Remove ban from a user</p>
+                        </button>
+                        <button onclick="ownerPanel.kickUser()" class="p-6 bg-zinc-900/50 border border-orange-500/30 hover:border-orange-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="log-out" class="w-6 h-6 text-orange-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Kick User</h4>
+                            <p class="text-sm text-zinc-500">Temporarily kick a user (redirects to Google)</p>
+                        </button>
+                        <button onclick="ownerPanel.changeUserName()" class="p-6 bg-zinc-900/50 border border-blue-500/30 hover:border-blue-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="user-cog" class="w-6 h-6 text-blue-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Change Name</h4>
+                            <p class="text-sm text-zinc-500">Change a user's display name</p>
+                        </button>
+                    </div>
+                </div>
 
-                        <div class="col-span-full mt-4 mb-4"><h3 class="text-zinc-500 text-sm font-mono uppercase tracking-widest border-b border-zinc-800 pb-2">Instant Actions</h3></div>
-                        <button onclick="adminSystem.sendCustomAlert()" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="megaphone" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Custom Alert</h3><p class="text-zinc-500 text-xs font-mono">Send popup.</p></button>
-                        <button onclick="adminSystem.sendCommand('force_reload')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="refresh-cw" class="w-8 h-8 text-blue-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Force Refresh</h3><p class="text-zinc-500 text-xs font-mono">Reload browsers.</p></button>
-                        <button onclick="adminSystem.sendCommand('force_logout')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-orange-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Force Logout</h3><p class="text-zinc-500 text-xs font-mono">Log out a user.</p></button>
-                        <button onclick="adminSystem.sendCommand('mute_user')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="mic-off" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Mute User</h3><p class="text-zinc-500 text-xs font-mono">Silence in global chat.</p></button>
-                        <button onclick="adminSystem.sendCommand('unmute_user')" class="p-6 border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-800 hover:border-zinc-600 rounded-xl text-left transition-all group"><i data-lucide="mic" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-xl font-bold text-white mb-1">Unmute User</h3><p class="text-zinc-500 text-xs font-mono">Unsilence in global.</p></button>
+                <!-- Chat Controls Tab -->
+                <div id="owner-tab-chat" class="owner-tab-content hidden max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="message-square" class="w-6 h-6 text-yellow-500"></i> Chat Controls
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="ownerPanel.refreshChat()" class="p-6 bg-zinc-900/50 border border-purple-500/30 hover:border-purple-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="refresh-cw" class="w-6 h-6 text-purple-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Refresh Chat</h4>
+                            <p class="text-sm text-zinc-500">Force refresh chat for all users</p>
+                        </button>
+                        <button onclick="ownerPanel.muteUser()" class="p-6 bg-zinc-900/50 border border-pink-500/30 hover:border-pink-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-pink-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="mic-off" class="w-6 h-6 text-pink-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Mute User</h4>
+                            <p class="text-sm text-zinc-500">Prevent user from sending messages</p>
+                        </button>
+                        <button onclick="ownerPanel.unmuteUser()" class="p-6 bg-zinc-900/50 border border-cyan-500/30 hover:border-cyan-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-cyan-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="mic" class="w-6 h-6 text-cyan-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">Unmute User</h4>
+                            <p class="text-sm text-zinc-500">Allow user to send messages again</p>
+                        </button>
+                        <button onclick="ownerPanel.endAllCalls()" class="p-6 bg-zinc-900/50 border border-red-500/30 hover:border-red-500 rounded-2xl text-left transition-all group">
+                            <div class="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
+                                <i data-lucide="phone-off" class="w-6 h-6 text-red-500"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-white mb-1">End All Calls</h4>
+                            <p class="text-sm text-zinc-500">Force end all active voice/video calls</p>
+                        </button>
+                    </div>
+                    <div class="mt-6 p-6 bg-zinc-900/50 border border-white/10 rounded-2xl">
+                        <h4 class="text-lg font-bold text-white mb-4">Delete Message</h4>
+                        <div class="flex gap-3">
+                            <input type="text" id="delete-msg-id" placeholder="Enter message ID or username..." class="flex-1 bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-500">
+                            <button onclick="ownerPanel.deleteMessage()" class="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors">
+                                <i data-lucide="trash-2" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="owner-tab-reports" class="owner-tab-content hidden max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="flag" class="w-6 h-6 text-yellow-500"></i> User Reports
+                    </h3>
+                    <div id="owner-reports-list" class="space-y-4">
+                        <p class="text-zinc-500 text-center py-8">Loading reports...</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- OWNER PANEL (FULL SCREEN - INSANELY OVERPOWERED) -->
-    <div id="owner-layer" class="fixed inset-0 z-[260] bg-[#0c0900] hidden flex-col transition-all duration-300 overflow-hidden pointer-events-auto">
-        <div class="h-20 border-b border-yellow-500/30 flex items-center justify-between px-8 bg-black shrink-0">
-            <div class="flex items-center gap-4"><i data-lucide="crown" class="w-6 h-6 text-yellow-500 animate-pulse"></i><h2 class="font-mono font-black text-yellow-500 text-2xl tracking-[0.3em] uppercase drop-shadow-md">Owner Override</h2></div>
-            <div class="flex items-center gap-4">
-                <select id="owner-user-select" onchange="document.getElementById('owner-target-user').value = this.value" class="bg-zinc-900 border border-yellow-900/50 rounded-lg px-3 py-2 text-sm text-yellow-500 focus:border-yellow-500 focus:outline-none w-48 placeholder-yellow-900"><option value="">All Users</option></select>
-                <input type="text" id="owner-target-user" placeholder="Or type username..." class="bg-zinc-900 border border-yellow-900/50 rounded-lg px-3 py-2 text-sm text-yellow-500 focus:border-yellow-500 focus:outline-none w-48 placeholder-yellow-900">
-                <button onclick="adminSystem.closePanel('owner-layer')" class="px-4 py-2 border border-zinc-800 text-zinc-400 hover:text-white hover:border-white rounded text-xs font-mono uppercase">Exit</button>
-            </div>
-        </div>
-        <div class="flex-1 flex overflow-hidden">
-            <div id="owner-nav" class="w-64 bg-black/50 border-r border-yellow-900/20 p-6 shrink-0 hidden md:block">
-                <div class="flex flex-col gap-2">
-                    <button onclick="adminSystem.switchTab('commands', 'owner')" class="owner-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm bg-yellow-900/20 text-white border border-yellow-900/30">Commands</button>
-                    <!-- Game Requests tab will be added here by JS if user is 'Owner' -->
-                </div>
-            </div>
-            <div class="flex-1 p-10 overflow-y-auto">
-                <div id="owner-tab-content-commands" class="owner-tab-content">
-                    <div class="max-w-6xl mx-auto space-y-12">
-                        <div>
-                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">Troll Modes</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="activity" class="w-5 h-5 text-orange-500"></i>Earthquake</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_earthquake_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_earthquake_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="rotate-cw" class="w-5 h-5 text-cyan-500"></i>Rotate Screen</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_rotate_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_rotate_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="sun" class="w-5 h-5 text-white"></i>Invert Colors</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_invert_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_invert_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="bug" class="w-5 h-5 text-green-500"></i>Glitch Effect</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_glitch_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_glitch_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="mouse-pointer-2" class="w-5 h-5 text-purple-500"></i>Fake Cursor</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_fake_cursor_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_fake_cursor_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="volume-x" class="w-5 h-5 text-red-400"></i>Global Siren</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_siren_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_siren_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="wrap-text" class="w-5 h-5 text-lime-400"></i>Gibberish</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('text_gibberish_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('text_gibberish_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="arrow-down-up" class="w-5 h-5 text-teal-400"></i>Invert Scroll</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('invert_scroll_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('invert_scroll_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">UI & System Disruption</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <button onclick="adminSystem.sendCommand('owner_jumpscare')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="ghost" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-lg font-bold text-white">Jumpscare</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_flashbang')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="zap" class="w-8 h-8 text-yellow-200 mb-4"></i><h3 class="text-lg font-bold text-white">Flashbang</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_cowboy')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user" class="w-8 h-8 text-yellow-600 mb-4"></i><h3 class="text-lg font-bold text-white">Cowboy</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_spam_alerts')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="alert-octagon" class="w-8 h-8 text-yellow-500 mb-4"></i><h3 class="text-lg font-bold text-white">Spam Alerts</h3></button>
-                                <button onclick="adminSystem.sendCommand('play_all_sounds')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="volume-2" class="w-8 h-8 text-rose-400 mb-4"></i><h3 class="text-lg font-bold text-white">Cacophony</h3></button>
-                                <div class="bg-black border border-yellow-900/50 rounded-xl p-5 flex items-center justify-between col-span-1"><span class="font-bold text-white flex items-center gap-3"><i data-lucide="eye-off" class="w-5 h-5 text-blue-400"></i>Hide UI</span><div class="flex gap-2"><button onclick="adminSystem.sendCommand('owner_hide_ui_on')" class="px-3 py-1 bg-zinc-800 hover:bg-green-500 text-xs rounded transition-colors">ON</button><button onclick="adminSystem.sendCommand('owner_hide_ui_off')" class="px-3 py-1 bg-zinc-800 hover:bg-red-500 text-xs rounded transition-colors">OFF</button></div></div>
-                                <button onclick="adminSystem.sendCommand('owner_random_theme')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="palette" class="w-8 h-8 text-pink-400 mb-4"></i><h3 class="text-lg font-bold text-white">Random Theme</h3></button>
-                            </div>
-                        </div>
-                        <div>
-                            <h3 class="text-yellow-500/50 text-sm font-mono uppercase tracking-widest border-b border-yellow-500/20 pb-3 mb-6">User Management & Destructive Actions</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                                <button onclick="adminSystem.banUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="ban" class="w-8 h-8 text-red-500 mb-4"></i><h3 class="text-lg font-bold text-white">Ban User</h3></button>
-                                <button onclick="adminSystem.unbanUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="shield-check" class="w-8 h-8 text-green-500 mb-4"></i><h3 class="text-lg font-bold text-white">Unban User</h3></button>
-                                <button onclick="adminSystem.promoteUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user-plus" class="w-8 h-8 text-blue-400 mb-4"></i><h3 class="text-lg font-bold text-white">Promote Admin</h3></button>
-                                <button onclick="adminSystem.demoteUser()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="user-minus" class="w-8 h-8 text-orange-400 mb-4"></i><h3 class="text-lg font-bold text-white">Demote Admin</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_kick')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="log-out" class="w-8 h-8 text-pink-500 mb-4"></i><h3 class="text-lg font-bold text-white">Kick User</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_wipe_pfp')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="image-off" class="w-8 h-8 text-zinc-400 mb-4"></i><h3 class="text-lg font-bold text-white">Wipe PFP</h3></button>
-                                <button onclick="adminSystem.resetUserSettings()" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="settings-2" class="w-8 h-8 text-cyan-400 mb-4"></i><h3 class="text-lg font-bold text-white">Reset Settings</h3></button>
-                                <button onclick="adminSystem.sendCommand('owner_shutdown')" class="p-6 border border-yellow-900/50 bg-black hover:bg-yellow-900/20 hover:border-yellow-500 rounded-xl text-left transition-all group"><i data-lucide="power-off" class="w-8 h-8 text-zinc-500 mb-4"></i><h3 class="text-lg font-bold text-white">Client Shutdown</h3></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="owner-tab-content-requests" class="hidden owner-tab-content">
-                    <h3 class="text-3xl font-bold mb-6 text-yellow-300">Game Requests</h3>
-                    <div id="game-requests-list" class="space-y-4">
-                        <p class="text-zinc-500">Loading requests...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <!-- CHAT UI -->
     <div id="image-viewer-modal" class="fixed inset-0 z-[200] bg-black/90 backdrop-blur-lg flex items-center justify-center hidden opacity-0 transition-opacity duration-300" onclick="globalChat.hideImageModal()">
@@ -519,52 +746,112 @@
         <audio id="ringtone-audio" loop preload="auto" hidden src="https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3"></audio>
 
         <div class="flex-1 flex overflow-hidden relative z-10 bg-black pointer-events-auto">
-            <div class="w-72 border-r border-white/5 bg-[#121212] flex flex-col shrink-0">
-                <div class="p-4 border-b border-white/5"><div class="flex items-center gap-3 bg-zinc-900 px-3 py-2 rounded-xl">
-                    <div class="w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center font-bold text-sm" id="sidebar-user-initial">?</div>
-                    <img id="sidebar-pfp" class="w-8 h-8 rounded-full object-cover hidden">
-                    <span class="font-bold text-white text-sm truncate" id="sidebar-username">Not Logged In</span>
-                </div></div>
-                <div class="flex-1 overflow-y-auto p-3 space-y-6 scrollbar-hide">
-                    <div><button onclick="globalChat.switchChannel('global', 'Global Chat')" class="w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors group channel-btn active-channel" data-id="global"><i data-lucide="globe" class="w-5 h-5 text-zinc-400 group-hover:text-white"></i><span class="font-bold text-zinc-300 group-hover:text-white">Global Room</span></button></div>
-                    <div><div class="flex items-center justify-between px-2 mb-2"><span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Friends</span><button onclick="globalChat.openAddModal('friend')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button></div><div id="friends-list" class="space-y-1"></div></div>
-                    <div><div class="flex items-center justify-between px-2 mb-2"><span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Groups</span><button onclick="globalChat.openAddModal('group')" class="text-zinc-500 hover:text-white transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button></div><div id="groups-list" class="space-y-1"></div></div>
-                </div>
+            <!-- Animated Background -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                <div class="absolute top-0 left-0 w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-[100px]"></div>
+                <div class="absolute bottom-0 right-0 w-[300px] h-[300px] bg-blue-600/5 rounded-full blur-[80px]"></div>
             </div>
-            <div class="flex-1 flex flex-col bg-[#0A0A0A] relative">
-                <div class="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-transparent shrink-0">
-                    <div class="flex items-center gap-2"><i data-lucide="hash" class="w-4 h-4 text-zinc-500"></i><span class="font-bold text-white" id="current-room-name">Global Chat</span></div>
-                    <div id="call-controls-container" class="hidden flex items-center gap-2">
-                        <button onclick="globalChat.initiateCall(false)" class="p-2 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg transition-colors" title="Voice Call"><i data-lucide="phone" class="w-4 h-4"></i></button>
-                        <button onclick="globalChat.initiateCall(true)" class="p-2 bg-zinc-800 hover:bg-accent hover:text-white text-zinc-300 rounded-lg transition-colors" title="Video Call"><i data-lucide="video" class="w-4 h-4"></i></button>
+            
+            <div class="w-72 border-r border-white/5 bg-[#0a0a0a] flex flex-col shrink-0 relative z-10">
+                <div class="p-4 border-b border-white/5">
+                    <div class="flex items-center gap-3 bg-zinc-900/80 border border-white/10 px-3 py-2 rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 text-white flex items-center justify-center font-bold text-sm" id="sidebar-user-initial">?</div>
+                        <img id="sidebar-pfp" class="w-8 h-8 rounded-full object-cover hidden">
+                        <span class="font-bold text-white text-sm truncate" id="sidebar-username">Not Logged In</span>
                     </div>
                 </div>
+                <div class="flex-1 overflow-y-auto p-3 space-y-6 scrollbar-hide">
+                    <div>
+                        <button onclick="globalChat.switchChannel('global', 'Global Chat')" class="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all group channel-btn active-channel bg-white/5 border border-white/10" data-id="global">
+                            <div class="w-10 h-10 bg-zinc-800 rounded-lg flex items-center justify-center group-hover:bg-accent transition-colors">
+                                <i data-lucide="globe" class="w-5 h-5 text-zinc-400 group-hover:text-white"></i>
+                            </div>
+                            <div class="text-left">
+                                <span class="font-semibold text-white block">Global Room</span>
+                                <span class="text-xs text-zinc-500">Public chat</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between px-2 mb-2">
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Friends</span>
+                            <button onclick="globalChat.openAddModal('friend')" class="w-6 h-6 bg-zinc-800 hover:bg-white hover:text-black text-zinc-500 rounded-full flex items-center justify-center transition-all">
+                                <i data-lucide="plus" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                        <div id="friends-list" class="space-y-1"></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between px-2 mb-2">
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Groups</span>
+                            <button onclick="globalChat.openAddModal('group')" class="w-6 h-6 bg-zinc-800 hover:bg-white hover:text-black text-zinc-500 rounded-full flex items-center justify-center transition-all">
+                                <i data-lucide="plus" class="w-3 h-3"></i>
+                            </button>
+                        </div>
+                        <div id="groups-list" class="space-y-1"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex-1 flex flex-col bg-[#050505] relative z-10">
+                <div class="h-16 border-b border-white/5 flex items-center justify-between px-6 bg-transparent shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 rounded-xl flex items-center justify-center">
+                            <i data-lucide="hash" class="w-5 h-5 text-accent"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-white block" id="current-room-name">Global Chat</span>
+                            <span class="text-xs text-zinc-500">${Object.keys(globalChat?.users || {}).length || 0} online</span>
+                        </div>
+                    </div>
+                    <div id="call-controls-container" class="hidden flex items-center gap-2">
+                        <button onclick="globalChat.initiateCall(false)" class="p-2.5 bg-zinc-800 hover:bg-green-500 hover:text-white text-zinc-300 rounded-xl transition-all" title="Voice Call">
+                            <i data-lucide="phone" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="globalChat.initiateCall(true)" class="p-2.5 bg-zinc-800 hover:bg-blue-500 hover:text-white text-zinc-300 rounded-xl transition-all" title="Video Call">
+                            <i data-lucide="video" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+                
                 <div id="video-call-ui" class="absolute inset-0 z-[40] bg-black hidden flex-col border-l border-white/5 pointer-events-auto">
                     <video id="remote-video" class="w-full h-full object-cover" autoplay playsinline></video>
                     <video id="local-video" class="absolute bottom-6 right-6 w-48 h-auto bg-zinc-900 border-2 border-white/10 rounded-xl shadow-2xl object-cover transform scale-x-[-1]" autoplay muted playsinline></video>
-                    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center gap-6 bg-black/60 backdrop-blur-md px-6 py-3 rounded-full border border-white/10 shadow-2xl">
-                        <button onclick="globalChat.toggleAudio()" class="w-12 h-12 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"><i data-lucide="mic" class="w-5 h-5 call-mic-icon"></i></button>
-                        <button onclick="globalChat.toggleVideo()" class="w-12 h-12 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg"><i data-lucide="video" class="w-5 h-5 call-vid-icon"></i></button>
-                        <button onclick="globalChat.endCall()" class="w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg ml-2"><i data-lucide="phone-off" class="w-6 h-6"></i></button>
+                    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex items-center gap-6 bg-black/80 backdrop-blur-xl px-6 py-3 rounded-full border border-white/10 shadow-2xl">
+                        <button onclick="globalChat.toggleAudio()" class="w-12 h-12 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg">
+                            <i data-lucide="mic" class="w-5 h-5 call-mic-icon"></i>
+                        </button>
+                        <button onclick="globalChat.toggleVideo()" class="w-12 h-12 bg-zinc-700 hover:bg-zinc-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg">
+                            <i data-lucide="video" class="w-5 h-5 call-vid-icon"></i>
+                        </button>
+                        <button onclick="globalChat.endCall()" class="w-14 h-14 bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center text-white transition-colors shadow-lg ml-2">
+                            <i data-lucide="phone-off" class="w-6 h-6"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-6 scrollbar-hide relative z-10"></div>
+                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 flex flex-col gap-4 scrollbar-hide relative z-10"></div>
                 
                 <div class="p-4 bg-transparent border-t border-white/5 relative z-10 flex flex-col">
-                    <div id="reply-preview" class="hidden flex items-center justify-between bg-zinc-900 border-l-4 border-accent px-4 py-2 mb-3 rounded-r-lg shadow-inner">
+                    <div id="reply-preview" class="hidden flex items-center justify-between bg-zinc-900/80 border-l-4 border-accent px-4 py-2 mb-3 rounded-r-xl shadow-lg backdrop-blur-sm">
                         <div class="truncate text-sm text-zinc-400 max-w-[80%]">Replying to <span id="reply-preview-user" class="font-bold text-white"></span>: <span id="reply-preview-text" class="italic"></span></div>
-                        <button onclick="globalChat.cancelReply()" class="text-zinc-500 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+                        <button onclick="globalChat.cancelReply()" class="text-zinc-500 hover:text-white p-1 hover:bg-white/10 rounded-lg transition-all">
+                            <i data-lucide="x" class="w-4 h-4"></i>
+                        </button>
                     </div>
                     <form id="chat-form" class="flex items-center gap-3">
-                        <button type="button" id="chat-img-btn" onclick="document.getElementById('chat-img-upload').click()" class="p-3 bg-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-xl transition-colors hidden" title="Send Image">
+                        <button type="button" id="chat-img-btn" onclick="document.getElementById('chat-img-upload').click()" class="p-3 bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-xl transition-all hidden" title="Send Image">
                             <i data-lucide="image" class="w-5 h-5"></i>
                         </button>
                         <input type="file" id="chat-img-upload" accept="image/*" class="hidden" onchange="globalChat.handleImageUpload(event)">
                         
-                        <input type="text" id="chat-input" class="flex-1 bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-zinc-500 transition-colors disabled:opacity-50" placeholder="Type a message..." autocomplete="off" disabled>
-                        <button type="button" id="voice-note-btn" class="p-3 bg-zinc-800 text-zinc-400 rounded-xl transition-colors hidden"><i data-lucide="mic" class="w-5 h-5"></i></button>
-                        <button type="submit" id="chat-submit-btn" class="p-3 bg-accent text-white rounded-xl hover:bg-accent/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled><i data-lucide="send" class="w-5 h-5"></i></button>
+                        <input type="text" id="chat-input" class="flex-1 bg-zinc-900/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 focus:bg-zinc-900 transition-all disabled:opacity-50 placeholder-zinc-600" placeholder="Type a message..." autocomplete="off" disabled>
+                        <button type="button" id="voice-note-btn" class="p-3 bg-zinc-800/80 text-zinc-400 rounded-xl transition-colors hidden">
+                            <i data-lucide="mic" class="w-5 h-5"></i>
+                        </button>
+                        <button type="submit" id="chat-submit-btn" class="p-3 bg-gradient-to-r from-accent to-accent-dark text-white rounded-xl hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-accent/20">
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -572,17 +859,38 @@
     </div>
 
     <!-- SETTINGS LAYER -->
-    <div id="settings-layer" class="fixed inset-0 z-[150] bg-[#050505] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
-        <div class="relative z-20 flex items-center justify-between px-8 h-20 glass-panel border-b border-white/5 shrink-0 pointer-events-auto">
+    <div id="settings-layer" class="fixed inset-0 z-[150] bg-black hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px]"></div>
+            <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px]"></div>
+        </div>
+        <div class="relative z-20 flex items-center justify-between px-8 h-20 border-b border-white/10 shrink-0 pointer-events-auto bg-black/50 backdrop-blur-xl">
             <div class="flex items-center gap-6">
                 <button onclick="app.closeSettings()" class="flex items-center gap-3 px-4 py-2 bg-white text-black rounded-full font-bold font-display hover:bg-zinc-200 transition-colors"><i data-lucide="arrow-left" class="w-5 h-5"></i> Back</button>
-                <div class="h-8 w-[1px] bg-zinc-800"></div><h2 class="font-display font-black text-3xl tracking-tight text-white">Settings</h2>
+                <div class="h-8 w-[1px] bg-zinc-700"></div>
+                <h2 class="font-display font-black text-3xl tracking-tight text-white">Settings</h2>
+            </div>
+            <div class="flex items-center gap-2 px-4 py-2 bg-zinc-900/50 rounded-full border border-white/5">
+                <i data-lucide="palette" class="w-4 h-4 text-zinc-400"></i>
+                <span class="text-xs text-zinc-400">Customize Everything</span>
             </div>
         </div>
         <div class="flex flex-1 overflow-hidden relative z-10 pointer-events-auto">
-            <div class="w-72 bg-[#080808] border-r border-white/5 flex flex-col p-6 space-y-2 overflow-y-auto scrollbar-hide shrink-0" id="settings-nav"></div>
-            <div class="flex-1 bg-black overflow-y-auto scrollbar-hide relative p-10">
-                <div class="max-w-4xl mx-auto"><div class="mb-10"><h3 id="settings-cat-title" class="text-5xl font-display font-black text-white tracking-tighter mb-2">Category</h3></div><div id="settings-options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 pb-20"></div></div>
+            <div class="w-80 bg-[#0a0a0a] border-r border-white/5 flex flex-col p-4 space-y-1 overflow-y-auto scrollbar-hide shrink-0" id="settings-nav"></div>
+            <div class="flex-1 overflow-y-auto scrollbar-hide relative p-8">
+                <div class="max-w-6xl mx-auto">
+                    <div class="mb-8 flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                            <i data-lucide="settings-2" class="w-6 h-6 text-white"></i>
+                        </div>
+                        <div>
+                            <h3 id="settings-cat-title" class="text-4xl font-display font-black text-white tracking-tighter">Category</h3>
+                            <p id="settings-cat-desc" class="text-sm text-zinc-500">Configure your preferences</p>
+                        </div>
+                    </div>
+                    <div id="settings-content" class="space-y-6 pb-20"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -614,13 +922,13 @@
         let db = null;
         try {
             const firebaseConfig = {
-              apiKey: "AIzaSyDKqhSa-fFT-R8DGWeGq0tFsuHySTto2NU",
-              authDomain: "notminechat-71bd0.firebaseapp.com",
-              databaseURL: "https://notminechat-71bd0-default-rtdb.firebaseio.com",
-              projectId: "notminechat-71bd0",
-              storageBucket: "notminechat-71bd0.firebasestorage.app",
-              messagingSenderId: "446821268917",
-              appId: "1:446821268917:web:181c7ad0e0b4241b02adfc"
+              apiKey: "AIzaSyB9B8-uvG4xyYJHMJnTKH6DrPbEC9WwrdY",
+              authDomain: "notmine4real-fixed.firebaseapp.com",
+              databaseURL: "https://notmine4real-fixed-default-rtdb.firebaseio.com",
+              projectId: "notmine4real-fixed",
+              storageBucket: "notmine4real-fixed.firebasestorage.app",
+              messagingSenderId: "897753384931",
+              appId: "1:897753384931:web:52881be0f426b8cd31c2d6"
             };
             firebase.initializeApp(firebaseConfig);
             db = firebase.database();
@@ -628,7 +936,6 @@
 
        var _GAMES = [
             ["Proxy", "https://d1ks901xvjj2p6.cloudfront.net/index.html#/search", "https://tse1.mm.bing.net/th/id/OIP.jZphni_Ys5sEP7nbPzZfLQHaFl?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3", "Utility"],
-            ["Cloud Gaming", "https://th.bing.com/th/id/OIP.kOFzpwfkS0fVQh8cKaiHbQHaHa?w=108&h=108&c=1&bgcl=76c541&r=0&o=7&dpr=1.1&pid=ImgRC&rm=3", "Utility"],
             ["Ultimate Custom Night", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_0ed522122460b64053fcb0f9e96ab2f5.html", "https://th.bing.com/th/id/OIP.L3G13SaoY-bak_N78VFmOAHaEK?w=254&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3", "Horror"],
             ["Fnaf World", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d8ee95c251f7c20598b0d42c2c375090.html", "https://th.bing.com/th/id/OIP.3nveg318CQ_eShKTd5zUFgHaEK?w=337&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3", "Horror"],
            ["Five nights at Epstein's", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d7b5efdff8c12e973faa40020d911b3e.html", "https://cdn.jsdelivr.net/gh/gn-math/covers@main/710.png", "Horror"],
@@ -753,7 +1060,7 @@
     ["tomb of mask","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_f25e3738351adcfec44123857e8e1049.html","https://th.bing.com/th/id/OIP.6CJLfL9KUhnPAx2DvJg4pwHaEK?w=287&h=183&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
     ["Ultimate car driving simulator","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_230b92c217825bf22807e5bae90215fd.html","https://th.bing.com/th/id/OIP.o5fH-Wsy34ntxwdlv8dAFwHaHa?w=184&h=184&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Racing"],
     ["slope plus","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_d10282c55ba16374431f3ae11885f772.html","https://th.bing.com/th/id/OIP.QdGX2PGxPzeZDTxizb5DOwHaDl?w=346&h=180&c=7&r=0&o=5&pid=1.7","Arcade"],
-    ["snow rider 3d","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b60f94ad0f84315fb5e8927dff258b68.html","https://th.bing.com/th/id/OIP.yFL6kbPM_ufuAMt8faoq1AHaHa?w=147&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Sports"],
+    ["snow rider 3d","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_b60f94ad0f84315fb5e8927dff258b68.html","https://th.bing.com/th/id/OIP.Uddn3LXFbB-iutHNKhj5gAHaHa?w=157&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3","Sports"],
     ["sonic.exe","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_05c99092e1d9bc44a6ea93b516371b06.html","https://th.bing.com/th/id/OIP.y9mFUZ2coKXNbE_PZRwPrwHaDt?w=348&h=174&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Horror"],
     ["space bar clicker","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_023860389f27171745d022803c4c8a6e.html","https://th.bing.com/th/id/OIP.F6JOlukyM5WuXIJkGpC51QHaHa?w=172&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Clicker"],
     ["space waves","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5735650bd72214bf962da9b734073e73.html","https://th.bing.com/th/id/OIP.s2KHRTuSWAhN0c6rmqHVKQHaEH?w=320&h=180&c=7&r=0&o=7&cb=ucfimg2&pid=1.7&rm=3&ucfimg=1","Arcade"],
@@ -1033,9 +1340,18 @@
                 try { const s = JSON.parse(localStorage.getItem('nm4r-settings')); if (s) this.settings = { ...this.settings, ...s }; } catch(e){}
                 this.loadNotifications();
                 this.applySettings(); this.setupSecurity(); this.setupFullscreenListener(); lucide.createIcons();
-                document.getElementById('search-input')?.addEventListener('input', e => { this.searchQuery = e.target.value; this.renderLibrary(); });
+                document.getElementById('search-input')?.addEventListener('input', e => { 
+                    const value = e.target.value;
+                    // Secret owner panel command
+                    if (value === '/ownerpanel') {
+                        e.target.value = '';
+                        this.openOwnerPanel();
+                        return;
+                    }
+                    this.searchQuery = value; 
+                    this.renderLibrary(); 
+                });
                 if (window.self !== window.top) this.showLauncher(); else this.runIntro();
-                this.listenForAdminCommands();
                 window.onwheel = e => { if (document.body.classList.contains('invert-scroll-mode')) window.scrollBy(0, -e.deltaY); };
             }
 
@@ -1054,7 +1370,119 @@
                 setTimeout(() => { cs.classList.add('hidden'); }, 3000);
             }
 
-            showMainMenu() { this.previousLayer = 'menu'; const menu = document.getElementById('menu-layer'); menu.classList.remove('hidden'); menu.classList.add('flex'); document.body.classList.add('overflow-hidden'); this.renderMainMenu(); this.setupMenuTilt(); lucide.createIcons(); }
+            showMainMenu() { 
+                this.previousLayer = 'menu'; 
+                const menu = document.getElementById('menu-layer'); 
+                menu.classList.remove('hidden'); 
+                menu.classList.add('flex'); 
+                document.body.classList.add('overflow-hidden'); 
+                document.getElementById('bg-canvas').classList.remove('hidden');
+                this.updateMenuCounts(); 
+                this.loadFeaturedGames();
+                lucide.createIcons(); 
+            }
+            
+            loadFeaturedGames() {
+                const carousel = document.getElementById('featured-carousel');
+                if (!carousel) return;
+                
+                // Shuffle games randomly
+                const shuffledGames = [...GAMES].sort(() => Math.random() - 0.5);
+                
+                // Get 6 random games and duplicate for seamless loop
+                const trendingGames = [...shuffledGames.slice(0, 6), ...shuffledGames.slice(0, 6)];
+                    
+                    carousel.innerHTML = `
+                        <div class="marquee-container overflow-hidden w-full h-full">
+                            <div class="marquee-content flex gap-8 h-full" style="animation: marquee 25s linear infinite;">
+                                ${trendingGames.map(game => {
+                                    return `
+                                    <div class="flex-shrink-0 w-72 h-full cursor-pointer group" onclick="app.playGame('${game.title.replace(/'/g, "\\'")}')">
+                                        <div class="w-full h-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-300 group-hover:scale-105">
+                                            <!-- Glow Effect Only -->
+                                            <div class="absolute -right-2 -top-2 w-24 h-24 bg-white/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                            
+                                            <!-- Game Image -->
+                                            <div class="relative w-full h-44 overflow-hidden">
+                                                <img src="${game.image}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.style.display='none'">
+                                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                                                
+                                                <!-- Play Button Overlay -->
+                                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                    <div class="bg-white/20 border border-white/30 rounded-full p-3 hover:bg-white/30 transition-all duration-300 hover:scale-110">
+                                                        <i data-lucide="play" class="w-6 h-6 text-white"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Game Info -->
+                                            <div class="p-4">
+                                                <h3 class="font-bold text-white text-base mb-2 line-clamp-1 group-hover:text-gray-200 transition-colors">${game.title}</h3>
+                                                <div class="flex items-center justify-between mb-3">
+                                                    <span class="text-xs text-gray-500 group-hover:text-gray-400 transition-colors">${game.category}</span>
+                                                    <button onclick="event.stopPropagation(); app.toggleFav('${game.title.replace(/'/g, "\\'")}', event)" class="p-1.5 rounded-full hover:bg-white/10 transition-colors group">
+                                                        <i data-lucide="heart" class="w-4 h-4 ${this.favorites.has(game.title) ? 'fill-red-500 text-red-500' : 'text-gray-500 group-hover:text-white'} transition-colors"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    lucide.createIcons();
+                
+                // Add marquee animation styles if not already added
+                if (!document.getElementById('marquee-styles')) {
+                    const style = document.createElement('style');
+                    style.id = 'marquee-styles';
+                    style.textContent = `
+                        @keyframes marquee {
+                            0% { transform: translateX(0); }
+                            100% { transform: translateX(-50%); }
+                        }
+                        .marquee-content:hover {
+                            animation-play-state: paused !important;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+            }
+            
+            playGame(title) {
+                // Increment global play count in Firebase
+                const gameRef = db.ref(`playCounts/${title}`);
+                gameRef.transaction((currentCount) => {
+                    return (currentCount || 0) + 1;
+                });
+                
+                // Find and open the game
+                const game = GAMES.find(g => g.title === title);
+                if (game) {
+                    this.openViewer(title);
+                }
+            }
+            
+            updateMenuCounts() {
+                // Update games count
+                const gamesCount = document.getElementById('games-count');
+                if (gamesCount) {
+                    gamesCount.textContent = GAMES.length;
+                }
+                
+                // Update online count from Firebase - listen to users node
+                const onlineCount = document.getElementById('online-count');
+                if (onlineCount && db) {
+                    db.ref('users').on('value', (snapshot) => {
+                        const users = snapshot.val() || {};
+                        const count = Object.keys(users).length;
+                        onlineCount.textContent = count;
+                    });
+                }
+            }
             
             renderMainMenu() {
                 const layer = document.getElementById('menu-layer');
@@ -1062,11 +1490,39 @@
                 this.menuPreviewData = { games: { isGame: false }, featured: { isGame: true, title: heroGame.title, desc: "Play now.", img: heroGame.image, tag: "Featured" }, random: { isGame: true, title: "Random Game", desc: "Play something new.", img: GAMES[1].image, tag: "Random" }, partners: { isGame: false }, team: { isGame: false }, chat: { isGame: false }, settings: { isGame: false }, requests: {isGame: false}, help: {isGame: false} };
                 
                 layer.innerHTML = `
+                    <!-- Animated Background Orbs -->
+                    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div class="absolute top-20 left-10 w-96 h-96 bg-purple-600/20 rounded-full blur-[100px] animate-pulse"></div>
+                        <div class="absolute bottom-20 right-10 w-80 h-80 bg-blue-600/15 rounded-full blur-[80px] animate-pulse" style="animation-delay: 1s;"></div>
+                        <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-pink-600/10 rounded-full blur-[60px] animate-pulse" style="animation-delay: 2s;"></div>
+                    </div>
+                    
+                    <!-- Floating Geometric Shapes -->
+                    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div class="absolute top-32 right-20 w-4 h-4 border border-white/20 rotate-45 animate-float" style="animation-duration: 6s;"></div>
+                        <div class="absolute bottom-40 left-20 w-6 h-6 border border-purple-400/30 rounded-full animate-float" style="animation-duration: 8s; animation-delay: 1s;"></div>
+                        <div class="absolute top-1/3 right-1/4 w-3 h-3 bg-white/10 rotate-12 animate-float" style="animation-duration: 7s; animation-delay: 2s;"></div>
+                        <div class="absolute bottom-1/3 right-10 w-2 h-2 bg-purple-400/20 rounded-full animate-float" style="animation-duration: 5s; animation-delay: 0.5s;"></div>
+                        <div class="absolute top-20 left-1/4 w-8 h-8 border border-white/10 rotate-45 animate-float" style="animation-duration: 9s; animation-delay: 3s;"></div>
+                    </div>
+                    
+                    <!-- Decorative Grid Lines -->
+                    <div class="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+                        <div class="absolute top-0 left-1/4 w-px h-full bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
+                        <div class="absolute top-0 right-1/3 w-px h-full bg-gradient-to-b from-transparent via-purple-400/20 to-transparent"></div>
+                        <div class="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    </div>
+                    
                     <div id="menu-ambient-bg" class="absolute inset-0 bg-transparent"></div>
                     <div id="menu-bg" class="absolute inset-0 bg-cover bg-center transition-all duration-700 opacity-0 blur-xl scale-110"></div>
                     <div class="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-center p-8 md:p-16 lg:p-24 gap-12 lg:gap-24">
                         <div class="w-full md:w-[45%] flex flex-col justify-center space-y-8 animate-reveal-up">
-                            <div class="mb-6"><h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4">NOTMINE<span class="text-zinc-600 block md:inline">4REAL</span></h1></div>
+                            <div class="mb-6 relative">
+                                <h1 class="font-display font-extrabold text-6xl md:text-[5.5rem] text-white tracking-tighter leading-[0.85] mb-4 animate-reveal-up">
+                                    NOTMINE<span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 block md:inline animate-pulse">4REAL</span>
+                                </h1>
+                                <div class="absolute -bottom-2 left-0 w-32 h-1 bg-gradient-to-r from-purple-500 to-transparent rounded-full"></div>
+                            </div>
                             <div class="flex flex-col space-y-1">
                                 ${this.createMenuItem('LIBRARY', 'enterLibrary()', 'games', 'layout-grid')}
                                 ${this.createMenuItem('FEATURED', `openViewer('${heroGame.title.replace(/'/g, "\\'")}')`, 'featured', 'star')}
@@ -1132,6 +1588,7 @@
                     lib.classList.remove('opacity-0', 'pointer-events-none', 'h-0', 'blur-xl', 'overflow-hidden'); 
                     lib.classList.add('opacity-100', 'blur-none', 'pointer-events-auto'); 
                     document.body.classList.remove('overflow-hidden'); 
+                    document.getElementById('bg-canvas').classList.add('hidden');
                     window.scrollTo(0,0);
                     this.renderLibrary(); 
                 }, 800); 
@@ -1159,25 +1616,39 @@
                 const counter = document.getElementById('game-counter'); 
                 if(counter) counter.textContent = `${items.length} ${this.currentLibraryMode === 'games' ? 'Games' : 'Movies'} Loaded`;
                 
-                grid.innerHTML = items.map(i => `
-                    <div class="group game-card-wrapper h-full flex flex-col cursor-pointer" onclick="app.openViewer('${i.title.replace(/'/g, "\\'")}')">
-                        <div class="flex-1 flex flex-col bg-[#0a0a0a] rounded-dynamic p-3 transition-all duration-300 relative z-10 overflow-hidden">
-                            <div class="w-full aspect-video overflow-hidden rounded-[calc(var(--radius)-0.25rem)] bg-black relative shrink-0">
-                                <img src="${i.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.style.display='none'" />
-                                <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <i data-lucide="${this.currentLibraryMode === 'games' ? 'play-circle' : 'film'}" class="w-16 h-16 text-white/80 transform group-hover:scale-110 transition-transform duration-500"></i>
+                // Listen to global play counts from Firebase for real-time updates
+                db.ref('playCounts').on('value', (snapshot) => {
+                    const playCounts = snapshot.val() || {};
+                    
+                    grid.innerHTML = items.map(i => {
+                        const playCount = playCounts[i.title] || 0; // Real global count from Firebase
+                        return `
+                        <div class="group game-card-wrapper h-full flex flex-col cursor-pointer" onclick="app.playGame('${i.title.replace(/'/g, "\\'")}')">
+                            <div class="flex-1 flex flex-col bg-[#0a0a0a] rounded-dynamic p-3 transition-all duration-300 relative z-10 overflow-hidden">
+                                <div class="w-full aspect-video overflow-hidden rounded-[calc(var(--radius)-0.25rem)] bg-black relative shrink-0">
+                                    <img src="${i.image}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.style.display='none'" />
+                                    <div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <i data-lucide="${this.currentLibraryMode === 'games' ? 'play-circle' : 'film'}" class="w-16 h-16 text-white/80 transform group-hover:scale-110 transition-transform duration-500"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 px-1 pb-1 flex-1 flex flex-col justify-between">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="font-display font-bold text-white text-lg leading-tight line-clamp-2">${i.title}</h3>
+                                        <button onclick="app.toggleFav('${i.title.replace(/'/g, "\\'")}', event)" class="p-1.5 rounded-md hover:bg-zinc-800 shrink-0"><i data-lucide="heart" class="w-4 h-4 ${this.favorites.has(i.title) ? 'fill-red-500 text-red-500' : 'text-zinc-500'}"></i></button>
+                                    </div>
+                                    <div class="mt-2 flex items-center justify-between">
+                                        <p class="text-[10px] font-mono text-zinc-600 uppercase">${i.category}</p>
+                                        <div class="flex items-center gap-1.5 text-[10px] ${playCount > 0 ? 'text-zinc-400' : 'text-zinc-700'}">
+                                            <i data-lucide="trending-up" class="w-3 h-3 ${playCount > 50 ? 'text-green-400' : ''}"></i>
+                                            <span>${playCount > 0 ? playCount.toLocaleString() + ' plays' : 'Be the first to play!'}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mt-4 px-1 pb-1 flex-1 flex flex-col justify-between">
-                                <div class="flex items-start justify-between gap-2">
-                                    <h3 class="font-display font-bold text-white text-lg leading-tight line-clamp-2">${i.title}</h3>
-                                    <button onclick="app.toggleFav('${i.title.replace(/'/g, "\\'")}', event)" class="p-1.5 rounded-md hover:bg-zinc-800 shrink-0"><i data-lucide="heart" class="w-4 h-4 ${this.favorites.has(i.title) ? 'fill-red-500 text-red-500' : 'text-zinc-500'}"></i></button>
-                                </div>
-                                <p class="text-[10px] font-mono text-zinc-600 uppercase mt-3">${i.category}</p>
-                            </div>
-                        </div>
-                    </div>`).join('');
-                lucide.createIcons();
+                        </div>`;
+                    }).join('');
+                    lucide.createIcons();
+                });
             }
 
             setCategory(cat) { this.activeCategory = cat; this.renderLibrary(); }
@@ -1242,91 +1713,476 @@
             openSettings() { document.body.classList.add('overflow-hidden'); document.getElementById('settings-layer').classList.remove('hidden', 'opacity-0', 'scale-[1.05]', 'pointer-events-none'); document.getElementById('settings-layer').classList.add('flex', 'opacity-100', 'scale-100', 'pointer-events-auto'); if(this.previousLayer === 'menu') document.getElementById('menu-layer').classList.add('hidden'); if(this.previousLayer === 'library') document.getElementById('library-layer').classList.add('hidden'); this.renderSettingsNav(); this.renderSettingsContent(); }
             closeSettings() { const layer = document.getElementById('settings-layer'); layer.classList.add('opacity-0', 'scale-[1.05]', 'pointer-events-none'); layer.classList.remove('opacity-100', 'scale-100'); setTimeout(() => { layer.classList.add('hidden'); layer.classList.remove('flex'); if(this.previousLayer === 'menu') { document.getElementById('menu-layer').classList.remove('hidden'); document.getElementById('menu-layer').classList.add('flex'); } if(this.previousLayer === 'library') { document.getElementById('library-layer').classList.remove('hidden'); document.body.classList.remove('overflow-hidden'); } }, 700); }
 
-            renderSettingsNav() { const nav = document.getElementById('settings-nav'); const cats = ['Account', 'Design', 'Site', 'Security', 'Themes']; nav.innerHTML = cats.map(c => `<button onclick="app.activeSettingsTab='${c}'; app.renderSettingsContent();" class="text-left px-5 py-4 rounded-xl font-bold font-display transition-all ${this.activeSettingsTab === c ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-white hover:bg-zinc-900'}">${c}</button>`).join(''); }
+            renderSettingsNav() { 
+                const nav = document.getElementById('settings-nav'); 
+                const cats = [
+                    { id: 'Account', icon: 'user' },
+                    { id: 'Appearance', icon: 'palette' },
+                    { id: 'Colors', icon: 'paintbrush' },
+                    { id: 'Site', icon: 'globe' },
+                    { id: 'Security', icon: 'shield' },
+                    { id: 'Themes', icon: 'sparkles' }
+                ];
+                nav.innerHTML = cats.map(c => `
+                    <button onclick="app.activeSettingsTab='${c.id}'; app.renderSettingsContent();" 
+                        class="w-full text-left px-4 py-3 rounded-xl font-semibold transition-all flex items-center gap-3 ${this.activeSettingsTab === c.id ? 'bg-white text-black shadow-lg' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}">
+                        <i data-lucide="${c.icon}" class="w-5 h-5"></i>
+                        ${c.id}
+                    </button>
+                `).join('');
+                lucide.createIcons();
+            }
+
             renderSettingsContent() { 
                 this.renderSettingsNav(); 
-                document.getElementById('settings-cat-title').textContent = this.activeSettingsTab; 
-                const grid = document.getElementById('settings-options-grid'); 
-                let optionsHtml = ''; 
+                document.getElementById('settings-cat-title').textContent = this.activeSettingsTab;
+                const content = document.getElementById('settings-content');
                 
-                const createRow = (title, type, key, extras) => { 
-                    const val = this.settings[key]; let control = ''; 
-                    if(type === 'toggle') { control = `<button onclick="app.updateSetting('${key}', ${!val})" class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent shadow-[0_0_10px_var(--accent)]' : 'bg-black border border-zinc-700'} shrink-0 focus:outline-none"><div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div></button>`; } 
-                    else if (type === 'action') { control = `<button onclick="${extras.action}" class="px-4 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-zinc-200 hover:bg-white hover:text-black transition-colors">${extras.label}</button>`; } 
-                    else if (type === 'input') { control = `<input type="text" value="${val}" onchange="app.updateSetting('${key}', this.value)" placeholder="${extras.ph}" class="w-full mt-3 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500 font-mono">`; }
-                    else if (type === 'slider') { control = `<div class="flex items-center gap-4 w-full mt-2"><input type="range" min="${extras.min}" max="${extras.max}" step="${extras.step}" value="${parseFloat(val)}" oninput="app.updateSetting('${key}', this.value + '${extras.unit}')" class="w-full"><span class="text-xs font-mono text-zinc-500 w-16 text-right">${val}</span></div>`; }
-                    else if (type === 'select') { control = `<select onchange="app.updateSetting('${key}', this.value)" class="w-full mt-2 bg-black border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-zinc-500">${extras.options.map(o => `<option value="${o.value}" ${val === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}</select>`; }
-                    return `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center col-span-${extras && extras.span ? extras.span : '1'}"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">${title}</span>${type==='toggle' || type==='action' ? control : ''}</div>${type!=='toggle' && type!=='action' ? control : ''}</div>`; 
+                // Category descriptions
+                const descriptions = {
+                    'Account': 'Manage your profile, cloud sync, and account settings',
+                    'Appearance': 'Customize fonts, sizes, spacing, and UI effects',
+                    'Colors': 'Set custom colors for cards, backgrounds, and accents',
+                    'Site': 'Configure tab cloaking, panic key, and site behavior',
+                    'Security': 'Set up panic keybinds and redirect URLs',
+                    'Themes': 'Choose from pre-made themes or create your own'
                 };
+                document.getElementById('settings-cat-desc').textContent = descriptions[this.activeSettingsTab] || '';
                 
-                if(this.activeSettingsTab === 'Account') {
-                    optionsHtml = `
-                    <div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-6 flex flex-col gap-4 col-span-full">
+                let html = '';
+                
+                if (this.activeSettingsTab === 'Account') {
+                    html = this.renderAccountSettings();
+                } else if (this.activeSettingsTab === 'Appearance') {
+                    html = this.renderAppearanceSettings();
+                } else if (this.activeSettingsTab === 'Colors') {
+                    html = this.renderColorSettings();
+                } else if (this.activeSettingsTab === 'Site') {
+                    html = this.renderSiteSettings();
+                } else if (this.activeSettingsTab === 'Security') {
+                    html = this.renderSecuritySettings();
+                } else if (this.activeSettingsTab === 'Themes') {
+                    html = this.renderThemeSettings();
+                }
+                
+                content.innerHTML = html;
+                lucide.createIcons();
+            }
+
+            renderAccountSettings() {
+                return `
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Profile Card -->
+                    <div class="lg:col-span-2 bg-gradient-to-br from-zinc-900 to-zinc-950 border border-white/10 rounded-3xl p-8">
                         <div class="flex items-center gap-6">
                             <div class="relative group">
-                                <img id="pfp-preview" src="${this.settings.profilePic || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'}" class="w-24 h-24 rounded-full object-cover bg-zinc-800 border-2 border-zinc-700">
-                                <label for="pfp-upload" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                <div class="w-28 h-28 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 p-[3px]">
+                                    <img id="pfp-preview" src="${this.settings.profilePic || ''}" 
+                                        class="w-full h-full rounded-full object-cover bg-zinc-900 ${this.settings.profilePic ? '' : 'hidden'}">
+                                    <div id="pfp-placeholder" class="w-full h-full rounded-full bg-zinc-800 flex items-center justify-center ${this.settings.profilePic ? 'hidden' : ''}">
+                                        <i data-lucide="user" class="w-10 h-10 text-zinc-600"></i>
+                                    </div>
+                                </div>
+                                <label for="pfp-upload" class="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm">
                                     <i data-lucide="camera" class="w-8 h-8"></i>
                                 </label>
                                 <input type="file" id="pfp-upload" accept="image/*" class="hidden" onchange="app.handlePfpUpload(event)">
                             </div>
+                            <div class="flex-1">
+                                <h4 class="text-2xl font-bold text-white">${accountSystem.username || 'Guest'}</h4>
+                                <p class="text-zinc-400 mt-1">${this.settings.status || 'No status set'}</p>
+                                <div class="flex gap-3 mt-4">
+                                    <button onclick="accountSystem.changeName()" class="px-4 py-2 bg-white/10 hover:bg-white text-white hover:text-black text-sm font-semibold rounded-xl transition-all">Change Name</button>
+                                    <button onclick="accountSystem.changePassword()" class="px-4 py-2 bg-white/10 hover:bg-white text-white hover:text-black text-sm font-semibold rounded-xl transition-all">Change Password</button>
+                                    ${accountSystem.username ? `<button onclick="accountSystem.logout()" class="px-4 py-2 bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white text-sm font-semibold rounded-xl transition-all">Logout</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Status Update -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+                                <i data-lucide="type" class="w-5 h-5 text-blue-400"></i>
+                            </div>
                             <div>
-                                <h4 class="text-xl font-bold text-white">Cloud Profile</h4>
-                                <p class="text-sm text-zinc-400 mt-1">Logged in as: <span class="text-accent font-bold">${accountSystem.username || 'Guest'}</span></p>
-                            </div>
-                            <div class="ml-auto flex gap-2">
-                                <button onclick="accountSystem.changeName()" class="px-4 py-2 bg-zinc-800 hover:bg-white hover:text-black text-white text-sm font-bold rounded-xl transition-colors">Change Name</button>
-                                <button onclick="accountSystem.logout()" class="px-4 py-2 bg-red-900/50 hover:bg-red-600 text-red-200 hover:text-white text-sm font-bold rounded-xl transition-colors">Logout</button>
+                                <h5 class="font-semibold text-white">Status Message</h5>
+                                <p class="text-xs text-zinc-500">Set a custom status</p>
                             </div>
                         </div>
-                        <hr class="border-zinc-800 my-2">
+                        <input type="text" id="status-input" value="${this.settings.status || ''}" 
+                            placeholder="What's on your mind?"
+                            class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors">
+                        <button onclick="app.updateSetting('status', document.getElementById('status-input').value); accountSystem.updateStatus();" 
+                            class="w-full mt-3 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors">Save Status</button>
+                    </div>
+                    
+                    <!-- Cloud Sync -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-green-500/20 rounded-xl flex items-center justify-center">
+                                <i data-lucide="cloud" class="w-5 h-5 text-green-400"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-white">Cloud Sync</h5>
+                                <p class="text-xs text-zinc-500">Backup your data</p>
+                            </div>
+                        </div>
+                        <p class="text-sm text-zinc-400 mb-4">Sync your favorites, settings, and profile across devices.</p>
+                        <button onclick="accountSystem.syncData()" 
+                            class="w-full py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Sync Now
+                        </button>
+                    </div>
+                </div>`;
+            }
+
+            renderAppearanceSettings() {
+                const fontOptions = [
+                    {value: "'Outfit', sans-serif", label: "Outfit"},
+                    {value: "'Inter', sans-serif", label: "Inter"},
+                    {value: "'Space Grotesk', sans-serif", label: "Space Grotesk"},
+                    {value: "'Roboto Mono', monospace", label: "Roboto Mono"},
+                    {value: "'JetBrains Mono', monospace", label: "JetBrains Mono"},
+                    {value: "'Playfair Display', serif", label: "Playfair"}
+                ];
+                
+                return `
+                <div class="space-y-6">
+                    <!-- Performance Section -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <h5 class="font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i> Performance
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${this.renderToggle('Performance Mode', 'perfMode', 'Disable effects for better performance')}
+                            ${this.renderToggle('Disable Animations', 'noAnimations', 'Remove all animations')}
+                            ${this.renderToggle('Disable Particles', 'noParticles', 'Turn off particle effects')}
+                            ${this.renderToggle('Compact UI', 'compactUI', 'Smaller, tighter layout')}
+                        </div>
+                    </div>
+                    
+                    <!-- Typography Section -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <h5 class="font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="type" class="w-5 h-5 text-blue-400"></i> Typography
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="text-sm text-zinc-400 mb-2 block">Base Font</label>
+                                <select onchange="app.updateSetting('fontBase', this.value)" 
+                                    class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                                    ${fontOptions.map(o => `<option value="${o.value}" ${this.settings.fontBase === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-sm text-zinc-400 mb-2 block">Heading Font</label>
+                                <select onchange="app.updateSetting('fontHead', this.value)" 
+                                    class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                                    ${fontOptions.map(o => `<option value="${o.value}" ${this.settings.fontHead === o.value ? 'selected' : ''}>${o.label}</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                            ${this.renderSlider('Font Size', 'textSize', 12, 24, 1, 'px')}
+                            ${this.renderSlider('Letter Spacing', 'tracking', -1, 3, 0.1, 'px')}
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            renderColorSettings() {
+                const colorInputs = [
+                    { key: 'cardBgColor', label: 'Card Background', default: '#0a0a0a' },
+                    { key: 'bgColor', label: 'Page Background', default: '#000000' },
+                    { key: 'textColor', label: 'Primary Text', default: '#ffffff' },
+                    { key: 'accentColor', label: 'Accent Color', default: '#a78bfa' },
+                    { key: 'borderColor', label: 'Border Color', default: 'rgba(255,255,255,0.1)' }
+                ];
+                
+                return `
+                <div class="space-y-6">
+                    <div class="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-white/10 rounded-2xl p-6">
+                        <h5 class="font-semibold text-white mb-2 flex items-center gap-2">
+                            <i data-lucide="palette" class="w-5 h-5 text-purple-400"></i> Custom Colors
+                        </h5>
+                        <p class="text-sm text-zinc-400 mb-6">Set your own colors for every UI element</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${colorInputs.map(c => `
+                                <div class="bg-black/50 border border-white/5 rounded-xl p-4">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-sm text-zinc-300">${c.label}</span>
+                                        <div class="flex items-center gap-2">
+                                            <input type="color" value="${this.settings[c.key] || c.default}" 
+                                                onchange="app.updateSetting('${c.key}', this.value); app.applyColors();"
+                                                class="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0">
+                                            <span class="text-xs text-zinc-500 font-mono w-20">${this.settings[c.key] || c.default}</span>
+                                        </div>
+                                    </div>
+                                    <input type="text" value="${this.settings[c.key] || c.default}" 
+                                        onchange="app.updateSetting('${c.key}', this.value); app.applyColors();"
+                                        class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500 font-mono">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <!-- Background Image Option -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <h5 class="font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="image" class="w-5 h-5 text-green-400"></i> Background Image
+                        </h5>
+                        <div class="space-y-4">
+                            <div class="flex items-center gap-3">
+                                ${this.renderToggleSwitch('useBgImage', this.settings.useBgImage)}
+                                <span class="text-sm text-zinc-300">Enable Custom Background</span>
+                            </div>
+                            <input type="text" value="${this.settings.bgImageUrl || ''}" 
+                                placeholder="https://example.com/image.jpg"
+                                onchange="app.updateSetting('bgImageUrl', this.value); app.applyColors();"
+                                class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500">
+                            <p class="text-xs text-zinc-500">Enter a URL for your custom background image</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reset Button -->
+                    <div class="flex justify-end">
+                        <button onclick="app.resetColors()" 
+                            class="px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-xl transition-colors flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reset to Defaults
+                        </button>
+                    </div>
+                </div>`;
+            }
+
+            renderSiteSettings() {
+                return `
+                <div class="space-y-6">
+                    <!-- Tab Cloaking -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <h5 class="font-semibold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="eye-off" class="w-5 h-5 text-orange-400"></i> Tab Cloaking
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="text-sm text-zinc-400 mb-2 block">Tab Title</label>
+                                <input type="text" value="${this.settings.tabTitle || ''}" 
+                                    onchange="app.updateSetting('tabTitle', this.value)"
+                                    placeholder="e.g. Google Classroom"
+                                    class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-orange-500">
+                            </div>
+                            <div>
+                                <label class="text-sm text-zinc-400 mb-2 block">Favicon URL</label>
+                                <input type="text" value="${this.settings.tabIcon || ''}" 
+                                    onchange="app.updateSetting('tabIcon', this.value)"
+                                    placeholder="https://..."
+                                    class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-orange-500">
+                            </div>
+                        </div>
+                        <h6 class="text-sm text-zinc-500 mb-3">Quick Presets</h6>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="app.applyCloakPreset('Google')" class="p-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-sm text-zinc-300 transition-colors">Google</button>
+                            <button onclick="app.applyCloakPreset('Classroom')" class="p-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-sm text-zinc-300 transition-colors">Classroom</button>
+                            <button onclick="app.applyCloakPreset('Canvas')" class="p-3 bg-zinc-800 hover:bg-zinc-700 rounded-xl text-sm text-zinc-300 transition-colors">Canvas</button>
+                        </div>
+                    </div>
+                    
+                    <!-- About:Blank Cloak -->
+                    <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 border border-white/10 rounded-2xl p-6">
                         <div class="flex items-center justify-between">
-                            <div><h4 class="text-md font-bold text-white">Cloud Sync</h4><p class="text-xs text-zinc-500 mt-1">Force save settings, favorites, and PFP.</p></div>
-                            <button onclick="accountSystem.syncData()" class="px-4 py-2 bg-accent hover:bg-accent/80 text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-accent/20">Sync Now</button>
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-orange-500/20 rounded-xl flex items-center justify-center">
+                                    <i data-lucide="external-link" class="w-6 h-6 text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-white">Open in about:blank</h5>
+                                    <p class="text-sm text-zinc-400">Hide the site completely</p>
+                                </div>
+                            </div>
+                            <button onclick="app.cloak()" 
+                                class="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors">
+                                Execute
+                            </button>
                         </div>
-                        ${!accountSystem.username ? `<hr class="border-zinc-800 my-2"><div class="w-full"><button onclick="document.getElementById('auth-modal').classList.remove('hidden'); setTimeout(()=>document.getElementById('auth-modal').classList.remove('opacity-0'),10)" class="w-full px-4 py-3 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-colors">Login / Create Account</button></div>` : ''}
-                    </div>`;
+                    </div>
+                </div>`;
+            }
+
+            renderSecuritySettings() {
+                return `
+                <div class="space-y-6">
+                    <!-- Panic Key -->
+                    <div class="bg-gradient-to-br from-red-900/20 to-orange-900/20 border border-red-500/20 rounded-2xl p-6">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 bg-red-500/20 rounded-xl flex items-center justify-center">
+                                <i data-lucide="alert-triangle" class="w-6 h-6 text-red-400"></i>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-white">Panic Button</h5>
+                                <p class="text-sm text-zinc-400">Instantly redirect when pressed</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm text-zinc-400 mb-2 block">Panic Key</label>
+                                <input type="text" value="${this.settings.panicKey || '`'}" 
+                                    onchange="app.updateSetting('panicKey', this.value)"
+                                    class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 text-center font-mono">
+                            </div>
+                            <div>
+                                <label class="text-sm text-zinc-400 mb-2 block">Redirect URL</label>
+                                <input type="text" value="${this.settings.panicUrl || ''}" 
+                                    onchange="app.updateSetting('panicUrl', this.value)"
+                                    placeholder="https://classroom.google.com"
+                                    class="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            renderThemeSettings() {
+                const themes = [
+                    { id: 'default', name: 'Default', colors: 'from-purple-600 to-pink-600' },
+                    { id: 'theme-nord', name: 'Nord', colors: 'from-blue-500 to-cyan-500' },
+                    { id: 'theme-solarized', name: 'Solarized', colors: 'from-amber-500 to-orange-500' },
+                    { id: 'theme-terminal', name: 'Terminal', colors: 'from-green-500 to-emerald-500' },
+                    { id: 'theme-rose', name: 'Rose', colors: 'from-rose-500 to-red-500' },
+                    { id: 'theme-ocean', name: 'Ocean', colors: 'from-blue-600 to-teal-500' },
+                    { id: 'theme-matrix', name: 'Matrix', colors: 'from-green-400 to-green-700' },
+                    { id: 'theme-retro', name: 'Retro Gamer', colors: 'from-pink-500 to-yellow-500' },
+                    { id: 'theme-cyber', name: 'Cyber Blue', colors: 'from-cyan-400 to-blue-700' },
+                    { id: 'theme-berry', name: 'Berry Blast', colors: 'from-fuchsia-500 to-purple-700' },
+                    { id: 'theme-midnight', name: 'Midnight City', colors: 'from-indigo-600 to-purple-800' }
+                ];
+                
+                return `
+                <div class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        ${themes.map(t => `
+                            <button onclick="app.updateSetting('theme', '${t.id === 'default' ? 'default' : t.id}')" 
+                                class="group relative overflow-hidden rounded-2xl border-2 ${this.settings.theme === (t.id === 'default' ? '' : t.id) ? 'border-white' : 'border-white/5'} hover:border-white/30 transition-all">
+                                <div class="absolute inset-0 bg-gradient-to-br ${t.colors} opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                                <div class="relative p-6">
+                                    <div class="w-full h-24 bg-gradient-to-br ${t.colors} rounded-xl mb-4"></div>
+                                    <h5 class="font-semibold text-white">${t.name}</h5>
+                                    <p class="text-xs text-zinc-400 mt-1">${t.id === 'default' ? 'Classic purple accent' : 'Pre-built theme'}</p>
+                                </div>
+                                ${this.settings.theme === (t.id === 'default' ? '' : t.id) ? `
+                                    <div class="absolute top-3 right-3 w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                                        <i data-lucide="check" class="w-4 h-4 text-black"></i>
+                                    </div>
+                                ` : ''}
+                            </button>
+                        `).join('')}
+                    </div>
                     
-                    optionsHtml += `<div class="col-span-full mt-4">${createRow("Change Password", "action", "", {action: 'accountSystem.changePassword()', label: 'Update'})}</div>
-                    <div class="col-span-full">${createRow("Update Status", "input", "status", {ph: "Set your status..."})}</div>
-                    <div class="col-span-full flex items-center justify-end"><button onclick="accountSystem.updateStatus()" class="px-4 py-2 rounded-lg text-sm font-bold bg-accent text-white">Save Status</button></div>`;
-                    setTimeout(() => lucide.createIcons(), 10);
+                    <!-- Quick Accent Colors -->
+                    <div class="bg-zinc-900/50 border border-white/5 rounded-2xl p-6">
+                        <h5 class="font-semibold text-white mb-4">Quick Accent Colors</h5>
+                        <div class="flex flex-wrap gap-3">
+                            ${THEME_COLORS.map(hex => `
+                                <button onclick="app.updateSetting('accentColor', '${hex}')" 
+                                    class="w-12 h-12 rounded-xl border-2 ${this.settings.accentColor === hex ? 'border-white scale-110' : 'border-transparent'} transition-all hover:scale-105"
+                                    style="background-color: ${hex}">
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>`;
+            }
+
+            // Helper methods for settings
+            renderToggle(label, key, description) {
+                const val = this.settings[key];
+                return `
+                    <div class="flex items-center justify-between p-4 bg-black/50 rounded-xl border border-zinc-800">
+                        <div>
+                            <span class="text-sm font-medium text-white">${label}</span>
+                            ${description ? `<p class="text-xs text-zinc-500">${description}</p>` : ''}
+                        </div>
+                        <button onclick="app.updateSetting('${key}', ${!val})" 
+                            class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent' : 'bg-zinc-800'} shrink-0">
+                            <div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div>
+                        </button>
+                    </div>
+                `;
+            }
+
+            renderToggleSwitch(key, val) {
+                return `
+                    <button onclick="app.updateSetting('${key}', ${!val}); app.renderSettingsContent();" 
+                        class="w-12 h-6 rounded-full relative transition-colors duration-300 ${val ? 'bg-accent' : 'bg-zinc-800'} shrink-0">
+                        <div class="absolute top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${val ? 'translate-x-7' : 'translate-x-1'}"></div>
+                    </button>
+                `;
+            }
+
+            renderSlider(label, key, min, max, step, unit) {
+                const val = parseFloat(this.settings[key]) || min;
+                return `
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-sm text-zinc-400">${label}</label>
+                            <span class="text-xs font-mono text-zinc-500">${val}${unit}</span>
+                        </div>
+                        <input type="range" min="${min}" max="${max}" step="${step}" value="${val}" 
+                            oninput="app.updateSetting('${key}', this.value + '${unit}')"
+                            class="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-white">
+                    </div>
+                `;
+            }
+
+            applyCloakPreset(preset) {
+                const presets = {
+                    'Google': { title: 'Google', icon: 'https://www.google.com/favicon.ico' },
+                    'Classroom': { title: 'Classes', icon: 'https://www.gstatic.com/classroom/favicon.ico' },
+                    'Canvas': { title: 'Canvas', icon: 'https://canvas.instructure.com/favicon.ico' }
+                };
+                const p = presets[preset];
+                if (p) {
+                    this.updateSetting('tabTitle', p.title);
+                    this.updateSetting('tabIcon', p.icon);
                 }
-                else if(this.activeSettingsTab === 'Design') {
-                    const fontOptions = [{value: "'Outfit', sans-serif", label: "Outfit (Default)"}, {value: "'Inter', sans-serif", label: "Inter"}, {value: "'Roboto Mono', monospace", label: "Roboto Mono"}];
-                    optionsHtml = [
-                        createRow("Performance Mode", "toggle", "perfMode"), 
-                        createRow("Disable Animations", "toggle", "noAnimations"),
-                        createRow("Disable Particles", "toggle", "noParticles"),
-                        createRow("Compact UI Grid", "toggle", "compactUI"),
-                        createRow("Card Hover Lift", "toggle", "hoverFx"),
-                        createRow("Base Font", "select", "fontBase", {options: fontOptions, span: 2}),
-                        createRow("Font Size", "slider", "textSize", {min: 12, max: 20, step: 1, unit: 'px', span: 2}),
-                        createRow("Letter Spacing", "slider", "tracking", {min: -1, max: 2, step: 0.1, unit: 'px', span: 2})
-                    ].join('');
+            }
+
+            applyColors() {
+                const s = this.settings;
+                const root = document.documentElement;
+                
+                if (s.cardBgColor) root.style.setProperty('--card-bg', s.cardBgColor);
+                if (s.bgColor) document.body.style.backgroundColor = s.bgColor;
+                if (s.textColor) root.style.setProperty('--text-primary', s.textColor);
+                if (s.accentColor) root.style.setProperty('--accent', s.accentColor);
+                
+                // Apply background image
+                if (s.useBgImage && s.bgImageUrl) {
+                    document.body.style.backgroundImage = `url(${s.bgImageUrl})`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                } else {
+                    document.body.style.backgroundImage = '';
                 }
-                else if(this.activeSettingsTab === 'Site') { 
-                    optionsHtml = [
-                        createRow("Tab Title", "input", "tabTitle", {ph: 'e.g. Google Classroom', span: 2}), 
-                        createRow("Tab Icon URL", "input", "tabIcon", {ph: 'e.g. https://www.google.com/favicon.ico', span: 2}),
-                        `<div class="col-span-full"><h4 class="text-sm font-bold text-zinc-400 mb-2">Cloaking Presets</h4><div class="grid grid-cols-3 gap-2">
-                           <button onclick="app.updateSetting('tabTitle', 'Google'); app.updateSetting('tabIcon', 'https://www.google.com/favicon.ico')" class="px-4 py-2 text-sm bg-zinc-800 rounded-lg">Google</button>
-                           <button onclick="app.updateSetting('tabTitle', 'Classes'); app.updateSetting('tabIcon', 'https://www.gstatic.com/classroom/favicon.ico')" class="px-4 py-2 text-sm bg-zinc-800 rounded-lg">Classroom</button>
-                           <button onclick="app.updateSetting('tabTitle', 'Canvas'); app.updateSetting('tabIcon', 'https://canvas.instructure.com/favicon.ico')" class="px-4 py-2 text-sm bg-zinc-800 rounded-lg">Canvas</button>
-                        </div></div>`,
-                        `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex flex-col justify-center col-span-full"><div class="flex items-center justify-between gap-4"><span class="text-base font-medium text-zinc-200">Open in about:blank</span><button onclick="app.cloak()" class="px-4 py-2 rounded-lg text-sm font-bold bg-zinc-800 text-zinc-200 hover:bg-white hover:text-black transition-colors">Execute</button></div></div>`
-                    ].join('');
-                }
-                else if(this.activeSettingsTab === 'Security') optionsHtml = [createRow("Panic Keybind", "input", "panicKey", {ph: 'e.g. ` or Esc'}), createRow("Panic Redirect URL", "input", "panicUrl", {ph: 'https://...'})].join('');
-                else if(this.activeSettingsTab === 'Themes') { 
-                    const themeButtons = [
-                        {label: 'Default', value: 'default'}, {label: 'Nord', value: 'theme-nord'}, {label: 'Solarized', value: 'theme-solarized'}, {label: 'Terminal', value: 'theme-terminal'}
-                    ].map(theme => `<button onclick="app.updateSetting('theme', '${theme.value}')" class="px-4 py-3 rounded-lg text-sm font-bold ${this.settings.theme === theme.value ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'}">${theme.label}</button>`).join('');
-                    
-                    optionsHtml = `<div class="col-span-full"><h4 class="text-sm font-bold text-zinc-400 mb-2">Full Themes</h4><div class="grid grid-cols-2 gap-2 mb-6">${themeButtons}</div></div>` +
-                    THEME_COLORS.map((hex, i) => `<div class="bg-zinc-900/30 border border-zinc-800/50 rounded-2xl p-5 flex items-center justify-between"><div class="flex items-center gap-4"><div class="w-6 h-6 rounded-full" style="background-color: ${hex}"></div><span class="text-base font-medium text-zinc-200">Accent 0${i+1}</span></div><button onclick="app.updateSetting('accentColor', '${hex}')" class="px-4 py-2 rounded-lg text-sm font-bold ${this.settings.accentColor === hex ? 'bg-white text-black' : 'bg-zinc-800 text-zinc-400'} transition-colors">Select</button></div>`).join(''); 
-                }
-                grid.innerHTML = optionsHtml;
+            }
+
+            resetColors() {
+                const defaults = {
+                    cardBgColor: '#0a0a0a',
+                    bgColor: '#000000',
+                    textColor: '#ffffff',
+                    accentColor: '#a78bfa',
+                    borderColor: 'rgba(255,255,255,0.1)',
+                    useBgImage: false,
+                    bgImageUrl: ''
+                };
+                Object.keys(defaults).forEach(key => {
+                    this.settings[key] = defaults[key];
+                });
+                localStorage.setItem('nm4r-settings', JSON.stringify(this.settings));
+                this.applyColors();
+                this.renderSettingsContent();
             }
 
             handlePfpUpload(e) {
@@ -1516,336 +2372,205 @@
                 }
             }
 
-            listenForAdminCommands() {
-                try {
-                    db.ref('global_commands').limitToLast(1).on('child_added', (snapshot) => {
-                        const cmd = snapshot.val();
-                        if (Date.now() - cmd.timestamp > 3000) return; 
-                        
-                        if (window.isAdmin || window.isAppAdmin) { return; } // Both owner and admins are immune
+            // --- OWNER PANEL ACCESS ---
+            openOwnerPanel() {
+                // Check if user is Owner
+                if (accountSystem.username !== 'Owner') {
+                    alert('Access denied. Owner privileges required.');
+                    return;
+                }
+                const panel = document.getElementById('owner-layer');
+                panel.classList.remove('hidden');
+                panel.classList.add('flex');
+                ownerPanel.loadReports();
+                lucide.createIcons();
+            }
 
-                        if(cmd.target && cmd.target.toLowerCase() !== 'all' && cmd.target !== "") {
-                            if(cmd.target.toLowerCase() !== (accountSystem.username || "").toLowerCase()) return;
-                        }
-
-                        // --- Audio Commands ---
-                        const siren = document.getElementById('siren-audio');
-                        const cowboy = document.getElementById('cowboy-audio');
-
-                        switch(cmd.type) {
-                            case 'global_alert': this.showAdminAlertGUI(cmd.payload || "Alert"); this.addNotification('admin', 'System Alert', cmd.payload); break;
-                            case 'force_reload': location.reload(); break;
-                            case 'system_lock': document.getElementById('blur-overlay').classList.remove('hidden'); setTimeout(() => document.getElementById('blur-overlay').classList.remove('opacity-0'), 10); document.body.classList.add('blur-locked'); break;
-                            case 'system_unlock': document.getElementById('blur-overlay').classList.add('opacity-0'); setTimeout(() => document.getElementById('blur-overlay').classList.add('hidden'), 300); document.body.classList.remove('blur-locked'); break;
-                            case 'rickroll': window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; break;
-                            case 'matrix_mode_on': document.body.classList.add('matrix-mode'); break;
-                            case 'matrix_mode_off': document.body.classList.remove('matrix-mode'); break;
-                            case 'rainbow_on': document.body.classList.add('rainbow-mode'); break;
-                            case 'rainbow_off': document.body.classList.remove('rainbow-mode'); break;
-                            case 'brainrot_on': this.startBrainrot(); break;
-                            case 'brainrot_off': this.stopBrainrot(); break;
-                            case 'grayscale_on': document.body.classList.add('grayscale-mode'); break;
-                            case 'grayscale_off': document.body.classList.remove('grayscale-mode'); break;
-                            case 'blur_on': document.body.classList.add('blur-mode'); break;
-                            case 'blur_off': document.body.classList.remove('blur-mode'); break;
-                            case 'force_logout': accountSystem.logout(); break;
-                            case 'mute_user': if(globalChat) globalChat.isMuted = true; break;
-                            case 'unmute_user': if(globalChat) globalChat.isMuted = false; break;
-
-                            // OWNER COMMANDS
-                            case 'owner_jumpscare': this.executeJumpscare(); break;
-                            case 'owner_earthquake_on': document.body.classList.add('earthquake-mode'); break;
-                            case 'owner_earthquake_off': document.body.classList.remove('earthquake-mode'); break;
-                            case 'owner_rotate_on': document.body.classList.add('rotate-mode'); break;
-                            case 'owner_rotate_off': document.body.classList.remove('rotate-mode'); break;
-                            case 'owner_invert_on': document.body.classList.add('invert-mode'); break;
-                            case 'owner_invert_off': document.body.classList.remove('invert-mode'); break;
-                            case 'owner_glitch_on': document.body.classList.add('glitch-mode'); break;
-                            case 'owner_glitch_off': document.body.classList.remove('glitch-mode'); break;
-                            case 'owner_fake_cursor_on': this.toggleFakeCursor(true); break;
-                            case 'owner_fake_cursor_off': this.toggleFakeCursor(false); break;
-                            case 'owner_spin_on': document.body.classList.add('spin-mode'); break;
-                            case 'owner_spin_off': document.body.classList.remove('spin-mode'); break;
-                            case 'owner_float_on': document.body.classList.add('float-away-mode'); break;
-                            case 'owner_float_off': document.body.classList.remove('float-away-mode'); break;
-                            case 'owner_hide_ui_on': document.body.classList.add('hide-ui-mode'); break;
-                            case 'owner_hide_ui_off': document.body.classList.remove('hide-ui-mode'); break;
-                            case 'owner_siren_on': siren.play().catch(e=>{}); break;
-                            case 'owner_siren_off': siren.pause(); siren.currentTime = 0; break;
-                            case 'text_gibberish_on': this.toggleGibberish(true); break;
-                            case 'text_gibberish_off': this.toggleGibberish(false); break;
-                            case 'invert_scroll_on': document.body.classList.add('invert-scroll-mode'); break;
-                            case 'invert_scroll_off': document.body.classList.remove('invert-scroll-mode'); break;
-                            case 'owner_cowboy': 
-                                cowboy.play().catch(e=>{});
-                                const cOverlay = document.createElement('div'); cOverlay.className = 'screaming-cowboy-overlay'; cOverlay.innerHTML = `<img src="https://media1.tenor.com/m/5-2h23aO0s0AAAAC/sky-screaming.gif" class="screaming-cowboy-img">`; document.body.appendChild(cOverlay);
-                                setTimeout(() => cOverlay.remove(), 4000);
-                                break;
-                            case 'play_all_sounds': siren.play(); cowboy.play(); break;
-                            case 'owner_spam_alerts': 
-                                let i = 0; 
-                                const spam = setInterval(() => { this.addNotification('admin', 'SYSTEM WARNING', 'CRITICAL ERROR DETECTED'); if(i++ > 15) clearInterval(spam); }, 200);
-                                break;
-                            case 'owner_force_cloak': this.cloak(); break;
-                            case 'owner_shutdown':
-                                document.body.innerHTML = '<div style="background:black;color:red;height:100vh;display:flex;align-items:center;justify-content:center;font-family:monospace;font-size:2rem;font-weight:bold;">SYSTEM TERMINATED.</div>';
-                                break;
-                            case 'owner_disable_chat':
-                                if(globalChat) { globalChat.input.disabled = true; globalChat.submitBtn.disabled = true; globalChat.input.placeholder = "CHAT LOCKED BY OWNER."; }
-                                break;
-                            case 'owner_enable_chat':
-                                if(globalChat) { globalChat.input.disabled = false; globalChat.submitBtn.disabled = false; globalChat.input.placeholder = "Type a message..."; }
-                                break;
-                            case 'owner_kick': window.location.href = "https://www.google.com"; break;
-                            case 'owner_nuke_chat': if(globalChat) document.getElementById('chat-messages').innerHTML = '<p class="text-red-500 font-bold text-center">ALL CHAT HISTORY HAS BEEN INCINERATED.</p>'; break;
-                            case 'owner_wipe_db': alert("YOUR ACCOUNT HAS BEEN DELETED."); localStorage.clear(); location.reload(); break;
-                            case 'owner_wipe_pfp': case 'owner_random_theme': case 'reset_user_settings': location.reload(); break; // Reload to apply server-side settings change
-                            case 'owner_flashbang': 
-                                const f = document.createElement('div');
-                                f.style.cssText = 'position:fixed;inset:0;background:white;z-index:999999;transition:opacity 2s;';
-                                document.body.appendChild(f);
-                                const a = new Audio('https://www.myinstants.com/media/sounds/flashbang.mp3'); a.play().catch(e=>{});
-                                setTimeout(() => f.style.opacity = 0, 100);
-                                setTimeout(() => f.remove(), 2100);
-                                break;
-                        }
-                    });
-                } catch(e) { console.error("Admin command listener failed:", e) }
+            closeOwnerPanel() {
+                const panel = document.getElementById('owner-layer');
+                panel.classList.add('hidden');
+                panel.classList.remove('flex');
             }
         }
         const app = new App();
 
-        class AdminSystem {
+        // --- OWNER PANEL CLASS ---
+        class OwnerPanel {
             constructor() {
-                this.activeTab = 'commands';
-            }
-            openLogin() { document.getElementById('admin-login-modal').classList.remove('hidden'); document.getElementById('admin-login-modal').classList.add('flex'); }
-            closeLogin() { document.getElementById('admin-login-modal').classList.add('hidden'); document.getElementById('admin-login-modal').classList.remove('flex'); }
-            
-            async verify() { 
-                const pass = document.getElementById('admin-password-input').value; 
-                this.closeLogin(); 
-                document.getElementById('admin-password-input').value = "";
-                
-                let panelId = null;
-                if(pass === "0-0-0-0-0") { 
-                    panelId = 'admin-layer'; 
-                    window.isAdmin = true;
-                } 
-                else if (pass === "0024200!" || (accountSystem.username && accountSystem.username.toLowerCase() === 'Jessie James Cook')) { 
-                    panelId = 'owner-layer'; 
-                    window.isAdmin = true;
-                } 
-                else if (window.isAppAdmin) {
-                     panelId = 'admin-layer';
-                     window.isAdmin = true;
-                }
-                else { alert("ACCESS DENIED"); return; }
-                
-                app.closeSettings();
-                const panel = document.getElementById(panelId); 
-                panel.classList.remove('hidden'); 
-                panel.classList.add('flex');
-                
-                await this.populateUserList();
-                if (panelId === 'owner-layer') {
-                    this.addGameRequestTab();
-                }
-                lucide.createIcons();
+                this.currentTab = 'users';
             }
 
-            addGameRequestTab() {
-                const nav = document.getElementById('owner-nav');
-                if (nav && !document.getElementById('requests-tab-btn')) {
-                    nav.querySelector('.flex-col').innerHTML += `<button id="requests-tab-btn" onclick="adminSystem.switchTab('requests', 'owner')" class="owner-tab-btn text-left px-4 py-3 rounded-xl font-bold text-sm text-yellow-500/80 hover:bg-yellow-900/10">Game Requests</button>`;
-                }
-            }
-
-            async loadGameRequests() {
-                this.switchTab('requests', 'owner');
-                const listEl = document.getElementById('game-requests-list');
-                if (!listEl) return;
-                listEl.innerHTML = '<p class="text-zinc-500">Loading requests...</p>';
-                try {
-                    const snapshot = await db.ref('game_requests').orderByChild('timestamp').once('value');
-                    const requests = snapshot.val();
-                    if (!requests) {
-                        listEl.innerHTML = '<p class="text-zinc-500">No pending game requests.</p>';
-                        return;
-                    }
-                    const sortedKeys = Object.keys(requests).sort((a,b) => requests[b].timestamp - requests[a].timestamp);
-                    listEl.innerHTML = sortedKeys.map(key => {
-                        const req = requests[key];
-                        return `
-                        <div class="bg-zinc-900/50 border border-yellow-900/30 rounded-lg p-4 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-white">${req.title}</h4>
-                                <p class="text-xs text-zinc-400 mt-1">
-                                    Requested by <span class="text-yellow-400">${req.user}</span> on ${new Date(req.timestamp).toLocaleDateString()}
-                                </p>
-                                ${req.url ? `<a href="${req.url}" target="_blank" class="text-xs text-cyan-400 hover:underline">Game Link</a>` : ''}
-                            </div>
-                            <button onclick="adminSystem.deleteGameRequest('${key}')" class="p-2 text-red-500 hover:bg-red-500/10 rounded-full"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>`;
-                    }).join('');
-                    lucide.createIcons();
-                } catch(e) {
-                    listEl.innerHTML = '<p class="text-red-500">Error loading requests.</p>';
-                    console.error("Failed to load game requests:", e);
-                }
-            }
-
-            async deleteGameRequest(key) {
-                if (confirm('Are you sure you want to delete this request?')) {
-                    await db.ref(`game_requests/${key}`).remove();
-                    this.loadGameRequests();
-                }
-            }
-            
-            async populateUserList() {
-                try {
-                    const snapshot = await db.ref('accounts').once('value');
-                    const users = snapshot.val() ? Object.keys(snapshot.val()) : [];
-                    const adminSelect = document.getElementById('admin-user-select');
-                    const ownerSelect = document.getElementById('owner-user-select');
-                    
-                    const optionsHtml = '<option value="">All Users</option>' + users.map(u => `<option value="${u}">${u}</option>`).join('');
-                    if(adminSelect) adminSelect.innerHTML = optionsHtml;
-                    if(ownerSelect) ownerSelect.innerHTML = optionsHtml;
-
-                } catch(e) { console.error("Failed to populate user list:", e); }
-            }
-            
-            closePanel(panelId) {
-                const panel = document.getElementById(panelId);
-                panel.classList.add('hidden');
-                panel.classList.remove('flex');
-                window.isAdmin = false;
-            }
-            sendCommand(type, payload = null) { 
-                if(!db) { alert("Error: DB not connected."); return; } 
-                
-                let targetInput;
-                if(!document.getElementById('admin-layer').classList.contains('hidden')) {
-                    targetInput = document.getElementById('admin-target-user');
-                } else if (!document.getElementById('owner-layer').classList.contains('hidden')) {
-                    targetInput = document.getElementById('owner-target-user');
-                }
-                const target = targetInput ? targetInput.value.trim() : "";
-                
-                const commandData = { 
-                    type: type, 
-                    payload: payload, 
-                    target: target || "ALL",
-                    timestamp: firebase.database.ServerValue.TIMESTAMP 
-                };
-
-                // For commands that directly manipulate user data
-                if (['owner_wipe_pfp', 'owner_random_theme'].includes(type)) {
-                    if (target && target !== "ALL") {
-                        if(type === 'owner_wipe_pfp') db.ref(`accounts/${target}/settings/profilePic`).set("");
-                        if(type === 'owner_random_theme') db.ref(`accounts/${target}/settings/accentColor`).set(THEME_COLORS[Math.floor(Math.random() * THEME_COLORS.length)]);
-                    } else {
-                        alert("These commands require a specific target user.");
-                        return;
-                    }
-                }
-                
-                db.ref('global_commands').push(commandData); 
-                
-                if(type === 'clear_chat' || type === 'owner_nuke_chat') { db.ref('messages/global').remove(); } 
-                if(type === 'owner_wipe_db') { db.ref('accounts').remove(); db.ref('bans').remove(); } 
-                
-                const btn = event.currentTarget; 
-                if(btn && btn.tagName === 'BUTTON') {
-                    btn.classList.add('border-green-500');
-                    setTimeout(() => { btn.classList.remove('border-green-500'); }, 500); 
-                }
-            }
-            
-            getTargetUser(promptMsg) {
-                let targetInput;
-                if(!document.getElementById('admin-layer').classList.contains('hidden')) {
-                    targetInput = document.getElementById('admin-target-user');
-                } else if (!document.getElementById('owner-layer').classList.contains('hidden')) {
-                    targetInput = document.getElementById('owner-target-user');
-                }
-                const targetUser = targetInput ? targetInput.value.trim() : "";
-                return targetUser || prompt(promptMsg);
-            }
-
-            async banUser() {
-                const userToBan = this.getTargetUser("Enter the username to BAN:");
-                if (userToBan) {
-                    await db.ref(`bans/${userToBan}`).set(true);
-                    alert(`${userToBan} has been banned.`);
-                }
-            }
-
-            async unbanUser() {
-                const userToUnban = this.getTargetUser("Enter the username to UNBAN:");
-                if (userToUnban) {
-                    await db.ref(`bans/${userToUnban}`).remove();
-                    alert(`${userToUnban} has been unbanned.`);
-                }
-            }
-
-            async promoteUser() {
-                const userToPromote = this.getTargetUser("Enter username to promote to Admin:");
-                if (userToPromote) {
-                    await db.ref(`accounts/${userToPromote}/role`).set('admin');
-                    alert(`${userToPromote} is now an admin.`);
-                }
-            }
-
-            async demoteUser() {
-                const userToDemote = this.getTargetUser("Enter username to demote:");
-                if (userToDemote) {
-                    await db.ref(`accounts/${userToDemote}/role`).remove();
-                    alert(`${userToDemote} is no longer an admin.`);
-                }
-            }
-            
-            async resetUserSettings() {
-                const userToReset = this.getTargetUser("Enter username to reset settings for:");
-                if(userToReset && confirm(`Are you sure you want to reset all settings for ${userToReset}?`)) {
-                    await db.ref(`accounts/${userToReset}/settings`).set(app.defaultSettings);
-                    this.sendCommand('reset_user_settings', null); // Force reload client
-                    alert(`${userToReset}'s settings have been reset.`);
-                }
-            }
-
-
-            sendCustomAlert() { const msg = prompt("Enter the message to send to all users:"); if (msg) { this.sendCommand('global_alert', msg); } }
-            
-            switchTab(tabName, panelType) {
-                this.activeTab = tabName;
-                document.querySelectorAll(`.${panelType}-tab-btn`).forEach(btn => {
-                    const color = panelType === 'owner' ? 'yellow' : 'red';
-                    btn.classList.remove(`bg-${color}-900/20`, 'text-white');
-                    btn.classList.add(`text-zinc-400`, `hover:bg-${color}-900/10`, `hover:text-white`);
-                    btn.style.borderColor = 'transparent';
+            switchTab(tabName) {
+                this.currentTab = tabName;
+                document.querySelectorAll('.owner-tab-btn').forEach(btn => {
+                    btn.classList.remove('bg-yellow-500/20', 'text-white', 'border-yellow-500/30');
+                    btn.classList.add('text-zinc-400');
                 });
-                document.querySelectorAll(`.${panelType}-tab-content`).forEach(content => {
+                document.querySelectorAll('.owner-tab-content').forEach(content => {
                     content.classList.add('hidden');
                 });
                 
                 const activeBtn = event.currentTarget;
-                if(activeBtn) {
-                    const color = panelType === 'owner' ? 'yellow' : 'red';
-                    activeBtn.classList.add(`bg-${color}-900/20`, 'text-white');
-                    activeBtn.classList.remove(`text-zinc-400`);
-                    activeBtn.style.borderColor = `var(--${color}-900/30)`;
+                if (activeBtn) {
+                    activeBtn.classList.add('bg-yellow-500/20', 'text-white', 'border-yellow-500/30');
+                    activeBtn.classList.remove('text-zinc-400');
                 }
-                document.getElementById(`${panelType}-tab-content-${tabName}`).classList.remove('hidden');
-
-                if (tabName === 'requests' && panelType === 'owner') {
-                    this.loadGameRequests();
+                document.getElementById(`owner-tab-${tabName}`).classList.remove('hidden');
+                
+                if (tabName === 'reports') {
+                    this.loadReports();
                 }
             }
-        }
-        const adminSystem = new AdminSystem();
 
+            getTargetUser() {
+                const input = document.getElementById('owner-target-user');
+                return input ? input.value.trim() : '';
+            }
+
+            async banUser() {
+                const user = this.getTargetUser() || prompt('Enter username to ban:');
+                if (!user) return;
+                if (confirm(`Are you sure you want to ban ${user}?`)) {
+                    await db.ref(`bans/${user}`).set(true);
+                    alert(`${user} has been banned.`);
+                }
+            }
+
+            async unbanUser() {
+                const user = this.getTargetUser() || prompt('Enter username to unban:');
+                if (!user) return;
+                await db.ref(`bans/${user}`).remove();
+                alert(`${user} has been unbanned.`);
+            }
+
+            async kickUser() {
+                const user = this.getTargetUser() || prompt('Enter username to kick:');
+                if (!user) return;
+                await db.ref(`kicks/${user}`).set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
+                alert(`${user} will be kicked on next action.`);
+            }
+
+            async changeUserName() {
+                const user = this.getTargetUser() || prompt('Enter current username:');
+                if (!user) return;
+                const newName = prompt('Enter new username:');
+                if (!newName) return;
+                
+                const snapshot = await db.ref(`accounts/${user}`).once('value');
+                const data = snapshot.val();
+                if (data) {
+                    await db.ref(`accounts/${newName}`).set(data);
+                    await db.ref(`accounts/${user}`).remove();
+                    alert(`Username changed from ${user} to ${newName}`);
+                }
+            }
+
+            async refreshChat() {
+                if (globalChat) {
+                    globalChat.messagesContainer.innerHTML = '';
+                    globalChat.switchChannel(globalChat.currentChannel, globalChat.currentChannelName);
+                }
+                this.sendCommand('refresh_chat');
+                alert('Chat refreshed for all users.');
+            }
+
+            async muteUser() {
+                const user = this.getTargetUser() || prompt('Enter username to mute:');
+                if (!user) return;
+                await db.ref(`mutes/${user}`).set(true);
+                alert(`${user} has been muted.`);
+            }
+
+            async unmuteUser() {
+                const user = this.getTargetUser() || prompt('Enter username to unmute:');
+                if (!user) return;
+                await db.ref(`mutes/${user}`).remove();
+                alert(`${user} has been unmuted.`);
+            }
+
+            async endAllCalls() {
+                await db.ref('end_all_calls').set({ timestamp: firebase.database.ServerValue.TIMESTAMP });
+                alert('All calls have been ended.');
+            }
+
+            async deleteMessage() {
+                const input = document.getElementById('delete-msg-id');
+                const msgId = input ? input.value.trim() : prompt('Enter message ID or username:');
+                if (!msgId) return;
+                
+                const channel = globalChat ? globalChat.currentChannel : 'global';
+                const messagesRef = db.ref(`messages/${channel}`);
+                const snapshot = await messagesRef.once('value');
+                const messages = snapshot.val();
+                
+                if (messages) {
+                    for (const [key, msg] of Object.entries(messages)) {
+                        if (key === msgId || msg.user === msgId) {
+                            await messagesRef.child(key).remove();
+                        }
+                    }
+                }
+                alert('Message(s) deleted.');
+                if (input) input.value = '';
+            }
+
+            async loadReports() {
+                const listEl = document.getElementById('owner-reports-list');
+                if (!listEl) return;
+                
+                try {
+                    const snapshot = await db.ref('reports').orderByChild('timestamp').once('value');
+                    const reports = snapshot.val();
+                    
+                    if (!reports) {
+                        listEl.innerHTML = '<p class="text-zinc-500 text-center py-8">No reports yet.</p>';
+                        return;
+                    }
+                    
+                    const sortedKeys = Object.keys(reports).sort((a, b) => reports[b].timestamp - reports[a].timestamp);
+                    listEl.innerHTML = sortedKeys.map(key => {
+                        const r = reports[key];
+                        return `
+                        <div class="bg-zinc-900/50 border border-white/10 rounded-xl p-4">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-yellow-400 font-semibold">Reported: ${r.reportedUser}</span>
+                                        <span class="text-zinc-500 text-xs">by ${r.reporter}</span>
+                                    </div>
+                                    <p class="text-zinc-300 text-sm mb-2">${r.reason}</p>
+                                    <p class="text-zinc-500 text-xs">${new Date(r.timestamp).toLocaleString()}</p>
+                                </div>
+                                <button onclick="ownerPanel.deleteReport('${key}')" class="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    lucide.createIcons();
+                } catch (e) {
+                    listEl.innerHTML = '<p class="text-red-500 text-center py-8">Error loading reports.</p>';
+                }
+            }
+
+            async deleteReport(key) {
+                if (confirm('Delete this report?')) {
+                    await db.ref(`reports/${key}`).remove();
+                    this.loadReports();
+                }
+            }
+
+            sendCommand(type, payload = null) {
+                db.ref('owner_commands').push({
+                    type: type,
+                    payload: payload,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+            }
+        }
+        const ownerPanel = new OwnerPanel();
+
+        // --- CHAT SYSTEM ---
         class ChatSystem {
             constructor() {
                 this.messagesContainer = document.getElementById('chat-messages');
@@ -2062,6 +2787,7 @@
                             <div class="flex items-center gap-2">
                                 <span class="text-sm font-bold tracking-wide text-zinc-300">${msg.user}</span>
                                 <span class="text-[10px] font-mono text-zinc-600">${msg.time}</span>
+                                ${!isMe ? `<button onclick="globalChat.reportUser('${msg.user}', '${safeText}')" class="opacity-0 group-hover:opacity-100 p-1 text-zinc-600 hover:text-red-400 transition-all" title="Report user"><i data-lucide="flag" class="w-3 h-3"></i></button>` : ''}
                             </div>
                             <div class="relative group/bubble">
                                 <div class="px-4 py-3 text-[15px] max-w-xs md:max-w-md break-words shadow-lg ${isMe ? 'bg-gradient-to-br from-accent-dark to-accent text-white rounded-[1.2rem] rounded-br-sm' : 'bg-zinc-800 text-zinc-100 rounded-[1.2rem] rounded-bl-sm'}">
@@ -2141,6 +2867,21 @@
             
             scrollToBottom() { setTimeout(() => { this.messagesContainer.scrollTop = this.messagesContainer.scrollHeight; }, 50); }
             escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])); }
+            
+            reportUser(user, encodedText) {
+                const text = decodeURIComponent(encodedText);
+                const reason = prompt(`Report ${user}?\n\nMessage: ${text}\n\nEnter reason for reporting:`);
+                if (!reason) return;
+                
+                db.ref('reports').push({
+                    reportedUser: user,
+                    reporter: this.username,
+                    message: text,
+                    reason: reason,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
+                });
+                alert('Report submitted. Thank you for helping keep the community safe.');
+            }
             
             // --- CALL LOGIC ---
             listenForCalls() { const channelsToListen = []; this.friends.forEach(f => channelsToListen.push(`dm_${[this.username, f].sort().join('_')}`)); this.groups.forEach(g => channelsToListen.push(`group_${g}`)); channelsToListen.forEach(channelId => { this.db.ref(`calls/${channelId}`).on('value', snapshot => { const callData = snapshot.val(); if (callData && callData.offer && callData.caller !== this.username && !this.isCalling) { this.showIncomingCall(callData.caller, channelId, callData.isVideo); } if (callData && callData.answer && callData.caller === this.username && this.isCalling) { if (!this.peerConnection.currentRemoteDescription) { this.peerConnection.setRemoteDescription(new RTCSessionDescription(callData.answer)); } } if (callData && callData.candidates) { Object.values(callData.candidates).forEach(c => { if (c.user !== this.username && this.peerConnection) { this.peerConnection.addIceCandidate(new RTCIceCandidate(c.candidate)).catch(e=>console.error(e)); } }); } if (!callData && this.isCalling) this.endCall(false); }); }); }
@@ -2245,5 +2986,3 @@
 </body>
 
 </html>
-
-
