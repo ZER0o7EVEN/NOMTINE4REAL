@@ -693,11 +693,82 @@
         <button class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"><i data-lucide="x" class="w-8 h-8"></i></button>
     </div>
 
+    <!-- GIF Picker Modal -->
+    <div id="gif-picker-modal" class="fixed inset-0 z-[210] bg-black/60 backdrop-blur-sm hidden items-end justify-center opacity-0 transition-opacity duration-300 pointer-events-auto p-0">
+        <div class="bg-gradient-to-b from-zinc-800 to-zinc-900 border border-zinc-600 rounded-t-2xl w-full max-w-2xl shadow-2xl shadow-black/50 flex flex-col h-[95vh] relative">
+            <div class="p-5 border-b border-zinc-700/50 flex items-center justify-between bg-zinc-800/50 rounded-t-3xl">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                        <i data-lucide="file-type" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Send GIF</h3>
+                        <p class="text-xs text-zinc-400">Search or paste a URL</p>
+                    </div>
+                </div>
+                <button onclick="closeGifPicker()" class="w-8 h-8 bg-zinc-700/50 hover:bg-red-500/20 hover:text-red-400 text-zinc-400 rounded-lg flex items-center justify-center transition-all">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="p-4 space-y-3 overflow-hidden flex flex-col">
+                <div class="bg-zinc-800/30 rounded-xl p-3 border border-zinc-700/50">
+                    <label class="text-xs font-semibold text-zinc-400 mb-1.5 block uppercase tracking-wider">Direct GIF URL</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="gif-url-input" placeholder="https://media.giphy.com/media/..." class="flex-1 bg-black/50 border border-zinc-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/50 transition-all placeholder-zinc-600">
+                        <button onclick="sendGifFromUrl()" class="px-4 py-2 bg-gradient-to-r from-accent to-accent-dark text-white rounded-lg hover:opacity-90 transition-all text-sm font-semibold shadow-lg shadow-accent/20">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                            Send
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-zinc-500 mt-1.5">Works with Giphy, Tenor, or any direct GIF link</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-600 to-transparent"></div>
+                    <span class="text-xs font-medium text-zinc-500 bg-zinc-800/50 px-3 py-1 rounded-full">OR SEARCH</span>
+                    <div class="flex-1 h-px bg-gradient-to-r from-transparent via-zinc-600 to-transparent"></div>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                        <i data-lucide="search" class="w-4 h-4 text-zinc-500"></i>
+                    </div>
+                    <input type="text" id="gif-search-input" placeholder="Search Giphy for GIFs..." class="w-full bg-black/50 border border-zinc-600 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent/50 transition-all placeholder-zinc-600" onkeyup="searchGifs(event)">
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="changeGifPage(-1)" id="gif-prev-btn" class="w-10 h-10 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-lg flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                    </button>
+                    <div id="gif-results" class="grid grid-cols-3 gap-4 flex-1 min-h-0 rounded-xl p-2" style="max-height: 340px; overflow: hidden;">
+                        <div class="col-span-3 flex flex-col items-center justify-center py-10 text-zinc-500">
+                            <div class="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center mb-3">
+                                <i data-lucide="search" class="w-8 h-8 text-zinc-600"></i>
+                            </div>
+                            <p class="text-sm font-medium">Type a keyword and press Enter</p>
+                            <p class="text-xs text-zinc-600 mt-1">Try "funny", "reaction", or "cat"</p>
+                        </div>
+                    </div>
+                    <button onclick="changeGifPage(1)" id="gif-next-btn" class="w-10 h-10 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white rounded-lg flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed" disabled>
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="flex justify-center items-center gap-2 mt-2">
+                    <span id="gif-page-indicator" class="text-xs text-zinc-500 font-medium">Page 1 of 1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="chat-layer" class="fixed inset-0 z-[150] bg-[#0A0A0A] hidden flex-col transition-all duration-700 opacity-0 scale-[1.05] pointer-events-none overflow-hidden">
         <div class="relative z-20 flex items-center justify-between px-6 h-20 bg-[#121212]/50 backdrop-blur-xl border-b border-white/5 shrink-0 pointer-events-auto">
             <button onclick="app.closeChat()" class="flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-full font-bold transition-colors"><i data-lucide="arrow-left" class="w-4 h-4"></i> Back</button>
             <h2 class="font-display font-black text-xl text-white tracking-wide">Chat Room</h2>
-            <div class="w-20"></div>
+            <div id="call-controls-container" class="flex items-center gap-2">
+                <button onclick="globalChat.initiateCall(false)" class="p-2.5 bg-zinc-800 hover:bg-green-500 hover:text-white text-zinc-300 rounded-xl transition-all" title="Voice Call">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                </button>
+                <button onclick="globalChat.initiateCall(true)" class="p-2.5 bg-zinc-800 hover:bg-blue-500 hover:text-white text-zinc-300 rounded-xl transition-all" title="Video Call">
+                    <i data-lucide="video" class="w-4 h-4"></i>
+                </button>
+            </div>
         </div>
         
         <div id="add-modal" class="absolute inset-0 z-[60] bg-black/80 backdrop-blur-sm hidden items-center justify-center opacity-0 transition-opacity duration-300 pointer-events-auto">
@@ -844,7 +915,9 @@
                             <i data-lucide="image" class="w-5 h-5"></i>
                         </button>
                         <input type="file" id="chat-img-upload" accept="image/*" class="hidden" onchange="globalChat.handleImageUpload(event)">
-                        
+                        <button type="button" id="chat-gif-btn" onclick="openGifPicker()" class="p-3 bg-zinc-800/80 text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-xl transition-all hidden" title="Send GIF">
+                            <i data-lucide="file-type" class="w-5 h-5"></i>
+                        </button>
                         <input type="text" id="chat-input" class="flex-1 bg-zinc-900/80 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-accent/50 focus:bg-zinc-900 transition-all disabled:opacity-50 placeholder-zinc-600" placeholder="Type a message..." autocomplete="off" disabled>
                         <button type="button" id="voice-note-btn" class="p-3 bg-zinc-800/80 text-zinc-400 rounded-xl transition-colors hidden">
                             <i data-lucide="mic" class="w-5 h-5"></i>
@@ -1104,7 +1177,8 @@
     ["Yandere simulator","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_4d6f28fc6faa51efd76501f9c6c7d931.html","https://th.bing.com/th/id/OIP.5XjLOH6gkak1CgIondP6dAHaEK?w=289&h=180&c=7&r=0&o=5&pid=1.7","Simulation"],
     ["Baldi basics","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_71b56e8afb366e16b35005ecf06804df.html","https://th.bing.com/th/id/OIP.647bxkGN7fqaMM04BVg5YAAAAA?w=460&h=215&c=7&r=0&o=5&pid=1.7","Horror"],
     ["Class of 09","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_832effc1899f7a12522ca28d4f3bbb61.html","https://th.bing.com/th/id/OIP.3_x6Uj56uFhhr4cn_5dWbQAAAA?w=115&h=180&c=7&r=0&o=7&pid=1.7","Simulation"],
-    ["Crazy plane landing","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5693c6ca5a5a524934f89e61e2a2441e.html","https://th.bing.com/th/id/OIP.4U20-dNtlNsK4V6Ni3xI_QHaEK?w=267&h=183&c=7&r=0&o=7&pid=1.7","Simulation"]
+    ["Crazy plane landing","https://cookjessie383-wixsite-com.filesusr.com/html/308cff_5693c6ca5a5a524934f89e61e2a2441e.html","https://th.bing.com/th/id/OIP.4U20-dNtlNsK4V6Ni3xI_QHaEK?w=267&h=183&c=7&r=0&o=7&pid=1.7","Simulation"],
+    ["Snow board obby", "https://cookjessie383-wixsite-com.filesusr.com/html/308cff_730976908cc0738214f3dd3052f4c0b7.html", "https://th.bing.com/th/id/OIP.0lWxwaNEKXlLMRuD-NfhwgHaHa?w=175&h=180&c=7&r=0&o=7&dpr=1.1&pid=1.7&rm=3", "Arcade"]
 ];
         
         var _MOVIES = [
@@ -2658,17 +2732,20 @@
                 document.getElementById('chat-messages').innerHTML = ''; 
                 this.cancelReply(); 
                 
-                const controls = document.getElementById('call-controls-container'); 
+                const controls = document.getElementById('call-controls-container');
                 const imgBtn = document.getElementById('chat-img-btn');
+                const gifBtn = document.getElementById('chat-gif-btn');
                 const voiceBtn = document.getElementById('voice-note-btn');
 
                 if (channelId === 'global') {
                     controls.classList.add('hidden');
-                    imgBtn.classList.add('hidden');
+                    imgBtn.classList.remove('hidden');
+                    gifBtn.classList.remove('hidden');
                     voiceBtn.classList.add('hidden');
                 } else {
                     if(showCallBtn) controls.classList.remove('hidden');
                     imgBtn.classList.remove('hidden');
+                    gifBtn.classList.remove('hidden');
                     voiceBtn.classList.remove('hidden');
                 }
 
@@ -2767,6 +2844,9 @@
                 if(msg.imgBase64) {
                     contentHtml = `<img src="${msg.imgBase64}" class="w-full max-w-[250px] rounded-lg cursor-pointer hover:opacity-80 transition-opacity" onclick="globalChat.showImageModal('${msg.imgBase64}')">`;
                     safeText = encodeURIComponent("[Image]");
+                } else if (msg.gifUrl) {
+                    contentHtml = `<img src="${msg.gifUrl}" class="w-full max-w-[250px] rounded-lg cursor-pointer hover:opacity-80 transition-opacity" onclick="globalChat.showImageModal('${msg.gifUrl}')">`;
+                    safeText = encodeURIComponent("[GIF]");
                 } else if (msg.audioBase64) {
                     const audioId = `audio_${Date.now()}_${Math.random()}`;
                     contentHtml = `<div class="audio-player">
@@ -2982,6 +3062,208 @@
             window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
             resize(); animateParticles();
         });
+
+        // --- STANDALONE GIF FUNCTIONS ---
+        function openGifPicker() {
+            const modal = document.getElementById('gif-picker-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('gif-search-input').focus();
+            }, 10);
+            loadTrendingGifs();
+        }
+
+        function closeGifPicker() {
+            const modal = document.getElementById('gif-picker-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+        }
+
+        function sendGifFromUrl() {
+            const url = document.getElementById('gif-url-input').value.trim();
+            if (!url) return;
+            if (!globalChat || !globalChat.username) {
+                alert('Please login first');
+                return;
+            }
+            if (globalChat.currentChannel === 'global') {
+                const msgRef = db.ref('messages/global').push();
+                msgRef.set({
+                    user: globalChat.username,
+                    gifUrl: url,
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    timestamp: Date.now()
+                });
+            } else {
+                const msgRef = db.ref(`messages/${globalChat.currentChannel}`).push();
+                msgRef.set({
+                    user: globalChat.username,
+                    gifUrl: url,
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    timestamp: Date.now()
+                });
+            }
+            document.getElementById('gif-url-input').value = '';
+            closeGifPicker();
+        }
+
+        let gifSearchTimeout = null;
+        let currentGifQuery = '';
+        let allGifResults = [];
+        let currentPage = 0;
+        const itemsPerPage = 8;
+
+        function searchGifs(event) {
+            if (event.key === 'Enter') {
+                const query = event.target.value.trim();
+                if (!query) return;
+
+                currentGifQuery = query;
+                currentPage = 0;
+                allGifResults = [];
+
+                const resultsContainer = document.getElementById('gif-results');
+                resultsContainer.innerHTML = '<div class="col-span-3 flex items-center justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div></div>';
+
+                const apiKey = '2yXdXRAdH064obETL48Ply0dP96WHzI0';
+                const url = `https://api.giphy.com/v1/gifs/search?q=${encodeURIComponent(query)}&api_key=${apiKey}&limit=48&rating=g`;
+
+                fetch(url)
+                    .then(res => {
+                        if (res.ok) return res.json();
+                        console.error('Giphy API error:', res.status, res.statusText);
+                        throw new Error('API failed');
+                    })
+                    .then(data => {
+                        if (data.data && data.data.length > 0) {
+                            allGifResults = data.data;
+                            renderCurrentPage();
+                        } else {
+                            resultsContainer.innerHTML = '<div class="col-span-3 text-center py-10 text-zinc-500">No GIFs found. Try a different search term.</div>';
+                            updatePaginationButtons();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Giphy search error:', err);
+                        resultsContainer.innerHTML = '<div class="col-span-3 text-center py-10 text-zinc-500">Search failed. Try using the direct URL option.</div>';
+                        updatePaginationButtons();
+                    });
+            }
+        }
+
+        function changeGifPage(direction) {
+            const maxPage = Math.ceil(allGifResults.length / itemsPerPage) - 1;
+            currentPage += direction;
+            if (currentPage < 0) currentPage = 0;
+            if (currentPage > maxPage) currentPage = maxPage;
+            renderCurrentPage();
+        }
+
+        function renderCurrentPage() {
+            const start = currentPage * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageGifs = allGifResults.slice(start, end);
+            renderGifResults(pageGifs, true);
+            updatePaginationButtons();
+        }
+
+        function updatePaginationButtons() {
+            const prevBtn = document.getElementById('gif-prev-btn');
+            const nextBtn = document.getElementById('gif-next-btn');
+            const indicator = document.getElementById('gif-page-indicator');
+
+            if (!allGifResults.length) {
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                indicator.textContent = 'Page 1 of 1';
+                return;
+            }
+
+            const maxPage = Math.ceil(allGifResults.length / itemsPerPage);
+            prevBtn.disabled = currentPage === 0;
+            nextBtn.disabled = currentPage >= maxPage - 1;
+            indicator.textContent = `Page ${currentPage + 1} of ${maxPage}`;
+        }
+
+        function renderGifResults(gifs, initialLoad = false) {
+            const container = document.getElementById('gif-results');
+            if (initialLoad) {
+                container.innerHTML = '';
+            }
+            gifs.forEach(gif => {
+                const url = gif.images.fixed_height_small?.url || gif.images.fixed_height?.url || gif.images.original?.url;
+                if (!url) return;
+                const div = document.createElement('div');
+                div.className = 'gif-item relative aspect-square cursor-pointer group overflow-hidden rounded-lg bg-zinc-800 m-1';
+                div.style.width = '150px';
+                div.style.height = '150px';
+                div.onclick = () => sendGif(url);
+                div.innerHTML = `<img src="${url}" class="w-full h-full object-cover transition-transform group-hover:scale-110" loading="lazy"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center"><i data-lucide="send" class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"></i></div>`;
+                container.appendChild(div);
+            });
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function sendGif(url) {
+            if (!globalChat || !globalChat.username) {
+                alert('Please login first');
+                return;
+            }
+            if (globalChat.currentChannel === 'global') {
+                const msgRef = db.ref('messages/global').push();
+                msgRef.set({
+                    user: globalChat.username,
+                    gifUrl: url,
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    timestamp: Date.now()
+                });
+            } else {
+                const msgRef = db.ref(`messages/${globalChat.currentChannel}`).push();
+                msgRef.set({
+                    user: globalChat.username,
+                    gifUrl: url,
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    timestamp: Date.now()
+                });
+            }
+            closeGifPicker();
+        }
+
+        function loadTrendingGifs() {
+            const resultsContainer = document.getElementById('gif-results');
+            resultsContainer.innerHTML = '<div class="col-span-3 flex items-center justify-center py-10"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div></div>';
+
+            allGifResults = [];
+            currentGifQuery = 'trending';
+            currentPage = 0;
+
+            const apiKey = '2yXdXRAdH064obETL48Ply0dP96WHzI0';
+            fetch(`https://api.giphy.com/v1/gifs/trending?api_key=${apiKey}&limit=48&rating=g`)
+                .then(res => {
+                    if (res.ok) {
+                        return res.json();
+                    } else {
+                        console.error('Giphy API error:', res.status, res.statusText);
+                        resultsContainer.innerHTML = '<div class="col-span-3 text-center py-10 text-zinc-500">Failed to load trending GIFs. Please try again later.</div>';
+                        return Promise.resolve({ data: [] });
+                    }
+                })
+                .then(data => {
+                    if (data.data && data.data.length > 0) {
+                        allGifResults = data.data;
+                        renderCurrentPage();
+                    }
+                })
+                .catch(err => {
+                    console.error('Trending GIFs error:', err);
+                    resultsContainer.innerHTML = '<div class="col-span-3 flex flex-col items-center justify-center py-10 text-zinc-500"><div class="w-16 h-16 bg-zinc-800/50 rounded-2xl flex items-center justify-center mb-3"><i data-lucide="search" class="w-8 h-8 text-zinc-600"></i></div><p class="text-sm font-medium">Type a keyword and press Enter</p><p class="text-xs text-zinc-600 mt-1">Try "funny", "reaction", or "cat"</p></div>';
+                });
+        }
     </script>
 </body>
 
